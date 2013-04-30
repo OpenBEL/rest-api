@@ -27,7 +27,7 @@ fi
 . "${ENV}"/bin/activate || exit 1
 PKG_DIR="$_ENV_REST_DOCS/packages"
 PIP_OPTS="--quiet --no-index --find-links=$PKG_DIR"
-pip install $PIP_OPTS -r $_ENV_REQ_DEPS || exit 1
+python2 "${ENV}"/bin/pip install $PIP_OPTS -r $_ENV_REQ_DEPS || exit 1
 make clean html
 if [ $? -ne 0 ]; then
     echo "Errors in REST API docs!" >&2
