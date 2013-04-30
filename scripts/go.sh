@@ -50,6 +50,12 @@ function _4 {
 }
 
 function _5 {
+    echo "Documenting..."
+    echo
+    script "docs.sh" || return $?
+}
+
+function _6 {
     echo "Watching src/ for changes... "
     echo
     while true; do
@@ -66,6 +72,7 @@ CHOICES=(
          "build" \
          "test" \
          "run" \
+         "docs" \
          "build loop" \
          )
 

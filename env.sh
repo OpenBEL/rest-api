@@ -1,4 +1,5 @@
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export _ENV_VERSION=${_ENV_VERSION:-experimental}
 
 ### Special rules on syntax ###
 #
@@ -13,9 +14,14 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ### PATHS ###
 export _ENV_TOPDIR="${_ENV_TOPDIR:="$DIR"}"
 export _ENV_SCRIPTS="${_ENV_SCRIPTS:="$_ENV_TOPDIR/scripts"}"
+export _ENV_TOOLS="${_ENV_TOOLS:="$_ENV_TOPDIR/tools"}"
 export _ENV_SRC="${_ENV_SRC:="$_ENV_TOPDIR/src"}"
 export _ENV_TEST="${_ENV_TEST:="$_ENV_TEST/test"}"
 export _ENV_DEPS="${_ENV_DEPS:="$_ENV_TOPDIR/deps"}"
+export _ENV_DOCS="${_ENV_DOCS:="$_ENV_TOPDIR/docs"}"
+export _ENV_REST_DOCS="${_ENV_REST_DOCS:="$_ENV_DOCS/rest"}"
+export _ENV_JAVA_DOCS="${_ENV_JAVA_DOCS:="$_ENV_DOCS/java"}"
+export _ENV_VENDOR_HOME="${_ENV_VENDOR_HOME:="$_ENV_TOOLS/vendor"}"
 
 ### SETTINGS ###
 export _ENV_PORT=${_ENV_PORT:-60000}
@@ -27,6 +33,12 @@ DEFAULT_DBURL="jdbc:derby:${_ENV_BEL_ROOT}/db;create=true;"
 export _ENV_BEL_DBURL="${_ENV_BEL_DBURL:="$DEFAULT_DBURL"}"
 DEFAULT_RESIDX="http://resource.belframework.org/belframework/1.0/index.xml"
 export _ENV_BEL_RESIDX="${_ENV_BEL_RESIDX:="$DEFAULT_RESIDX"}"
+
+### MISCELLANEOUS ###
+# Convention for required Python dependencies
+export _ENV_REQ_DEPS=${_ENV_REQ_DEPS:-deps.req}
+# Convention for optional Python dependencies
+export _ENV_OPT_DEPS=${_ENV_OPT_DEPS:-deps.opt}
 
 if [ -r "${_ENV_OVERRIDE}" ]; then
     source ${_ENV_OVERRIDE} || exit 1
