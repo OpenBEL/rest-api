@@ -89,5 +89,3 @@ def configure(project)
   end
 end
 
-
-
