@@ -24,7 +24,6 @@ if [ ! -d "${ENV}" -o $_ENV_REQ_DEPS -nt "${ENV}" ]; then
     python2 $_ENV_VENDOR_HOME/virtualenv/virtualenv.py $VIRTENV_ARGS || exit 1
 fi
 
-echo harro
 . "${ENV}"/bin/activate || exit 1
 PKG_DIR="$_ENV_REST_DOCS/packages"
 PIP_OPTS="--quiet --no-index --find-links=$PKG_DIR"
