@@ -37,12 +37,9 @@
 package org.openbel.rest.common;
 
 import static org.openbel.rest.common.Objects.*;
-
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
-
-import java.util.Map;
 
 /**
  * Provides API version information.

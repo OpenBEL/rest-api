@@ -61,6 +61,13 @@ class main extends Component {
         getDefaultHost().attachDefault(apiapp);
     }
 
+    public void init() {
+        out.print("Bootstrapping MongoDB... ");
+        out.flush();
+        // TODO here
+        out.println("okay");
+    }
+
     public static void main(String... args) {
         String value = getenv("_ENV_PORT");
         boolean configured = true;
@@ -109,6 +116,7 @@ class main extends Component {
         apiapp = new APIApplication();
         final main main = new main();
         try {
+            main.init();
             main.start();
         } catch (Exception e) {
             e.printStackTrace();

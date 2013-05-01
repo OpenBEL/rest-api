@@ -36,27 +36,31 @@
  */
 package org.openbel.rest.common;
 
+import static org.openbel.rest.common.Objects.Signatures;
+import org.openbel.rest.common.Objects;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
+import org.restlet.representation.Representation;
+import org.openbel.framework.common.lang.Function;
+import org.openbel.framework.common.enums.FunctionEnum;
 
-import java.util.Map;
-
-public class Lang extends ServerResource {
-
-    class Root {
-        private String root;
-
-        Root() {
-            root = "lang";
-        }
-        public String getRoot() {
-            return root;
+public class SignaturesRoot extends ServerResource {
+    private static final Signatures SIGNATURES;
+    static {
+        SIGNATURES = new Signatures();
+        for (FunctionEnum e : FunctionEnum.values()) {
+        	Function f = e.getFunction();
+        	Objects.Function objf = new Objects.Function();
+        	objf.name = e.getDisplayValue();
+        	String abbrev = e.getAbbreviation();
+        	if (abbrev != null) objf.abbreviation = abbrev;
+        	SIGNATURES.addFunction(objf);
         }
     }
 
     @Get("json")
-    public Root _get() {
-        return new Root();
+    public Representation _get() {
+        return SIGNATURES.json();
     }
 
 }

@@ -41,15 +41,15 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
 
-public class V1Root extends ServerResource {
-    private final static V1 _V1;
+public class LangRoot extends ServerResource {
+    private static final Lang LANG;
     static {
-        _V1 = new V1();
+        LANG = new Lang();
     }
 
     @Get("json")
     public Representation _get() {
-        return _V1.json();
+        return LANG.json();
     }
 
 }

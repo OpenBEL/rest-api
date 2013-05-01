@@ -76,13 +76,16 @@ public class APIApplication extends Application {
         router.attach(path, NamespaceValue.class);
 
         path = "/api/v1/lang";
-        router.attach(path, Lang.class);
+        router.attach(path, LangRoot.class);
 
         path = "/api/v1/lang/relationships";
-        router.attach(path, Relationships.class);
+        router.attach(path, RelationshipsRoot.class);
 
         path = "/api/v1/lang/functions";
-        router.attach(path, Functions.class);
+        router.attach(path, FunctionsRoot.class);
+
+        path = "/api/v1/lang/functions/signatures";
+        router.attach(path, SignaturesRoot.class);
 
         return router;
     }

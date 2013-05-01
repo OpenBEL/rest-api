@@ -36,27 +36,21 @@
  */
 package org.openbel.rest.common;
 
+import static org.openbel.rest.common.Objects.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
-
-import java.util.Map;
+import org.restlet.representation.Representation;
 
 public class APIRoot extends ServerResource {
-
-    class Root {
-        private String root;
-
-        Root() {
-            root = "api";
-        }
-        public String getRoot() {
-            return root;
-        }
+    private final static API _API;
+    static {
+        _API = new API();
     }
 
+
     @Get("json")
-    public Root _get() {
-        return new Root();
+    public Representation _get() {
+        return _API.json();
     }
 
 }

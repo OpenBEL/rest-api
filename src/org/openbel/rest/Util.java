@@ -37,6 +37,7 @@
 package org.openbel.rest;
 
 import org.restlet.Request;
+import java.net.*;
 
 /**
  * BEL REST API Utilities.
@@ -48,10 +49,17 @@ public class Util {
      * request's context. If no request is associated with the current thread,
      * this method returns the uri as it was passed.
      *
+     * If the argument is already a URL, this method returns the uri as it was
+     * passed.
+     *
      * @param uri URI
      * @return String
      */
 	public static String asURL(String uri) {
+        try {
+            new URL(uri);
+            return uri;
+        } catch (Exception e) {}
 		Request req = Request.getCurrent();
 		if (req == null) return uri;
 		String root = req.getRootRef().toString();

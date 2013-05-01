@@ -36,27 +36,20 @@
  */
 package org.openbel.rest.common;
 
+import static org.openbel.rest.common.Objects.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
+import org.restlet.representation.Representation;
 
-import java.util.Map;
-
-public class Functions extends ServerResource {
-
-    class Root {
-        private String root;
-
-        Root() {
-            root = "functions";
-        }
-        public String getRoot() {
-            return root;
-        }
+public class RelationshipsRoot extends ServerResource {
+    private static final Relationships RELATIONSHIPS;
+    static {
+        RELATIONSHIPS = new Relationships();
     }
 
     @Get("json")
-    public Root _get() {
-        return new Root();
+    public Representation _get() {
+        return RELATIONSHIPS.json();
     }
 
 }
