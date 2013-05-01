@@ -35,7 +35,7 @@ GET
                 {
                   // The root of this API version is at /api/v1
                   "rel": "root",
-                  "path": "/api/v1"
+                  "href": "/api/v1"
                 }
               ]
             }
