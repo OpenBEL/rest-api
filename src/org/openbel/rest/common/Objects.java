@@ -51,210 +51,216 @@ import org.codehaus.jackson.map.annotate.*;
  */
 public class Objects {
 
-	/**
-	 * Type annotation used to indicate the path to a resource.
-	 */
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.TYPE)
-	public @interface Path {
-		String value();
-	}
+    /**
+     * Type annotation used to indicate the path to a resource.
+     */
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target(ElementType.TYPE)
+    public @interface Path {
+        String value();
+    }
 
-	public static class Link {
-		public String rel;
-		public String href;
-		public String getRel() { return rel; }
-		public String getHref() { return asURL(href); }
-	}
+    public static class Link {
+        public String rel;
+        public String href;
+        public String getRel() { return rel; }
+        public String getHref() { return asURL(href); }
+    }
 
-	@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
-	public static class Base extends HashMap<String, Object> {
+    @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+    public static class Base extends HashMap<String, Object> {
 
-		{
-			Class<?> cls = this.getClass();
-			if (cls.isAnnotationPresent(Path.class)) {
-				addLink("self", cls);
-			}
-		}
+        {
+            Class<?> cls = this.getClass();
+            if (cls.isAnnotationPresent(Path.class)) {
+                addLink("self", cls);
+            }
+        }
 
-		public void addLink(String rel, Object href) {
-			if (!this.containsKey("_links")) {
-				put("_links", new ArrayList<Link>());
-			}
-			Link link = new Link();
-			link.rel = rel;
-			if (href instanceof String)
-				link.href = (String) href;
-			else if (href instanceof Class) {
-				Class<?> cls = (Class) href;
-				if (cls.isAnnotationPresent(Path.class)) {
-					Path p = cls.getAnnotation(Path.class);
-					link.href = p.value();
-				}
-			}
-			@SuppressWarnings("unchecked")
-			List<Link> links = (List<Link>) this.get("_links");
-			links.add(link);
-		}
+        public void addLink(String rel, Object href) {
+            if (!this.containsKey("_links")) {
+                put("_links", new ArrayList<Link>());
+            }
+            Link link = new Link();
+            link.rel = rel;
+            if (href instanceof String)
+                link.href = (String) href;
+            else if (href instanceof Class) {
+                Class<?> cls = (Class) href;
+                if (cls.isAnnotationPresent(Path.class)) {
+                    Path p = cls.getAnnotation(Path.class);
+                    link.href = p.value();
+                }
+            }
+            @SuppressWarnings("unchecked")
+            List<Link> links = (List<Link>) this.get("_links");
+            links.add(link);
+        }
 
-		public Representation json() {
-			return new JacksonRepresentation<>(this);
-		}
+        public Representation json() {
+            return new JacksonRepresentation<>(this);
+        }
 
-		public String string(String k) { return (String) get(k); }
-	}
+        public String string(String k) { return (String) get(k); }
+            @SuppressWarnings("unchecked")
+        public <T> List<T> list(String k) { return (List<T>) get(k); }
+    }
 
-	@Path("/api")
-	public static class API extends Base {
-		{
-			put("release", getenv("_ENV_VERSION"));
-			addLink("subsection", Versions.class);
-			addLink("latest-version", V1.class);
-		}
-		public String getRelease() { return string("release"); }
-	}
+    @Path("/api")
+    public static class API extends Base {
+        public String release;
+        {
+            release = getenv("_ENV_VERSION");
+            put("release", release);
+            addLink("subsection", Versions.class);
+            addLink("latest-version", V1.class);
+        }
+    }
 
-	@Path("/api/versions")
-	public static class Versions extends Base {
-		public List<Version> versions;
-		{
-			versions = new ArrayList<>();
-			versions.add(new V1());
-			addLink("current", V1.class);
-		}
-		public List<Version> getVersions() { return versions; }
-	}
+    @Path("/api/versions")
+    public static class Versions extends Base {
+        public List<Version> versions;
+        {
+            versions = new ArrayList<>();
+            put("versions", versions);
+            versions.add(new V1());
+            addLink("current", V1.class);
+        }
+    }
 
-	public static class Version extends Base {
-		public int version;
-		public int getVersion() { return version; }
-	}
+    public static class Version extends Base {
+        public int version;
+        public Version(int version) {
+            put("version", version);
+            this.version = version;
+        }
+    }
 
-	@Path("/api/v1")
-	public static class V1 extends Version {
-		{
-			version = 1;
-			addLink("describedby", V1.class);
-			addLink("up", Versions.class);
-			addLink("subsection", Parameters.class);
-			addLink("subsection", Annotations.class);
-			addLink("subsection", Namespaces.class);
-			addLink("subsection", Statements.class);
-			addLink("subsection", Terms.class);
-			addLink("subsection", Lang.class);
-		}
-	}
+    @Path("/api/v1")
+    public static class V1 extends Version {
+        public V1() {
+            super(1);
+            addLink("describedby", V1.class);
+            addLink("up", Versions.class);
+            addLink("subsection", Parameters.class);
+            addLink("subsection", Annotations.class);
+            addLink("subsection", Namespaces.class);
+            addLink("subsection", Statements.class);
+            addLink("subsection", Terms.class);
+            addLink("subsection", Lang.class);
+        }
+    }
 
-	@Path("/api/v1/lang")
-	public static class Lang extends Base {
-		private static final String LANG_URL;
-		static {
-			LANG_URL = "http://wiki.openbel.org/display/BLD";
-		}
-		{
-			addLink("describedby", LANG_URL);
-			addLink("subsection", Functions.class);
-			addLink("subsection", Relationships.class);
-		}
-	}
+    @Path("/api/v1/lang")
+    public static class Lang extends Base {
+        private static final String LANG_URL;
+        static {
+            LANG_URL = "http://wiki.openbel.org/display/BLD";
+        }
+        {
+            addLink("describedby", LANG_URL);
+            addLink("subsection", Functions.class);
+            addLink("subsection", Relationships.class);
+        }
+    }
 
-	@Path("/api/v1/annotations")
-	public static class Annotations extends Base {
-		{
-		}
-	}
+    @Path("/api/v1/annotations")
+    public static class Annotations extends Base {
+        {
+        }
+    }
 
-	@Path("/api/v1/namespaces")
-	public static class Namespaces extends Base {
-		{
+    @Path("/api/v1/namespaces")
+    public static class Namespaces extends Base {
+        {
 
-		}
-	}
+        }
+    }
 
-	@Path("/api/v1/statements")
-	public static class Statements extends Base {
-		{
+    @Path("/api/v1/statements")
+    public static class Statements extends Base {
+        {
 
-		}
-	}
+        }
+    }
 
-	@Path("/api/v1/terms")
-	public static class Terms extends Base {
-		{
+    @Path("/api/v1/terms")
+    public static class Terms extends Base {
+        {
 
-		}
-	}
+        }
+    }
 
-	@Path("/api/v1/parameters")
-	public static class Parameters extends Base {
-		{
+    @Path("/api/v1/parameters")
+    public static class Parameters extends Base {
+        {
 
-		}
-	}
+        }
+    }
 
-	public static class Parameter extends Base {
-		{
+    public static class Parameter extends Base {
+        {
 
-		}
-	}
+        }
+    }
 
-	@Path("/api/v1/lang/functions")
-	public static class Functions extends Base {
-		{
-			addLink("related", Signatures.class);
-		}
-	}
+    @Path("/api/v1/lang/functions")
+    public static class Functions extends Base {
+        {
+            addLink("related", Signatures.class);
+        }
+    }
 
-	public static class Function extends Base {
-		public String name;
-		public String abbreviation;
-		public List<Signature> signatures;
-		{
-			signatures = new ArrayList<>();
-		}
-		public void addSignature(Signature s) { signatures.add(s); }
-	}
+    public static class Function extends Base {
+        public String name;
+        public String abbreviation;
+        public List<String> signatures;
+        public Function(String name, String abbreviation) {
+            this.name = name;
+            this.abbreviation = abbreviation;
+            put("name", name);
+            if (abbreviation != null)
+                put("abbreviation", abbreviation);
+            signatures = new ArrayList<>();
+            put("signatures", signatures);
+        }
+        public void addSignature(String s) { signatures.add(s); }
+    }
 
-	@Path("/api/v1/lang/functions/signatures")
-	public static class Signatures extends Base {
-		public List<Function> functions;
-		{
-			functions = new ArrayList<>();
-		}
-		public void addFunction(Function f) { functions.add(f); }
-	}
+    @Path("/api/v1/lang/functions/signatures")
+    public static class Signatures extends Base {
+        public List<Function> functions;
+        {
+            functions = new ArrayList<>();
+            put("functions", functions);
+        }
+        public void addFunction(Function f) { functions.add(f); }
+    }
 
-	public static class Signature extends Base {
-		public String value;
-		{
+    @Path("/api/v1/lang/relationships")
+    public static class Relationships extends Base {
+        {
+            addLink("related", Descriptions.class);
+        }
+    }
 
-		}
-	}
+    public static class Relationship extends Base {
+        {
 
-	@Path("/api/v1/lang/relationships")
-	public static class Relationships extends Base {
-		{
-			addLink("related", Descriptions.class);
-		}
-	}
+        }
+    }
 
-	public static class Relationship extends Base {
-		{
+    @Path("/api/v1/lang/relationships/descriptions")
+    public static class Descriptions extends Base {
+        {
 
-		}
-	}
+        }
+    }
 
-	@Path("/api/v1/lang/relationships/descriptions")
-	public static class Descriptions extends Base {
-		{
+    public static class Description extends Base {
+        {
 
-		}
-	}
-
-	public static class Description extends Base {
-		{
-
-		}
-	}
+        }
+    }
 
 }

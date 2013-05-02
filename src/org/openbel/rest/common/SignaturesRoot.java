@@ -42,6 +42,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
 import org.openbel.framework.common.lang.Function;
+import org.openbel.framework.common.lang.Signature;
 import org.openbel.framework.common.enums.FunctionEnum;
 
 public class SignaturesRoot extends ServerResource {
@@ -49,12 +50,14 @@ public class SignaturesRoot extends ServerResource {
     static {
         SIGNATURES = new Signatures();
         for (FunctionEnum e : FunctionEnum.values()) {
-        	Function f = e.getFunction();
-        	Objects.Function objf = new Objects.Function();
-        	objf.name = e.getDisplayValue();
-        	String abbrev = e.getAbbreviation();
-        	if (abbrev != null) objf.abbreviation = abbrev;
-        	SIGNATURES.addFunction(objf);
+            Function f = e.getFunction();
+            String name = e.getDisplayValue();
+            String abbrev = e.getAbbreviation();
+            Objects.Function objf = new Objects.Function(name, abbrev);
+            for (Signature s : f.getSignatures()) {
+                objf.addSignature(s.getValue());
+            }
+            SIGNATURES.addFunction(objf);
         }
     }
 
