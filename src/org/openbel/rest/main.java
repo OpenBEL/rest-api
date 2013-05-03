@@ -54,6 +54,8 @@ class main extends Component {
     static String work;
     static String dburl;
     static String residx;
+    static String mongoHost;
+    static String mongoDB;
     static APIApplication apiapp;
 
     public main() {
@@ -95,12 +97,24 @@ class main extends Component {
             err.println("no _ENV_BEL_RESIDX is set");
             configured = false;
         }
+        mongoHost = getenv("_ENV_MONGO_HOST");
+        if (mongoHost == null) {
+            err.println("no _ENV_MONGO_HOST");
+            configured = false;
+        }
+        mongoDB = getenv("_ENV_MONGO_DB");
+        if (mongoDB == null) {
+            err.println("no _ENV_MONGO_DB");
+            configured = false;
+        }
         if (!configured) exit(1);
         out.println("PORT: " + port);
         out.println("CACHE: " + cache);
         out.println("WORK: " + work);
         out.println("DBURL: " + dburl);
         out.println("RESOURCE INDEX: " + residx);
+        out.println("MONGODB HOST: " + mongoHost);
+        out.println("MONGODB DB: " + mongoDB);
         out.println();
 
         out.print("Bootstrapping the framework... ");
