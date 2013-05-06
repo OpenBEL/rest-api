@@ -37,7 +37,7 @@ DEFAULT_DBURL="jdbc:derby:${_ENV_BEL_ROOT}/db;create=true;"
 export _ENV_BEL_DBURL="${_ENV_BEL_DBURL:="$DEFAULT_DBURL"}"
 DEFAULT_RESIDX="http://resource.belframework.org/belframework/1.0/index.xml"
 export _ENV_BEL_RESIDX="${_ENV_BEL_RESIDX:="$DEFAULT_RESIDX"}"
-export _ENV_MONGO_DB=${_ENV_MONGO_DB:-restapi}
+export _ENV_MONGO_DB=${_ENV_MONGO_DB:-bel}
 export _ENV_MONGO_HOST=${_ENV_MONGO_HOST:-localhost}
 
 ### MISCELLANEOUS ###
