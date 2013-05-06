@@ -115,12 +115,14 @@ Prior to use, the BEL REST API must be built and have BEL data loaded into it.
 Follow these steps:
 
   1. ``scripts/build.sh``
+
   1. ``scripts/load.sh``
+
   1. ``scripts/mongo-check.sh``
 
 Once these three steps have completed, use ``scripts/run.sh`` to run.
 
-Alternatively, all of these scripts are available in ``go.sh``.
+Alternatively, use ``go.sh`` as a frontend to the scripts.
 
 API Documentation
 -----------------
