@@ -64,7 +64,7 @@ function _6 {
 function _7 {
     echo "Check..."
     echo
-    script "mongo-check.sh" || retrun $?
+    script "mongo-check.sh" || return $?
 }
 
 function _8 {

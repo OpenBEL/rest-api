@@ -10,6 +10,7 @@ import bson
 import pymongo
 conn = None
 restapi_db = None
+nsvalues_val_index = True
 
 
 def out(msg):
@@ -24,6 +25,18 @@ def check():
     '''
     print('Starting checks.')
     status = True
+
+    # INDEX PRESENT ON NSVALUES VAL FIELD
+    coll = restapi_db.nsvalues
+    out('Checking for an index on val in nsvalues... ')
+    if 'val' in coll.index_information():
+        print('yes')
+    else:
+        print('no')
+        global nsvalues_val_index
+        nsvalues_val_index = False
+        status = False
+
     print('Finished checks.')
     print()
     return status
@@ -35,6 +48,17 @@ def fix():
     REST API.
     '''
     print('Starting to apply changes.')
+    unique_fg_index_args = {'unique': True, 'background': False}
+    fg_index_args = {'background': False}
+
+    if not nsvalues_val_index:
+        out('Creating index on val in nsvalues... ')
+        coll = restapi_db.nsvalues
+        kwargs = {'name': 'val'}
+        kwargs.update(fg_index_args)
+        coll.create_index('name', **kwargs)
+        print('done')
+
     print('Finished applying changes.')
     print()
 
