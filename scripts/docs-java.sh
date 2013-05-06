@@ -7,6 +7,7 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${DIR}"/../ || exit 1
 . env.sh || exit 1
 
+cd "$_ENV_JAVA" || exit 1
 echo "
 ##########################
 # JAVA API DOCUMENTATION #
@@ -28,7 +29,7 @@ echo "Using javadoc command '${JAVADOC}'."
 mkdir -p "${_ENV_JAVA_DOCS}"
 RSLT=$($JAVADOC -source 1.7 \
                 -package \
-                -sourcepath "${_ENV_SRC}" \
+                -sourcepath "${_ENV_JAVA_SRC}" \
                 -subpackages org \
                 -classpath ${CLASSPATH} \
                 -link ${JAVA_API_LINK} \

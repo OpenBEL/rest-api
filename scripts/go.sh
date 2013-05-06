@@ -56,10 +56,22 @@ function _5 {
 }
 
 function _6 {
-    echo "Watching src/ for changes... "
+    echo "Loading..."
+    echo
+    script "load.sh" || return $?
+}
+
+function _7 {
+    echo "Check..."
+    echo
+    script "mongo-check.sh" || retrun $?
+}
+
+function _8 {
+    echo "Watching "$_ENV_JAVA_SRC" for changes... "
     echo
     while true; do
-        DIRS=$(find src -type d -printf "%p ") || return $?
+        DIRS=$(find "$_ENV_JAVA_SRC" -type d -printf "%p ") || return $?
         python3 "$_ENV_SCRIPTS"/gate ${DIRS} || return $?
         script "build.sh"
     done
@@ -73,6 +85,8 @@ CHOICES=(
          "test" \
          "run" \
          "docs" \
+         "load" \
+         "check" \
          "build loop" \
          )
 
