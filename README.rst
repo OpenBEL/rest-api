@@ -98,20 +98,26 @@ intended on serving a particular purpose.
 .. _Xirc: http://www.aquaticx.com/
 .. _OpenBEL Wiki: http://wiki.openbel.org
 
-Distribution
+Requirements
 ------------
 
-Nothing here yet.
+ * Java 7: http://java.com/en/download/index.jsp
+ * Clojure 1.5: http://clojure.org/download
+ * Python 3.3: http://www.python.org/download/
+ * Apache Buildr: http://buildr.apache.org/download.html
+ * MongoDB 2.4.3: http://www.mongodb.org/downloads
+ * Linux or OS X
+
+Use
+---
+
+Prior to use, the BEL REST API must be built and have BEL data loaded into it.
 
 Building
---------
+  Use ``scripts/build.sh``.
 
-Nothing here yet.
-
-Nightly Builds
-^^^^^^^^^^^^^^
-
-Nothing here yet.
+Loading Data
+  Use ``scripts/load.sh`` followed by ``scripts/mongo-check.sh``.
 
 API Documentation
 -----------------
@@ -157,11 +163,6 @@ Further Reference
  * BEL Portal: http://openbel.org
  * OpenBEL Wiki: http://wiki.openbel.org
  * Mailing list: https://groups.google.com/forum/#!forum/openbel-discuss
- * Selventa: http://www.selventa.com/
- * API documentation: http://openbel.github.com/openbel-framework
- * User documentation: http://openbel-framework.readthedocs.org/en/master/
- * Ohloh: https://www.ohloh.net/p/openbel-framework
- * Freecode: http://freecode.com/projects/openbel-framework
  * OpenBEL build server: http://build.openbel.org
  * GitHub: https://github.com/OpenBEL
  * Freecode: http://freecode.com/projects/openbel-framework
