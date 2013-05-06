@@ -40,6 +40,8 @@ import org.openbel.framework.common.cfg.SystemConfiguration;
 import org.restlet.*;
 import sun.misc.*;
 import java.util.*;
+import com.mongodb.*;
+import java.net.UnknownHostException;
 
 import static java.lang.System.*;
 import static java.lang.Runtime.*;
@@ -48,17 +50,19 @@ import static org.restlet.data.Protocol.*;
 import static java.lang.Integer.*;
 import static org.openbel.framework.common.cfg.SystemConfiguration.*;
 
-class main extends Component {
-    static int port;
-    static String cache;
-    static String work;
-    static String dburl;
-    static String residx;
-    static String mongoHost;
-    static String mongoDB;
-    static APIApplication apiapp;
+public class main extends Component {
+    public static int port;
+    public static String cache;
+    public static String work;
+    public static String dburl;
+    public static String residx;
+    public static String mongoHost;
+    public static String mongoDB;
+    public static DB db;
+    public static DBCollection nsvalues;
+    public static APIApplication apiapp;
 
-    public main() {
+    main() {
         getServers().add(HTTP, port);
         getDefaultHost().attachDefault(apiapp);
     }
@@ -66,7 +70,13 @@ class main extends Component {
     public void init() {
         out.print("Bootstrapping MongoDB... ");
         out.flush();
-        // TODO here
+        try {
+            db = new MongoClient(mongoHost).getDB(mongoDB);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            exit(1);
+        }
+        nsvalues = db.getCollection("nsvalues");
         out.println("okay");
     }
 

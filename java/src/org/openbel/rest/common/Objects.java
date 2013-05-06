@@ -263,4 +263,13 @@ public class Objects {
         }
     }
 
+    public static class Complete extends Base {
+        public List<String> results;
+        public Complete() {
+            results = new ArrayList<>();
+            put("results", results);
+        }
+        public void addResult(String s) { results.add(s); }
+    }
+
 }

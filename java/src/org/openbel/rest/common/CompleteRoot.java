@@ -34,62 +34,36 @@
  * authors and licensors of the program for any liabilities that these
  * contractual assumptions directly impose on those licensors and authors.
  */
-package org.openbel.rest;
+package org.openbel.rest.common;
 
-import org.openbel.rest.common.*;
-import org.restlet.*;
-import org.restlet.routing.*;
+import static org.openbel.rest.common.Objects.*;
+import static org.openbel.rest.main.*;
+import static org.openbel.rest.Util.*;
+import static java.util.regex.Pattern.*;
+import static java.lang.String.format;
+import org.restlet.resource.Get;
+import org.restlet.resource.ServerResource;
+import org.restlet.representation.Representation;
+import org.restlet.data.Status;
+import java.util.regex.*;
+import com.mongodb.*;
 
-/**
- * This application Restlet manages the BEL REST API resources and services.
- */
-public class APIApplication extends Application {
+public class CompleteRoot extends ServerResource {
 
-    /**
-     * Creates our inbound root Restlet to receive incoming calls.
-     * @return {@link Restlet}
-     */
-    @Override
-    public Restlet createInboundRoot() {
-        System.out.println("Creating inbound root");
-        Router router = new Router(getContext());
-
-        String path = "/api";
-        router.attach(path, APIRoot.class);
-
-        path = "/api/versions";
-        router.attach(path, VersionsRoot.class);
-
-        path = "/api/v1";
-        router.attach(path, V1Root.class);
-
-        path = "/api/v1/annotations";
-        router.attach(path, AnnotationsRoot.class);
-
-        path = "/api/v1/namespaces";
-        router.attach(path, NamespacesRoot.class);
-
-        path = "/api/v1/complete/{input}";
-        router.attach(path, CompleteRoot.class);
-
-        path = "/api/v1/namespaces/{keyword}";
-        router.attach(path, Namespace.class);
-
-        path = "/api/v1/namespaces/{keyword}/{value}";
-        router.attach(path, NamespaceValue.class);
-
-        path = "/api/v1/lang";
-        router.attach(path, LangRoot.class);
-
-        path = "/api/v1/lang/relationships";
-        router.attach(path, RelationshipsRoot.class);
-
-        path = "/api/v1/lang/functions";
-        router.attach(path, FunctionsRoot.class);
-
-        path = "/api/v1/lang/functions/signatures";
-        router.attach(path, SignaturesRoot.class);
-
-        return router;
+    @Get("json")
+    public Representation _get() {
+    	String input = format("^%s", escapeRE(getAttribute("input")));
+    	Pattern ptrn = compile(input.toLowerCase());
+    	DBObject query = new BasicDBObject("norm", ptrn);
+    	Complete ret = new Complete();
+    	for (DBObject o : nsvalues.find(query)) {
+    		ret.addResult((String) o.get("val"));
+    	}
+    	if (ret.results.size() == 0) {
+    		setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+    		return null;
+    	}
+    	return ret.json();
     }
+
 }

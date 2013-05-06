@@ -43,6 +43,42 @@ import java.net.*;
  * BEL REST API Utilities.
  */
 public class Util {
+    private final static String[][] METASTR;
+    static {
+        METASTR = new String[19][];
+        METASTR[0] = new String[] { "<", "\\<" };
+        METASTR[1] = new String[] { "(", "\\(" };
+        METASTR[2] = new String[] { "[", "\\[" };
+        METASTR[3] = new String[] { "{", "\\{" };
+        METASTR[4] = new String[] { "\\", "\\\\" };
+        METASTR[5] = new String[] { "^", "\\^" };
+        METASTR[6] = new String[] { "-", "\\-" };
+        METASTR[7] = new String[] { "=", "\\=" };
+        METASTR[8] = new String[] { "$", "\\$" };
+        METASTR[9] = new String[] { "!", "\\!" };
+        METASTR[10] = new String[] { "|", "\\|" };
+        METASTR[11] = new String[] { "]", "\\]" };
+        METASTR[12] = new String[] { "}", "\\}" };
+        METASTR[13] = new String[] { ")", "\\)" };
+        METASTR[14] = new String[] { "?", "\\?" };
+        METASTR[15] = new String[] { "*", "\\*" };
+        METASTR[16] = new String[] { "+", "\\+" };
+        METASTR[17] = new String[] { ".", "\\." };
+        METASTR[18] = new String[] { ">", "\\>" };
+    }
+
+    /**
+     * Escape any metacharacters contains in {@code regex}.
+     *
+     * @param regex Regular expression
+     * @return String
+     */
+    public static String escapeRE(String regex) {
+        String ret = regex;
+        for (final String[] meta : METASTR)
+            ret = ret.replace(meta[0], meta[1]);
+        return ret;
+    }
 
     /**
      * Converts a URI like {@code "/api/v1"} to the full URL using the current
