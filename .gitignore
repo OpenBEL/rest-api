@@ -1,3 +1,4 @@
 *.class
 env.sh.custom
+__pycache__
 
