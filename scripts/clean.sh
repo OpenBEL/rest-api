@@ -2,9 +2,20 @@
 #
 # Cleans the current build.
 #
-# Executes from top-level dir
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"/../
 . "$DIR"/env.sh || exit 1
 
-buildr test=no c --silent $@
+echo -en "Java... "
+cd "$_ENV_JAVA" || exit 1
+buildr test=no c --silent $@ >/dev/null
+echo "okay"
 
+echo -en "Clojure... "
+cd "$_ENV_CLOJURE" || exit 1
+lein clean
+echo "okay"
+
+echo -en "Python... "
+cd "$_ENV_PYTHON_SRC" || exit 1
+rm -fr __pycache__
+echo "okay"

@@ -34,29 +34,62 @@
  * authors and licensors of the program for any liabilities that these
  * contractual assumptions directly impose on those licensors and authors.
  */
-package org.openbel.rest.common;
+package org.openbel.rest;
 
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
+import org.openbel.rest.common.*;
+import org.restlet.*;
+import org.restlet.routing.*;
 
-import java.util.Map;
+/**
+ * This application Restlet manages the BEL REST API resources and services.
+ */
+public class APIApplication extends Application {
 
-public class Functions extends ServerResource {
+    /**
+     * Creates our inbound root Restlet to receive incoming calls.
+     * @return {@link Restlet}
+     */
+    @Override
+    public Restlet createInboundRoot() {
+        System.out.println("Creating inbound root");
+        Router router = new Router(getContext());
 
-    class Root {
-        private String root;
+        String path = "/api";
+        router.attach(path, APIRoot.class);
 
-        Root() {
-            root = "functions";
-        }
-        public String getRoot() {
-            return root;
-        }
+        path = "/api/versions";
+        router.attach(path, VersionsRoot.class);
+
+        path = "/api/v1";
+        router.attach(path, V1Root.class);
+
+        path = "/api/v1/annotations";
+        router.attach(path, AnnotationsRoot.class);
+
+        path = "/api/v1/namespaces";
+        router.attach(path, NamespacesRoot.class);
+
+        path = "/api/v1/complete/{input}";
+        router.attach(path, CompleteRoot.class);
+
+        path = "/api/v1/namespaces/{keyword}";
+        router.attach(path, Namespace.class);
+
+        path = "/api/v1/namespaces/{keyword}/{value}";
+        router.attach(path, NamespaceValue.class);
+
+        path = "/api/v1/lang";
+        router.attach(path, LangRoot.class);
+
+        path = "/api/v1/lang/relationships";
+        router.attach(path, RelationshipsRoot.class);
+
+        path = "/api/v1/lang/functions";
+        router.attach(path, FunctionsRoot.class);
+
+        path = "/api/v1/lang/functions/signatures";
+        router.attach(path, SignaturesRoot.class);
+
+        return router;
     }
-
-    @Get("json")
-    public Root _get() {
-        return new Root();
-    }
-
 }

@@ -58,7 +58,8 @@ define 'rest-api', :layout=>layout do
   default_compile_opts compile
 
   main = 'org.openbel.rest.main'
-  run.using :main => main
+  run.using :main => main,
+            :java_args => ['-Drebel.restlet_plugin=true']
   package(:tgz).include _('.')
 
   task :deps => compile do

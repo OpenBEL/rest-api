@@ -15,9 +15,12 @@ export _ENV_VERSION=${_ENV_VERSION:-experimental}
 export _ENV_TOPDIR="${_ENV_TOPDIR:="$DIR"}"
 export _ENV_SCRIPTS="${_ENV_SCRIPTS:="$_ENV_TOPDIR/scripts"}"
 export _ENV_TOOLS="${_ENV_TOOLS:="$_ENV_TOPDIR/tools"}"
-export _ENV_SRC="${_ENV_SRC:="$_ENV_TOPDIR/src"}"
-export _ENV_TEST="${_ENV_TEST:="$_ENV_TEST/test"}"
-export _ENV_DEPS="${_ENV_DEPS:="$_ENV_TOPDIR/deps"}"
+export _ENV_JAVA="${_ENV_JAVA:="$_ENV_TOPDIR/java"}"
+export _ENV_JAVA_SRC="${_ENV_JAVA_SRC:="$_ENV_JAVA/src"}"
+export _ENV_CLOJURE="${_ENV_CLOJURE:="$_ENV_TOPDIR/clojure"}"
+export _ENV_PYTHON="${_ENV_PYTHON:="$_ENV_TOPDIR/python"}"
+export _ENV_PYTHON_SRC="${_ENV_PYTHON_SRC:="$_ENV_PYTHON/src"}"
+export _ENV_DEPS="${_ENV_DEPS:="$_ENV_JAVA/deps"}"
 export _ENV_DOCS="${_ENV_DOCS:="$_ENV_TOPDIR/docs"}"
 export _ENV_REST_DOCS="${_ENV_REST_DOCS:="$_ENV_DOCS/rest"}"
 export _ENV_JAVA_DOCS="${_ENV_JAVA_DOCS:="$_ENV_DOCS/java"}"
@@ -33,6 +36,14 @@ DEFAULT_DBURL="jdbc:derby:${_ENV_BEL_ROOT}/db;create=true;"
 export _ENV_BEL_DBURL="${_ENV_BEL_DBURL:="$DEFAULT_DBURL"}"
 DEFAULT_RESIDX="http://resource.belframework.org/belframework/1.0/index.xml"
 export _ENV_BEL_RESIDX="${_ENV_BEL_RESIDX:="$DEFAULT_RESIDX"}"
+export _ENV_MONGO_DB=${_ENV_MONGO_DB:-bel}
+export _ENV_MONGO_HOST=${_ENV_MONGO_HOST:-localhost}
+
+### MISCELLANEOUS ###
+# Convention for required Python dependencies
+export _ENV_REQ_DEPS=${_ENV_REQ_DEPS:-deps.req}
+# Convention for optional Python dependencies
+export _ENV_OPT_DEPS=${_ENV_OPT_DEPS:-deps.opt}
 
 ### MISCELLANEOUS ###
 # Convention for required Python dependencies

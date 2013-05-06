@@ -40,6 +40,8 @@ import org.openbel.framework.common.cfg.SystemConfiguration;
 import org.restlet.*;
 import sun.misc.*;
 import java.util.*;
+import com.mongodb.*;
+import java.net.UnknownHostException;
 
 import static java.lang.System.*;
 import static java.lang.Runtime.*;
@@ -48,17 +50,34 @@ import static org.restlet.data.Protocol.*;
 import static java.lang.Integer.*;
 import static org.openbel.framework.common.cfg.SystemConfiguration.*;
 
-class main extends Component {
-    static int port;
-    static String cache;
-    static String work;
-    static String dburl;
-    static String residx;
-    static APIApplication apiapp;
+public class main extends Component {
+    public static int port;
+    public static String cache;
+    public static String work;
+    public static String dburl;
+    public static String residx;
+    public static String mongoHost;
+    public static String mongoDB;
+    public static DB db;
+    public static DBCollection nsvalues;
+    public static APIApplication apiapp;
 
-    public main() {
+    main() {
         getServers().add(HTTP, port);
         getDefaultHost().attachDefault(apiapp);
+    }
+
+    public void init() {
+        out.print("Bootstrapping MongoDB... ");
+        out.flush();
+        try {
+            db = new MongoClient(mongoHost).getDB(mongoDB);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            exit(1);
+        }
+        nsvalues = db.getCollection("nsvalues");
+        out.println("okay");
     }
 
     public static void main(String... args) {
@@ -88,12 +107,24 @@ class main extends Component {
             err.println("no _ENV_BEL_RESIDX is set");
             configured = false;
         }
+        mongoHost = getenv("_ENV_MONGO_HOST");
+        if (mongoHost == null) {
+            err.println("no _ENV_MONGO_HOST");
+            configured = false;
+        }
+        mongoDB = getenv("_ENV_MONGO_DB");
+        if (mongoDB == null) {
+            err.println("no _ENV_MONGO_DB");
+            configured = false;
+        }
         if (!configured) exit(1);
         out.println("PORT: " + port);
         out.println("CACHE: " + cache);
         out.println("WORK: " + work);
         out.println("DBURL: " + dburl);
         out.println("RESOURCE INDEX: " + residx);
+        out.println("MONGODB HOST: " + mongoHost);
+        out.println("MONGODB DB: " + mongoDB);
         out.println();
 
         out.print("Bootstrapping the framework... ");
@@ -109,6 +140,7 @@ class main extends Component {
         apiapp = new APIApplication();
         final main main = new main();
         try {
+            main.init();
             main.start();
         } catch (Exception e) {
             e.printStackTrace();

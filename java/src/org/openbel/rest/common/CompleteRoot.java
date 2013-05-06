@@ -36,27 +36,34 @@
  */
 package org.openbel.rest.common;
 
+import static org.openbel.rest.common.Objects.*;
+import static org.openbel.rest.main.*;
+import static org.openbel.rest.Util.*;
+import static java.util.regex.Pattern.*;
+import static java.lang.String.format;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
+import org.restlet.representation.Representation;
+import org.restlet.data.Status;
+import java.util.regex.*;
+import com.mongodb.*;
 
-import java.util.Map;
-
-public class V1Root extends ServerResource {
-
-    class Root {
-        private String root;
-
-        Root() {
-            root = "v1";
-        }
-        public String getRoot() {
-            return root;
-        }
-    }
+public class CompleteRoot extends ServerResource {
 
     @Get("json")
-    public Root _get() {
-        return new Root();
+    public Representation _get() {
+    	String input = format("^%s", escapeRE(getAttribute("input")));
+    	Pattern ptrn = compile(input.toLowerCase());
+    	DBObject query = new BasicDBObject("norm", ptrn);
+    	Complete ret = new Complete();
+    	for (DBObject o : nsvalues.find(query)) {
+    		ret.addResult((String) o.get("val"));
+    	}
+    	if (ret.results.size() == 0) {
+    		setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+    		return null;
+    	}
+    	return ret.json();
     }
 
 }
