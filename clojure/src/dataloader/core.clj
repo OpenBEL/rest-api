@@ -35,7 +35,7 @@
 
 (ns dataloader.core
   (:require [monger.core :as mg])
-  (:use [monger.collection :only [insert]])
+  (:require [monger.collection :as coll])
   (:import [com.mongodb MongoOptions ServerAddress]
            [org.bson.types ObjectId])
   (:gen-class))
@@ -113,11 +113,11 @@
   (def residx (System/getenv "_ENV_BEL_RESIDX"))
 
   (if (nil? host)
-    (println "no _ENV_MONGO_HOST is set"))
+    (outln "no _ENV_MONGO_HOST is set"))
   (if (nil? db)
-    (println "no _ENV_MONGO_DB is set"))
+    (outln "no _ENV_MONGO_DB is set"))
   (if (nil? residx)
-    (println "no _ENV_BEL_RESIDX is set"))
+    (outln "no _ENV_BEL_RESIDX is set"))
   (if (nil? (or host db residx))
     (System/exit 1))
 
@@ -125,10 +125,13 @@
   ; connect to MongoDB and set the database
   (mg/connect! { :host host })
   (mg/set-db! (mg/get-db db))
-  (println "okay")
+  (outln "okay")
+  (out "Dropping namespaces... ")
+  (coll/drop "namespaces")
+  (outln "okay")
   (doseq [x (namespace-urls residx)]
     (out (str x "... "))
     (download-ns x "temp.belns")
-    (insert "namespaces" (parse-namespace "temp.belns"))
+    (coll/insert "namespaces" (parse-namespace "temp.belns"))
     (outln "okay"))
   (mg/disconnect!))
