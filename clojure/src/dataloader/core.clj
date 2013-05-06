@@ -140,7 +140,8 @@
     (doseq [value (nsmap :values)]
       (def nsval-id (ObjectId.))
       (def nsval-meta {:_id nsval-id :nsmeta-id nsmeta-id})
-      (def nsval-data {:enc (value 1) :val (value 0)})
+      (def nsval-norm (clojure.string/lower-case (value 0)))
+      (def nsval-data {:enc (value 1) :val (value 0) :norm nsval-norm})
       (coll/insert "nsvalues" (conj nsval-meta nsval-data)))
     (outln "okay"))
   (mg/disconnect!))
