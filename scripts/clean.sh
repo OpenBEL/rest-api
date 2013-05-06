@@ -15,3 +15,7 @@ cd "$_ENV_CLOJURE" || exit 1
 lein clean
 echo "okay"
 
+echo -en "Python... "
+cd "$_ENV_PYTHON_SRC" || exit 1
+rm -fr __pycache__
+echo "okay"
