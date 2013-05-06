@@ -106,6 +106,7 @@ Requirements
  * Python 3.3: http://www.python.org/download/
  * Apache Buildr: http://buildr.apache.org/download.html
  * MongoDB 2.4.3: http://www.mongodb.org/downloads
+ * Leiningen: https://github.com/technomancy/leiningen
  * Linux or OS X
 
 Use
