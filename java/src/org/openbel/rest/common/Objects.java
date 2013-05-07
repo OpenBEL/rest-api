@@ -45,20 +45,12 @@ import org.restlet.representation.Representation;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.codehaus.jackson.annotate.*;
 import org.codehaus.jackson.map.annotate.*;
+import org.openbel.rest.Path;
 
 /**
  * Objects used by common resources.
  */
 public class Objects {
-
-    /**
-     * Type annotation used to indicate the path to a resource.
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    public @interface Path {
-        String value();
-    }
 
     public static class Link {
         public String rel;
@@ -87,10 +79,7 @@ public class Objects {
                 link.href = (String) href;
             else if (href instanceof Class) {
                 Class<?> cls = (Class) href;
-                if (cls.isAnnotationPresent(Path.class)) {
-                    Path p = cls.getAnnotation(Path.class);
-                    link.href = p.value();
-                }
+                link.href = declaredPath(cls);
             }
             @SuppressWarnings("unchecked")
             List<Link> links = (List<Link>) this.get("_links");

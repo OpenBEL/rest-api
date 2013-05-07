@@ -36,6 +36,7 @@
  */
 package org.openbel.rest;
 
+import static org.openbel.rest.Util.*;
 import org.openbel.rest.common.*;
 import org.restlet.*;
 import org.restlet.routing.*;
@@ -54,41 +55,47 @@ public class APIApplication extends Application {
         System.out.println("Creating inbound root");
         Router router = new Router(getContext());
 
-        String path = "/api";
+        String path = declaredPath(APIRoot.class);
         router.attach(path, APIRoot.class);
 
-        path = "/api/versions";
+        path = declaredPath(VersionsRoot.class);
         router.attach(path, VersionsRoot.class);
 
-        path = "/api/v1";
+        path = declaredPath(V1Root.class);
         router.attach(path, V1Root.class);
 
-        path = "/api/v1/annotations";
+        path = declaredPath(AnnotationsRoot.class);
         router.attach(path, AnnotationsRoot.class);
 
-        path = "/api/v1/namespaces";
+        path = declaredPath(NamespacesRoot.class);
         router.attach(path, NamespacesRoot.class);
 
-        path = "/api/v1/complete/{input}";
+        path = declaredPath(CompleteRoot.class);
         router.attach(path, CompleteRoot.class);
 
-        path = "/api/v1/namespaces/{keyword}";
+        path = declaredPath(Namespace.class);
         router.attach(path, Namespace.class);
 
-        path = "/api/v1/namespaces/{keyword}/{value}";
+        path = declaredPath(NamespaceValue.class);
         router.attach(path, NamespaceValue.class);
 
-        path = "/api/v1/lang";
+        path = declaredPath(LangRoot.class);
         router.attach(path, LangRoot.class);
 
-        path = "/api/v1/lang/relationships";
+        path = declaredPath(RelationshipsRoot.class);
         router.attach(path, RelationshipsRoot.class);
 
-        path = "/api/v1/lang/functions";
+        path = declaredPath(SignaturesRoot.class);
+        router.attach(path, SignaturesRoot.class);
+
+        path = declaredPath(FunctionsRoot.class);
         router.attach(path, FunctionsRoot.class);
 
-        path = "/api/v1/lang/functions/signatures";
-        router.attach(path, SignaturesRoot.class);
+        path = declaredPath(Functions.class);
+        router.attach(path, Functions.class);
+
+        path = declaredPath(Signatures.class);
+        router.attach(path, Signatures.class);
 
         return router;
     }

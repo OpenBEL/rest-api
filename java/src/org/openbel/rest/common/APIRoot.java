@@ -37,10 +37,12 @@
 package org.openbel.rest.common;
 
 import static org.openbel.rest.common.Objects.*;
+import org.openbel.rest.Path;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
 
+@Path("/api")
 public class APIRoot extends ServerResource {
     private final static API _API;
     static {

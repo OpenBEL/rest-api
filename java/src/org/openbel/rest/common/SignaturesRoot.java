@@ -44,7 +44,9 @@ import org.restlet.representation.Representation;
 import org.openbel.framework.common.lang.Function;
 import org.openbel.framework.common.lang.Signature;
 import org.openbel.framework.common.enums.FunctionEnum;
+import org.openbel.rest.Path;
 
+@Path("/api/v1/lang/functions/signatures")
 public class SignaturesRoot extends ServerResource {
     private static final Signatures SIGNATURES;
     static {

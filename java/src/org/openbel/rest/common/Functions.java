@@ -37,21 +37,40 @@
 package org.openbel.rest.common;
 
 import static org.openbel.rest.common.Objects.*;
+import static org.openbel.framework.common.enums.FunctionEnum.*;
+import static org.openbel.rest.Util.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
+import org.openbel.framework.common.lang.Function;
+import org.openbel.framework.common.enums.FunctionEnum;
 import org.openbel.rest.Path;
+import org.restlet.data.Status;
 
-@Path("/api/v1/lang")
-public class LangRoot extends ServerResource {
-    private static final Lang LANG;
-    static {
-        LANG = new Lang();
-    }
+@Path("/api/v1/lang/functions/{function}")
+public class Functions extends ServerResource {
 
     @Get("json")
     public Representation _get() {
-        return LANG.json();
+        String function = getAttribute("function");
+        FunctionEnum f = fromString(function);
+        if (f == null) {
+            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            return null;
+        }
+
+        String name = f.getDisplayValue();
+        String abbrev = f.getAbbreviation();
+        Objects.Function objf = new Objects.Function(name, abbrev);
+        objf.put("description", description(f));
+
+        // links
+        String path = declaredPath(Objects.Functions.class);
+        objf.addLink("self", path + "/" + function);
+        path = declaredPath(Objects.Signatures.class);
+        objf.addLink("related", path + "/" + function);
+
+        return objf.json();
     }
 
 }

@@ -37,6 +37,7 @@
 package org.openbel.rest.common;
 
 import static org.openbel.rest.common.Objects.*;
+import org.openbel.rest.Path;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
@@ -44,6 +45,7 @@ import org.restlet.representation.Representation;
 /**
  * Provides API version information.
  */
+@Path("/api/versions")
 public class VersionsRoot extends ServerResource {
 	private final static Versions VERSIONS;
 	static {

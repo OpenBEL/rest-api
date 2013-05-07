@@ -47,7 +47,9 @@ import org.restlet.representation.Representation;
 import org.restlet.data.Status;
 import java.util.regex.*;
 import com.mongodb.*;
+import org.openbel.rest.Path;
 
+@Path("/api/v1/complete/{input}")
 public class CompleteRoot extends ServerResource {
 
     @Get("json")

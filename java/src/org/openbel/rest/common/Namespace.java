@@ -38,9 +38,11 @@ package org.openbel.rest.common;
 
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
+import org.openbel.rest.Path;
 
 import java.util.Map;
 
+@Path("/api/v1/namespace")
 public class Namespace extends ServerResource {
 
     class Root {

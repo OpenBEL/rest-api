@@ -34,24 +34,15 @@
  * authors and licensors of the program for any liabilities that these
  * contractual assumptions directly impose on those licensors and authors.
  */
-package org.openbel.rest.common;
+package org.openbel.rest;
 
-import static org.openbel.rest.common.Objects.*;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
-import org.restlet.representation.Representation;
-import org.openbel.rest.Path;
+import java.lang.annotation.*;
 
-@Path("/api/v1/lang")
-public class LangRoot extends ServerResource {
-    private static final Lang LANG;
-    static {
-        LANG = new Lang();
-    }
-
-    @Get("json")
-    public Representation _get() {
-        return LANG.json();
-    }
-
+/**
+ * Type annotation used to indicate the path to a resource.
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface Path {
+    String value();
 }
