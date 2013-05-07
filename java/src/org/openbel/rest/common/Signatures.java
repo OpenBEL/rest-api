@@ -76,6 +76,8 @@ public class Signatures extends ServerResource {
         String path = declaredPath(Objects.Signatures.class);
         objf.addLink("self", path + "/" + function);
         objf.addLink("enclosure", path);
+        path = declaredPath(Objects.Functions.class);
+        objf.addLink("up", path + "/" + function);
         return objf.json();
     }
 

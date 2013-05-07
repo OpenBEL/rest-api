@@ -58,6 +58,8 @@ public class FunctionsRoot extends ServerResource {
             String abbrev = e.getAbbreviation();
             Objects.Function objf = new Objects.Function(name, abbrev);
             objf.put("description", description(e));
+            String path = declaredPath(Objects.Signatures.class);
+            objf.addLink("related", path + "/" + name);
             FUNCTIONS.addFunction(objf);
         }
     }
