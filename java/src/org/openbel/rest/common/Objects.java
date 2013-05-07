@@ -206,25 +206,33 @@ public class Objects {
 
     @Path("/api/v1/lang/functions")
     public static class Functions extends Base {
+        public List<Function> functions;
         {
+            functions = new ArrayList<>();
+            put("functions", functions);
             addLink("related", Signatures.class);
         }
+        public void addFunction(Function f) { functions.add(f); }
     }
 
     public static class Function extends Base {
         public String name;
         public String abbreviation;
-        public List<String> signatures;
+        public List<Signature> signatures;
         public Function(String name, String abbreviation) {
             this.name = name;
             this.abbreviation = abbreviation;
             put("name", name);
             if (abbreviation != null)
                 put("abbreviation", abbreviation);
-            signatures = new ArrayList<>();
-            put("signatures", signatures);
         }
-        public void addSignature(String s) { signatures.add(s); }
+        public void addSignature(Signature s) {
+            if (signatures == null) {
+                signatures = new ArrayList<>();
+                put("signatures", signatures);
+            }
+            signatures.add(s);
+        }
     }
 
     @Path("/api/v1/lang/functions/signatures")
@@ -255,6 +263,21 @@ public class Objects {
         {
 
         }
+    }
+
+    public static class Signature extends Base {
+        public String value;
+        public String numArgs;
+        public String returnType;
+        public Signature(String value, String numArgs, String returnType) {
+            this.value = value;
+            this.numArgs = numArgs;
+            this.returnType = returnType;
+            put("value", value);
+            put("number_of_arguments", numArgs);
+            put("return_type", returnType);
+        }
+
     }
 
     public static class Description extends Base {

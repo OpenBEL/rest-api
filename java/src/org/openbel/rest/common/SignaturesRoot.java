@@ -55,7 +55,11 @@ public class SignaturesRoot extends ServerResource {
             String abbrev = e.getAbbreviation();
             Objects.Function objf = new Objects.Function(name, abbrev);
             for (Signature s : f.getSignatures()) {
-                objf.addSignature(s.getValue());
+                String value = s.getValue();
+                String numArgs = s.getNumberOfArguments();
+                String returnType = s.getReturnType().toString();
+                Objects.Signature objs = new Objects.Signature(value, numArgs, returnType);
+                objf.addSignature(objs);
             }
             SIGNATURES.addFunction(objf);
         }
