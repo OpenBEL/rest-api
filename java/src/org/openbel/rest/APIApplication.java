@@ -85,6 +85,9 @@ public class APIApplication extends Application {
         path = declaredPath(RelationshipsRoot.class);
         router.attach(path, RelationshipsRoot.class);
 
+        path = declaredPath(Relationships.class);
+        router.attach(path, Relationships.class);
+
         path = declaredPath(SignaturesRoot.class);
         router.attach(path, SignaturesRoot.class);
 

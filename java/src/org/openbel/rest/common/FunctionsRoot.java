@@ -38,6 +38,7 @@ package org.openbel.rest.common;
 
 import static org.openbel.framework.common.enums.FunctionEnum.*;
 import static org.openbel.rest.Util.*;
+import static java.util.Collections.*;
 import org.openbel.rest.common.Objects;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
@@ -45,12 +46,19 @@ import org.restlet.representation.Representation;
 import org.openbel.framework.common.lang.Function;
 import org.openbel.framework.common.enums.FunctionEnum;
 import org.openbel.rest.Path;
+import java.util.*;
 
 @Path("/api/v1/lang/functions")
 public class FunctionsRoot extends ServerResource {
+    private static final List<String> RESOURCES;
+    private static final String START;
+    private static final String END;
     private static final Objects.Functions FUNCTIONS;
+    private static final String MY_PATH;
     static {
         FUNCTIONS = new Objects.Functions();
+        RESOURCES = new ArrayList<>();
+        MY_PATH = declaredPath(FunctionsRoot.class);
         for (FunctionEnum e : FunctionEnum.values()) {
             if (e == LIST) continue;
             Function f = e.getFunction();
@@ -58,13 +66,37 @@ public class FunctionsRoot extends ServerResource {
             String abbrev = e.getAbbreviation();
             Objects.Function objf = new Objects.Function(name, abbrev);
             objf.put("description", description(e));
+            String path = declaredPath(Objects.Signatures.class);
+            objf.addLink("related", path + "/" + name);
+            objf.addLink("self", MY_PATH + "/" + name);
             FUNCTIONS.addFunction(objf);
+            RESOURCES.add(name);
         }
+        sort(RESOURCES);
+        START = RESOURCES.get(0);
+        END = RESOURCES.get(RESOURCES.size() - 1);
+        FUNCTIONS.addLink("start", MY_PATH + "/" + START);
+        FUNCTIONS.addLink("end", MY_PATH + "/" + END);
     }
 
     @Get("json")
     public Representation _get() {
         return FUNCTIONS.json();
+    }
+
+    static void linkResource(Objects.Function resource) {
+        resource.addLink("index", FunctionsRoot.class);
+        resource.addLink("first", MY_PATH + "/" + START);
+        resource.addLink("last", MY_PATH + "/" + END);
+        int i = RESOURCES.indexOf(resource.name);
+        if (i > 0) {
+            String prev = RESOURCES.get(i - 1);
+            resource.addLink("prev", MY_PATH + "/" + prev);
+        }
+        if ((i + 1) < (RESOURCES.size())) {
+            String next = RESOURCES.get(i + 1);
+            resource.addLink("next", MY_PATH + "/" + next);
+        }
     }
 
 }

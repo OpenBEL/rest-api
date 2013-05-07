@@ -36,42 +36,57 @@
  */
 package org.openbel.rest.common;
 
-import static org.openbel.rest.common.Objects.*;
-import static org.openbel.framework.common.enums.FunctionEnum.*;
+import static org.openbel.framework.common.enums.RelationshipType.*;
 import static org.openbel.rest.Util.*;
+import static org.openbel.rest.common.Objects.*;
+import static java.net.URLDecoder.*;
+import org.openbel.framework.common.enums.RelationshipType;
+import static org.openbel.rest.common.Objects.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
-import org.openbel.framework.common.lang.Function;
-import org.openbel.framework.common.enums.FunctionEnum;
 import org.openbel.rest.Path;
 import org.restlet.data.Status;
+import java.util.*;
+import java.io.*;
 
-@Path("/api/v1/lang/functions/{function}")
-public class Functions extends ServerResource {
+@Path("/api/v1/lang/relationships/{relationship}")
+public class Relationships extends ServerResource {
 
     @Get("json")
     public Representation _get() {
-        String function = getAttribute("function");
-        FunctionEnum f = fromString(function);
-        if (f == null) {
+        String relationship = getAttribute("relationship");
+        try {
+            relationship = decode(relationship, "UTF-8");
+        } catch (UnsupportedEncodingException e) {}
+        RelationshipType r = fromString(relationship);
+        if (r == null) r = fromAbbreviation(relationship);
+        if (r == null) {
             setStatus(Status.CLIENT_ERROR_NOT_FOUND);
             return null;
         }
+        String name = r.getDisplayValue();
+        String abbrev = r.getAbbreviation();
+        Objects.Relationship objr = new Objects.Relationship(name, abbrev);
 
-        String name = f.getDisplayValue();
-        String abbrev = f.getAbbreviation();
-        Objects.Function objf = new Objects.Function(name, abbrev);
-        objf.put("description", description(f));
+        Map<String, Boolean> metadata = new HashMap<>();
+        objr.put("metadata", metadata);
+        metadata.put("causal", r.isCausal());
+        metadata.put("correlative", r.isCorrelative());
+        metadata.put("decreasing", r.isDecreasing());
+        metadata.put("direct", r.isDirect());
+        metadata.put("directed", r.isDirected());
+        metadata.put("genomic", r.isGenomic());
+        metadata.put("increasing", r.isIncreasing());
+        metadata.put("indirect", r.isIndirect());
+        metadata.put("listable", r.isListable());
+        metadata.put("self", r.isSelf());
 
-        // links
-        String path = declaredPath(Objects.Functions.class);
-        objf.addLink("self", path + "/" + function);
-        path = declaredPath(Objects.Signatures.class);
-        objf.addLink("related", path + "/" + function);
-        FunctionsRoot.linkResource(objf);
-
-        return objf.json();
+        objr.put("description", description(r));
+        String path = declaredPath(RelationshipsRoot.class);
+        objr.addLink("self", path + "/" + name);
+        RelationshipsRoot.linkResource(objr);
+        return objr.json();
     }
 
 }
