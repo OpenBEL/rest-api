@@ -47,6 +47,7 @@ import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
 import org.openbel.rest.Path;
 import org.restlet.data.Status;
+import java.util.*;
 import java.io.*;
 
 @Path("/api/v1/lang/relationships/{relationship}")
@@ -67,6 +68,20 @@ public class Relationships extends ServerResource {
         String name = r.getDisplayValue();
         String abbrev = r.getAbbreviation();
         Objects.Relationship objr = new Objects.Relationship(name, abbrev);
+
+        Map<String, Boolean> metadata = new HashMap<>();
+        objr.put("metadata", metadata);
+        metadata.put("causal", r.isCausal());
+        metadata.put("correlative", r.isCorrelative());
+        metadata.put("decreasing", r.isDecreasing());
+        metadata.put("direct", r.isDirect());
+        metadata.put("directed", r.isDirected());
+        metadata.put("genomic", r.isGenomic());
+        metadata.put("increasing", r.isIncreasing());
+        metadata.put("indirect", r.isIndirect());
+        metadata.put("listable", r.isListable());
+        metadata.put("self", r.isSelf());
+
         objr.put("description", description(r));
         String path = declaredPath(RelationshipsRoot.class);
         objr.addLink("self", path + "/" + name);
