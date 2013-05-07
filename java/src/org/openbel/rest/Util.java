@@ -38,8 +38,10 @@ package org.openbel.rest;
 
 import org.restlet.Request;
 import java.net.*;
+import java.util.*;
 import static org.openbel.framework.common.enums.FunctionEnum.*;
 import org.openbel.framework.common.enums.FunctionEnum;
+import org.restlet.util.Series;
 
 /**
  * BEL REST API Utilities.
@@ -100,6 +102,10 @@ public class Util {
         } catch (Exception e) {}
         Request req = Request.getCurrent();
         if (req == null) return uri;
+        Map<String, Object> attrs = req.getAttributes();
+        Series<?> series = (Series<?>) attrs.get("org.restlet.http.headers");
+        String realURI = series.getFirstValue("X-Real-URI");
+        if (realURI != null) return realURI.concat(uri);
         String root = req.getRootRef().toString();
         return root.concat(uri);
     }
