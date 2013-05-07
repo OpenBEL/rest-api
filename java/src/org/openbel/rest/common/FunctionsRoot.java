@@ -36,15 +36,30 @@
  */
 package org.openbel.rest.common;
 
-import static org.openbel.rest.common.Objects.*;
+import static org.openbel.framework.common.enums.FunctionEnum.*;
+import static org.openbel.rest.Util.*;
+import org.openbel.rest.common.Objects;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
+import org.openbel.framework.common.lang.Function;
+import org.openbel.framework.common.enums.FunctionEnum;
+import org.openbel.rest.Path;
 
+@Path("/api/v1/lang/functions")
 public class FunctionsRoot extends ServerResource {
-    private static final Functions FUNCTIONS;
+    private static final Objects.Functions FUNCTIONS;
     static {
-        FUNCTIONS = new Functions();
+        FUNCTIONS = new Objects.Functions();
+        for (FunctionEnum e : FunctionEnum.values()) {
+            if (e == LIST) continue;
+            Function f = e.getFunction();
+            String name = e.getDisplayValue();
+            String abbrev = e.getAbbreviation();
+            Objects.Function objf = new Objects.Function(name, abbrev);
+            objf.put("description", description(e));
+            FUNCTIONS.addFunction(objf);
+        }
     }
 
     @Get("json")

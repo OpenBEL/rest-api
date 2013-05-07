@@ -40,7 +40,9 @@ import static org.openbel.rest.common.Objects.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
+import org.openbel.rest.Path;
 
+@Path("/api/v1/lang/relationships")
 public class RelationshipsRoot extends ServerResource {
     private static final Relationships RELATIONSHIPS;
     static {

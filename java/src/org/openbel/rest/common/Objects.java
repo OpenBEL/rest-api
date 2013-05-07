@@ -45,20 +45,12 @@ import org.restlet.representation.Representation;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.codehaus.jackson.annotate.*;
 import org.codehaus.jackson.map.annotate.*;
+import org.openbel.rest.Path;
 
 /**
  * Objects used by common resources.
  */
 public class Objects {
-
-    /**
-     * Type annotation used to indicate the path to a resource.
-     */
-    @Retention(RetentionPolicy.RUNTIME)
-    @Target(ElementType.TYPE)
-    public @interface Path {
-        String value();
-    }
 
     public static class Link {
         public String rel;
@@ -87,10 +79,7 @@ public class Objects {
                 link.href = (String) href;
             else if (href instanceof Class) {
                 Class<?> cls = (Class) href;
-                if (cls.isAnnotationPresent(Path.class)) {
-                    Path p = cls.getAnnotation(Path.class);
-                    link.href = p.value();
-                }
+                link.href = declaredPath(cls);
             }
             @SuppressWarnings("unchecked")
             List<Link> links = (List<Link>) this.get("_links");
@@ -206,25 +195,33 @@ public class Objects {
 
     @Path("/api/v1/lang/functions")
     public static class Functions extends Base {
+        public List<Function> functions;
         {
+            functions = new ArrayList<>();
+            put("functions", functions);
             addLink("related", Signatures.class);
         }
+        public void addFunction(Function f) { functions.add(f); }
     }
 
     public static class Function extends Base {
         public String name;
         public String abbreviation;
-        public List<String> signatures;
+        public List<Signature> signatures;
         public Function(String name, String abbreviation) {
             this.name = name;
             this.abbreviation = abbreviation;
             put("name", name);
             if (abbreviation != null)
                 put("abbreviation", abbreviation);
-            signatures = new ArrayList<>();
-            put("signatures", signatures);
         }
-        public void addSignature(String s) { signatures.add(s); }
+        public void addSignature(Signature s) {
+            if (signatures == null) {
+                signatures = new ArrayList<>();
+                put("signatures", signatures);
+            }
+            signatures.add(s);
+        }
     }
 
     @Path("/api/v1/lang/functions/signatures")
@@ -255,6 +252,21 @@ public class Objects {
         {
 
         }
+    }
+
+    public static class Signature extends Base {
+        public String value;
+        public String numArgs;
+        public String returnType;
+        public Signature(String value, String numArgs, String returnType) {
+            this.value = value;
+            this.numArgs = numArgs;
+            this.returnType = returnType;
+            put("value", value);
+            put("number_of_arguments", numArgs);
+            put("return_type", returnType);
+        }
+
     }
 
     public static class Description extends Base {

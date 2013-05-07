@@ -38,6 +38,8 @@ package org.openbel.rest;
 
 import org.restlet.Request;
 import java.net.*;
+import static org.openbel.framework.common.enums.FunctionEnum.*;
+import org.openbel.framework.common.enums.FunctionEnum;
 
 /**
  * BEL REST API Utilities.
@@ -91,15 +93,163 @@ public class Util {
      * @param uri URI
      * @return String
      */
-	public static String asURL(String uri) {
+    public static String asURL(String uri) {
         try {
             new URL(uri);
             return uri;
         } catch (Exception e) {}
-		Request req = Request.getCurrent();
-		if (req == null) return uri;
-		String root = req.getRootRef().toString();
-		return root.concat(uri);
-	}
+        Request req = Request.getCurrent();
+        if (req == null) return uri;
+        String root = req.getRootRef().toString();
+        return root.concat(uri);
+    }
+
+    /**
+     * Gets the value of a class annotated with the
+     * {@link org.openbel.rest.Path} annotation.
+     *
+     * @param cls Class
+     * @return String; may be null
+     */
+    public static String declaredPath(Class<?> cls) {
+        if (cls.isAnnotationPresent(Path.class)) {
+            Path p = cls.getAnnotation(Path.class);
+            return p.value();
+        }
+        return null;
+    }
+
+    /**
+     * Get a description of a BEL language function.
+     *
+     * @param f BEL language {@code FunctionEnum}
+     * @return String
+     */
+    public static String description(FunctionEnum f) {
+        String ret = null;
+        switch (f) {
+        case ABUNDANCE:
+            ret = "Denotes the abundance of an entity.";
+            break;
+        case BIOLOGICAL_PROCESS:
+            ret = "Denotes a process or population of events.";
+            break;
+        case CATALYTIC_ACTIVITY:
+            ret = "Denotes the frequency or abundance of events where a " +
+                  "member acts as an enzymatic catalyst of biochecmial " +
+                  "reactions.";
+            break;
+        case CELL_SECRETION:
+            ret = "Denotes the frequency or abundance of events in which " +
+                  "members of an abundance move from cells to regions " +
+                  "outside of the cells.";
+            break;
+        case CELL_SURFACE_EXPRESSION:
+            ret = "Denotes the frequency or abundance of events in which " +
+                  "members of an abundance move to the surface of cells.";
+            break;
+        case CHAPERONE_ACTIVITY:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member binds to some substrate and acts as a chaperone " +
+                  "for the substrate.";
+            break;
+        case COMPLEX_ABUNDANCE:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member binds to some substrate and acts as a chaperone " +
+                  "for the substrate.";
+            break;
+        case COMPOSITE_ABUNDANCE:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member binds to some substrate and acts as a chaperone " +
+                  "for the substrate.";
+            break;
+        case DEGRADATION:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member binds to some substrate and acts as a chaperone " +
+                  "for the substrate.";
+            break;
+        case FUSION:
+            ret = "Specifies the abundance of a protein translated from the " +
+                  "fusion of a gene.";
+            break;
+        case GENE_ABUNDANCE:
+            ret = "Specifies the abundance of a protein translated from the " +
+                  "fusion of a gene.";
+            break;
+        case GTP_BOUND_ACTIVITY:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member of a G-protein abundance is GTP-bound.";
+            break;
+        case KINASE_ACTIVITY:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member acts as a kinase, performing enzymatic phosphoryl" +
+                  "ation of a substrate.";
+            break;
+        case MICRORNA_ABUNDANCE:
+            ret = "Denotes the abundance of a processed, functional microRNA.";
+            break;
+        case MOLECULAR_ACTIVITY:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member acts as a causal agent at the molecular scale.";
+            break;
+        case PATHOLOGY:
+            ret = "Denotes a disease or pathology process.";
+            break;
+        case PEPTIDASE_ACTIVITY:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member acts to cleave a protein.";
+            break;
+        case PHOSPHATASE_ACTIVITY:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member acts as a phosphatase.";
+            break;
+        case PRODUCTS:
+            ret = "Denotes the products of a reaction.";
+            break;
+        case PROTEIN_ABUNDANCE:
+            ret = "Denotes the abundance of a protein.";
+            break;
+        case PROTEIN_MODIFICATION:
+            ret = "Denotes a covalently modified protein abundance.";
+            break;
+        case REACTANTS:
+            ret = "Denotes the reactants of a reaction.";
+            break;
+        case REACTION:
+            ret = "Denotes the frequency or abundance of events in a " +
+                  "reaction.";
+            break;
+        case RIBOSYLATION_ACTIVITY:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member acts to perform post-translational modification " +
+                  "of proteins.";
+            break;
+        case RNA_ABUNDANCE:
+            ret = "Denotes the abundance of a gene.";
+            break;
+        case SUBSTITUTION:
+            ret = "Indicates the abundance of proteins with amino acid " +
+                  "substitution sequence.";
+            break;
+        case TRANSCRIPTIONAL_ACTIVITY:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member directly acts to control transcription of genes.";
+            break;
+        case TRANSLOCATION:
+            ret = "Denotes the frequency or abundance of events in which " +
+                  "members move between locations.";
+            break;
+        case TRANSPORT_ACTIVITY:
+            ret = "Denotes the frequency or abundance of events in which a " +
+                  "member directs acts to enable the directed movement of " +
+                  "substances into, out of, within, or between cells.";
+            break;
+        case TRUNCATION:
+            ret = "Indicates an abundance of proteins with truncation " +
+                  "sequence variants.";
+            break;
+        }
+        return ret;
+    }
 
 }

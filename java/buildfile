@@ -32,6 +32,8 @@ else
   PERFORMANCE_TESTS = false
 end
 
+repositories.remote << 'http://repo1.maven.org/maven2'
+
 deps = Dir['deps/*.jar'].each { |x| "#{Dir.pwd}/#{x}" }
 classpath = deps.join(':')
 

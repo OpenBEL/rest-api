@@ -44,7 +44,9 @@ import org.restlet.representation.Representation;
 import org.openbel.framework.common.lang.Function;
 import org.openbel.framework.common.lang.Signature;
 import org.openbel.framework.common.enums.FunctionEnum;
+import org.openbel.rest.Path;
 
+@Path("/api/v1/lang/functions/signatures")
 public class SignaturesRoot extends ServerResource {
     private static final Signatures SIGNATURES;
     static {
@@ -55,7 +57,11 @@ public class SignaturesRoot extends ServerResource {
             String abbrev = e.getAbbreviation();
             Objects.Function objf = new Objects.Function(name, abbrev);
             for (Signature s : f.getSignatures()) {
-                objf.addSignature(s.getValue());
+                String value = s.getValue();
+                String numArgs = s.getNumberOfArguments();
+                String returnType = s.getReturnType().toString();
+                Objects.Signature objs = new Objects.Signature(value, numArgs, returnType);
+                objf.addSignature(objs);
             }
             SIGNATURES.addFunction(objf);
         }

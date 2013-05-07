@@ -36,22 +36,47 @@
  */
 package org.openbel.rest.common;
 
-import static org.openbel.rest.common.Objects.*;
+import static org.openbel.framework.common.enums.FunctionEnum.*;
+import static org.openbel.rest.Util.*;
+import org.openbel.rest.common.Objects;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
+import org.openbel.framework.common.lang.Function;
+import org.openbel.framework.common.lang.Signature;
+import org.openbel.framework.common.enums.FunctionEnum;
 import org.openbel.rest.Path;
+import org.restlet.data.Status;
 
-@Path("/api/v1/lang")
-public class LangRoot extends ServerResource {
-    private static final Lang LANG;
-    static {
-        LANG = new Lang();
-    }
+@Path("/api/v1/lang/functions/signatures/{function}")
+public class Signatures extends ServerResource {
 
     @Get("json")
     public Representation _get() {
-        return LANG.json();
+        String function = getAttribute("function");
+        FunctionEnum f = fromString(function);
+        if (f == null) {
+            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            return null;
+        }
+
+        String name = f.getDisplayValue();
+        String abbrev = f.getAbbreviation();
+        Objects.Function objf = new Objects.Function(name, abbrev);
+        for (Signature s : f.getFunction().getSignatures()) {
+            String value = s.getValue();
+            String numArgs = s.getNumberOfArguments();
+            String returnType = s.getReturnType().toString();
+            Objects.Signature objs = new Objects.Signature(value, numArgs, returnType);
+            objf.addSignature(objs);
+        }
+        objf.put("description", description(f));
+
+        // links
+        String path = declaredPath(Objects.Signatures.class);
+        objf.addLink("self", path + "/" + function);
+        objf.addLink("enclosure", path);
+        return objf.json();
     }
 
 }
