@@ -212,8 +212,7 @@ public class Objects {
             this.name = name;
             this.abbreviation = abbreviation;
             put("name", name);
-            if (abbreviation != null)
-                put("abbreviation", abbreviation);
+            if (abbreviation != null) put("abbreviation", abbreviation);
         }
         public void addSignature(Signature s) {
             if (signatures == null) {
@@ -236,21 +235,22 @@ public class Objects {
 
     @Path("/api/v1/lang/relationships")
     public static class Relationships extends Base {
+        public List<Relationship> relationships;
         {
-            addLink("related", Descriptions.class);
+            relationships = new ArrayList<>();
+            put("relationships", relationships);
         }
+        public void addRelationship(Relationship r) { relationships.add(r); }
     }
 
     public static class Relationship extends Base {
-        {
-
-        }
-    }
-
-    @Path("/api/v1/lang/relationships/descriptions")
-    public static class Descriptions extends Base {
-        {
-
+        public String name;
+        public String abbreviation;
+        public Relationship(String name, String abbreviation) {
+            this.name = name;
+            this.abbreviation = abbreviation;
+            put("name", name);
+            if (abbreviation != null) put("abbreviation", abbreviation);
         }
     }
 
@@ -267,12 +267,6 @@ public class Objects {
             put("return_type", returnType);
         }
 
-    }
-
-    public static class Description extends Base {
-        {
-
-        }
     }
 
     public static class Complete extends Base {

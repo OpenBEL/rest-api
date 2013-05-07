@@ -41,6 +41,8 @@ import java.net.*;
 import java.util.*;
 import static org.openbel.framework.common.enums.FunctionEnum.*;
 import org.openbel.framework.common.enums.FunctionEnum;
+import static org.openbel.framework.common.enums.RelationshipType.*;
+import org.openbel.framework.common.enums.RelationshipType;
 import org.restlet.util.Series;
 
 /**
@@ -123,6 +125,187 @@ public class Util {
             return p.value();
         }
         return null;
+    }
+
+    public static String description(RelationshipType r) {
+        String ret = null;
+        switch (r) {
+        case ANALOGOUS:
+            ret = "For terms A and B, A analogousTo B indicates that A " +
+                  "and B represent abundances or molecular activities in " +
+                  "different species which function in a similar manner.";
+            break;
+        case ASSOCIATION:
+            ret = "For terms A and B, A association B or A -- B indicates " +
+                  "that A and B are associated in an unspecified manner. " +
+                  "This relationship is used when not enough information " +
+                  "about the association is available to describe it using " +
+                  "more specific relationships, like increases or " +
+                  "positiveCorrelation.";
+            break;
+        case BIOMARKER_FOR:
+            ret = "For term A and process term P, A biomarkerFor P " +
+                  "indicates that changes in or detection of A is used in " +
+                  "some way to be a biomarker for pathology or biological " +
+                  "process P.";
+            break;
+        case CAUSES_NO_CHANGE:
+            ret = "For terms A and B, A causesNoChange B indicates that B " +
+                  "was observed not to change in response to changes in A. " +
+                  "Statements using this relationship correspond to cases " +
+                  "where explicit measurement of B demonstrates lack of " +
+                  "significant change, not for cases where the state of B " +
+                  "is unknown.";
+            break;
+        case DECREASES:
+            ret = "For terms A and B, A decreases B or A -| B indicates " +
+                  "that increases in A have been observed to cause " +
+                  "decreases in B. A decreases B also represents cases " +
+                  "where decreases in A have been observed to cause " +
+                  "increases in B, for example, in recording the results of " +
+                  "gene deletion or other inhibition experiments. A is a " +
+                  "BEL Term and B is either a BEL Term or a BEL Statement. " +
+                  "The relationship does not indicate that the changes in A " +
+                  "are either necessary for changes in B, nor does it " +
+                  "indicate that changes in A are sufficient to cause " +
+                  "changes in B.";
+            break;
+        case DIRECTLY_DECREASES:
+            ret = "For terms A and B, A directlyDecreases B or A =| B " +
+                  "indicates A decreases B and that the mechanism of the " +
+                  "causal relationship is based on physical interaction of " +
+                  "entities related to A and B. This is a direct version of " +
+                  "the decreases relationship.";
+            break;
+        case DIRECTLY_INCREASES:
+            ret = "For terms A and B, A directlyIncreases B or A => B " +
+                  "indicate A increases B and that the mechanism of the " +
+                  "causal relationship is based on physical interaction of " +
+                  "entities related to A and B. This is a direct version of " +
+                  "the increases relationship.";
+            break;
+        case HAS_COMPONENT:
+            ret = "For complexAbundance term A and abundance term B, A " +
+                  "hasComponent B designates B as a component of A, that " +
+                  "complexes that are instances of A have instances of B as " +
+                  "possible components. Note that, the stoichiometry of A " +
+                  "is not described, nor is it stated that B is a required " +
+                  "component. The use of hasComponent relationships is " +
+                  "complementary to the use of functionally composed " +
+                  "complexes and is intended to enable the assignment of " +
+                  "components to complexes designated by names in external " +
+                  "vocabularies. The assignment of components can " +
+                  "potentially enable the reconciliation of equivalent " +
+                  "complexes at knowledge assembly time.";
+            break;
+        case HAS_COMPONENTS:
+            ret = "The hasComponents relationship is a special form which " +
+                  "enables the assignment of multiple complex components " +
+                  "in a single statement where the object of the statement " +
+                  "is a set of abundance terms. A statement using " +
+                  "hasComponents is exactly equivalent to multiple " +
+                  "hasComponent statements. A term may not appear in both " +
+                  "the subject and object of the same hasComponents " +
+                  "statement. For the abundance terms A, B, C and D, A " +
+                  "hasComponents B, C, D indicates that A has components B, " +
+                  "C and D.";
+            break;
+        case HAS_MEMBER:
+            ret = "For term abundances A and B, A hasMember B designates B " +
+                  "as a member class of A. A member class is a " +
+                  "distinguished sub-class. A is defined as a group by all " +
+                  "of the members assigned to it. The member classes may or " +
+                  "may not be overlapping and may or may not entirely cover " +
+                  "all instances of A. A term may not appear in both the " +
+                  "subject and object of the same hasMember statement.";
+            break;
+        case HAS_MEMBERS:
+            ret = "The hasMembers relationship is a special form which " +
+                  "enables the assignment of multiple member classes in a " +
+                  "single statement where the object of the statement is a " +
+                  "set of abundance terms. A statement using hasMembers is " +
+                  "exactly equivalent to multiple hasMember statements. A " +
+                  "term may not appear in both the subject and object of a " +
+                  "of the same hasMembers statement. For the abundance " +
+                  "terms A, B, C and D, A hasMembers B, C, D indicates " +
+                  "that A is defined by its member abundance classes B, " +
+                  "C and D.";
+            break;
+        case INCREASES:
+            ret = "For terms A and B, A increases B or A -> B indicates " +
+                 "that increases in A have been observed to cause increases " +
+                 "in B. A increases B also represents cases where decreases " +
+                 "in A have been observed to cause decreases in B, for " +
+                 "example, in recording the results of gene deletion or " +
+                 "other inhibition experiments. A is a BEL Term and B is " +
+                 "either a BEL Term or a BEL Statement. The relationship " +
+                 "does not indicate that the changes in A are either " +
+                 "necessary for changes in B, nor does it indicate that " +
+                 "changes in A are sufficient to cause changes in B.";
+            break;
+        case IS_A:
+            ret = "For terms A and B, A isA B indicates that A is a subset " +
+                  "of B. All terms in BEL represent classes, but given that " +
+                  "classes implicitly have instances, one can also " +
+                  "interpret A isA B to mean that any instance of A must " +
+                  "also be an instance of B. This relationship can be used " +
+                  "to represent GO and MeSH hierarchies: " +
+                  "pathology(MESH:Psoriasis) isA " +
+                  "pathology(MESH:\"Skin Diseases\").";
+            break;
+        case NEGATIVE_CORRELATION:
+            ret = "For terms A and B, A negativeCorrelation B indicates " +
+                  "that changes in A and B have been observed to be " +
+                  "negatively correlated. The order of the subject and " +
+                  "object does not affect the interpretation of the " +
+                  "statement, thus B negativeCorrelation A is equivalent " +
+                  "to A negativeCorrelation B.";
+            break;
+        case ORTHOLOGOUS:
+            ret = "For geneAbundance terms A and B, A orthologousTo B " +
+                  "indicates that A and B represent abundances of genes in " +
+                  "different species which are sequence similar and which " +
+                  "are therefore presumed to share a common ancestral gene.";
+            break;
+        case POSITIVE_CORRELATION:
+            ret = "For terms A and B, A positiveCorrelation B indicates " +
+                  "that changes in A and B have been observed to be " +
+                  "positively correlated, thus B positiveCorrelation A is " +
+                  "equivalent to A positiveCorrelation B.";
+            break;
+        case PROGNOSTIC_BIOMARKER_FOR:
+            ret = "For term A and process term P, A prognosticBiomarkerFor " +
+                  "P indicates that changes in or detection of A is used in " +
+                  "some way to be a prognostic biomarker for the subsequent " +
+                  "development of pathology or biological process P.";
+            break;
+        case RATE_LIMITING_STEP_OF:
+            ret = "For process, activity, or transformation term A and " +
+                  "process term B, A rateLimitingStepOf B indicates A " +
+                  "subProcessOf B and A -> B.";
+            break;
+        case SUB_PROCESS_OF:
+            ret = "For process, activity, or transformation term A and " +
+                  "process term B, A subProcessOf B indicates that " +
+                  "instances of process B, by default, include one or more " +
+                  "instances of A in their composition.";
+            break;
+        case TRANSCRIBED_TO:
+            ret = "For rnaAbundance term R and geneAbundance term G, G " +
+                  "transcribedTo R or G :> R indicates that members of R " +
+                  "are produced by the transcription of members of G. For " +
+                  "example: g(HGNC:AKT1) :> r(HGNC:AKT1) indicates that the " +
+                  "human AKT1 RNA is transcribed from the human AKT1 gene.";
+            break;
+        case TRANSLATED_TO:
+            ret = "For rnaAbundance term R and proteinAbundance term P, R " +
+                  "translatedTo P or R >> P indicates that members of P are " +
+                  "produced by the translation of members of R. For " +
+                  "example: r(HGNC:AKT1) >> p(HGNC:AKT1) indicates that " +
+                  "AKT1 protein is produced by translation of AKT1 RNA.";
+            break;
+        }
+        return ret;
     }
 
     /**

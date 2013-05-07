@@ -36,22 +36,73 @@
  */
 package org.openbel.rest.common;
 
+import static org.openbel.framework.common.enums.FunctionEnum.*;
+import static org.openbel.framework.common.enums.RelationshipType.*;
+import static org.openbel.rest.Util.*;
 import static org.openbel.rest.common.Objects.*;
-import org.restlet.resource.Get;
-import org.restlet.resource.ServerResource;
+import static java.util.Collections.*;
+import org.openbel.framework.common.enums.RelationshipType;
 import org.restlet.representation.Representation;
+import org.restlet.resource.ServerResource;
+import org.restlet.resource.Get;
 import org.openbel.rest.Path;
+import java.util.*;
 
 @Path("/api/v1/lang/relationships")
 public class RelationshipsRoot extends ServerResource {
-    private static final Relationships RELATIONSHIPS;
+    private static final List<String> RESOURCES;
+    private static final String START;
+    private static final String END;
+    private static final Objects.Relationships RELATIONSHIPS;
+    private static final String MY_PATH;
     static {
-        RELATIONSHIPS = new Relationships();
+        RELATIONSHIPS = new Objects.Relationships();
+        RESOURCES = new ArrayList<>();
+        MY_PATH = declaredPath(RelationshipsRoot.class);
+        for (RelationshipType r : RelationshipType.values()) {
+            switch (r) {
+            case ACTS_IN:
+            case INCLUDES:
+            case TRANSLOCATES:
+            case HAS_PRODUCT:
+            case REACTANT_IN:
+            case HAS_MODIFICATION:
+            case HAS_VARIANT:
+                continue;
+            }
+            String name = r.getDisplayValue();
+            String abbrev = r.getAbbreviation();
+            Objects.Relationship objr = new Objects.Relationship(name, abbrev);
+            objr.put("description", description(r));
+            objr.addLink("self", MY_PATH + "/" + name);
+            RELATIONSHIPS.addRelationship(objr);
+            RESOURCES.add(name);
+        }
+        sort(RESOURCES);
+        START = RESOURCES.get(0);
+        END = RESOURCES.get(RESOURCES.size() - 1);
+        RELATIONSHIPS.addLink("start", MY_PATH + "/" + START);
+        RELATIONSHIPS.addLink("end", MY_PATH + "/" + END);
     }
 
     @Get("json")
     public Representation _get() {
         return RELATIONSHIPS.json();
+    }
+
+    static void linkResource(Relationship resource) {
+        resource.addLink("index", RelationshipsRoot.class);
+        resource.addLink("first", MY_PATH + "/" + START);
+        resource.addLink("last", MY_PATH + "/" + END);
+        int i = RESOURCES.indexOf(resource.name);
+        if (i > 0) {
+            String prev = RESOURCES.get(i - 1);
+            resource.addLink("prev", MY_PATH + "/" + prev);
+        }
+        if ((i + 1) < (RESOURCES.size())) {
+            String next = RESOURCES.get(i + 1);
+            resource.addLink("next", MY_PATH + "/" + next);
+        }
     }
 
 }
