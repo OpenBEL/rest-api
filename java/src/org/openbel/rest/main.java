@@ -42,6 +42,7 @@ import sun.misc.*;
 import java.util.*;
 import com.mongodb.*;
 import java.net.UnknownHostException;
+import org.jongo.*;
 
 import static java.lang.System.*;
 import static java.lang.Runtime.*;
@@ -51,32 +52,35 @@ import static java.lang.Integer.*;
 import static org.openbel.framework.common.cfg.SystemConfiguration.*;
 
 public class main extends Component {
-    public static int port;
-    public static String cache;
-    public static String work;
-    public static String dburl;
-    public static String residx;
-    public static String mongoHost;
-    public static String mongoDB;
-    public static DB db;
-    public static DBCollection nsvalues;
-    public static APIApplication apiapp;
+    public static int $port;
+    public static String $cache;
+    public static String $work;
+    public static String $dburl;
+    public static String $residx;
+    public static String $mongoHost;
+    public static String $mongoDB;
+    public static DB $db;
+    public static DBCollection $nsvalues;
+    public static APIApplication $apiapp;
+    public static MongoCollection $namespaces;
 
     main() {
-        getServers().add(HTTP, port);
-        getDefaultHost().attachDefault(apiapp);
+        getServers().add(HTTP, $port);
+        getDefaultHost().attachDefault($apiapp);
     }
 
     public void init() {
         out.print("Bootstrapping MongoDB... ");
         out.flush();
         try {
-            db = new MongoClient(mongoHost).getDB(mongoDB);
+            $db = new MongoClient($mongoHost).getDB($mongoDB);
         } catch (UnknownHostException e) {
             e.printStackTrace();
             exit(1);
         }
-        nsvalues = db.getCollection("nsvalues");
+        $nsvalues = $db.getCollection("nsvalues");
+        Jongo jongo = new Jongo($db);
+        $namespaces = jongo.getCollection("namespaces");
         out.println("okay");
     }
 
@@ -86,58 +90,58 @@ public class main extends Component {
         if (value == null) {
             err.println("no _ENV_PORT is set");
             configured = false;
-        } else port = parseInt(value);
-        cache = getenv("_ENV_BEL_CACHE");
-        if (cache == null) {
+        } else $port = parseInt(value);
+        $cache = getenv("_ENV_BEL_CACHE");
+        if ($cache == null) {
             err.println("no _ENV_BEL_CACHE is set");
             configured = false;
         }
-        work = getenv("_ENV_BEL_WORK");
-        if (work == null) {
+        $work = getenv("_ENV_BEL_WORK");
+        if ($work == null) {
             err.println("no _ENV_BEL_WORK is set");
             configured = false;
         }
-        dburl = getenv("_ENV_BEL_DBURL");
-        if (dburl == null) {
+        $dburl = getenv("_ENV_BEL_DBURL");
+        if ($dburl == null) {
             err.println("no _ENV_BEL_DBURL is set");
             configured = false;
         }
-        residx = getenv("_ENV_BEL_RESIDX");
-        if (residx == null) {
+        $residx = getenv("_ENV_BEL_RESIDX");
+        if ($residx == null) {
             err.println("no _ENV_BEL_RESIDX is set");
             configured = false;
         }
-        mongoHost = getenv("_ENV_MONGO_HOST");
-        if (mongoHost == null) {
+        $mongoHost = getenv("_ENV_MONGO_HOST");
+        if ($mongoHost == null) {
             err.println("no _ENV_MONGO_HOST");
             configured = false;
         }
-        mongoDB = getenv("_ENV_MONGO_DB");
-        if (mongoDB == null) {
+        $mongoDB = getenv("_ENV_MONGO_DB");
+        if ($mongoDB == null) {
             err.println("no _ENV_MONGO_DB");
             configured = false;
         }
         if (!configured) exit(1);
-        out.println("PORT: " + port);
-        out.println("CACHE: " + cache);
-        out.println("WORK: " + work);
-        out.println("DBURL: " + dburl);
-        out.println("RESOURCE INDEX: " + residx);
-        out.println("MONGODB HOST: " + mongoHost);
-        out.println("MONGODB DB: " + mongoDB);
+        out.println("PORT: " + $port);
+        out.println("CACHE: " + $cache);
+        out.println("WORK: " + $work);
+        out.println("DBURL: " + $dburl);
+        out.println("RESOURCE INDEX: " + $residx);
+        out.println("MONGODB HOST: " + $mongoHost);
+        out.println("MONGODB DB: " + $mongoDB);
         out.println();
 
         out.print("Bootstrapping the framework... ");
         // Bootstrap the framework
         Map<String, String> map = new HashMap<>();
-        map.put(FRAMEWORK_CACHE_DIRECTORY_DESC, cache);
-        map.put(FRAMEWORK_WORKING_AREA_DESC, work);
-        map.put(KAMSTORE_URL_DESC, dburl);
-        map.put(RESOURCE_INDEX_URL_DESC, residx);
+        map.put(FRAMEWORK_CACHE_DIRECTORY_DESC, $cache);
+        map.put(FRAMEWORK_WORKING_AREA_DESC, $work);
+        map.put(KAMSTORE_URL_DESC, $dburl);
+        map.put(RESOURCE_INDEX_URL_DESC, $residx);
         SystemConfiguration syscfg = createSystemConfiguration(map);
         out.println("okay");
 
-        apiapp = new APIApplication();
+        $apiapp = new APIApplication();
         final main main = new main();
         try {
             main.init();

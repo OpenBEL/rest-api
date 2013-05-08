@@ -205,8 +205,8 @@ public class Objects {
     }
 
     public static class Function extends Base {
-        public String name;
-        public String abbreviation;
+        public String name; // required
+        public String abbreviation; // not required
         public List<Signature> signatures;
         public Function(String name, String abbreviation) {
             this.name = name;
@@ -244,8 +244,8 @@ public class Objects {
     }
 
     public static class Relationship extends Base {
-        public String name;
-        public String abbreviation;
+        public String name; // required
+        public String abbreviation; // not required
         public Relationship(String name, String abbreviation) {
             this.name = name;
             this.abbreviation = abbreviation;
@@ -255,9 +255,9 @@ public class Objects {
     }
 
     public static class Signature extends Base {
-        public String value;
-        public String numArgs;
-        public String returnType;
+        public String value; // required
+        public String numArgs; // required
+        public String returnType; // required
         public Signature(String value, String numArgs, String returnType) {
             this.value = value;
             this.numArgs = numArgs;
@@ -276,6 +276,20 @@ public class Objects {
             put("results", results);
         }
         public void addResult(String s) { results.add(s); }
+    }
+
+    public static class Namespace extends Base {
+        public String description; // not required
+        public String name; // required
+        public String keyword; // required
+        public Namespace(String name, String keyword, String description) {
+            this.name = name;
+            this.keyword = keyword;
+            this.description = description;
+            put("name", name);
+            put("keyword", keyword);
+            if (description != null) put("description", description);
+        }
     }
 
 }

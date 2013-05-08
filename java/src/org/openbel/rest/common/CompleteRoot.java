@@ -58,7 +58,7 @@ public class CompleteRoot extends ServerResource {
     	Pattern ptrn = compile(input.toLowerCase());
     	DBObject query = new BasicDBObject("norm", ptrn);
     	Complete ret = new Complete();
-    	for (DBObject o : nsvalues.find(query)) {
+    	for (DBObject o : $nsvalues.find(query)) {
     		ret.addResult((String) o.get("val"));
     	}
     	if (ret.results.size() == 0) {
