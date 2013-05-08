@@ -41,26 +41,31 @@ import static org.openbel.rest.main.*;
 import static org.openbel.rest.Util.*;
 import static java.util.regex.Pattern.*;
 import static java.lang.String.format;
+import org.jongo.*;
+import java.util.*;
+import java.util.regex.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
 import org.restlet.data.Status;
-import java.util.regex.*;
-import com.mongodb.*;
 import org.openbel.rest.Path;
 
 @Path("/api/v1/complete/{input}")
 public class CompleteRoot extends ServerResource {
+    private static final String FIND;
+    static {
+        FIND = "{norm:#}";
+    }
 
     @Get("json")
     public Representation _get() {
     	String input = format("^%s", escapeRE(getAttribute("input")));
     	Pattern ptrn = compile(input.toLowerCase());
-    	DBObject query = new BasicDBObject("norm", ptrn);
-    	Complete ret = new Complete();
-    	for (DBObject o : $nsvalues.find(query)) {
-    		ret.addResult((String) o.get("val"));
-    	}
+        Find find = $nsvalues.find(FIND, ptrn);
+        Complete ret = new Complete();
+        for (Map<?, ?> map : find.as(Map.class)) {
+            ret.addResult((String) map.get("val"));
+        }
     	if (ret.results.size() == 0) {
     		setStatus(Status.CLIENT_ERROR_NOT_FOUND);
     		return null;

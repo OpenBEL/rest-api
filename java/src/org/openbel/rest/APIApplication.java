@@ -73,11 +73,11 @@ public class APIApplication extends Application {
         path = declaredPath(CompleteRoot.class);
         router.attach(path, CompleteRoot.class);
 
-        path = declaredPath(Namespace.class);
-        router.attach(path, Namespace.class);
+        path = declaredPath(Namespaces.class);
+        router.attach(path, Namespaces.class);
 
-        path = declaredPath(NamespaceValue.class);
-        router.attach(path, NamespaceValue.class);
+        path = declaredPath(NamespaceValues.class);
+        router.attach(path, NamespaceValues.class);
 
         path = declaredPath(LangRoot.class);
         router.attach(path, LangRoot.class);

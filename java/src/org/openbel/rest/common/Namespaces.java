@@ -36,29 +36,47 @@
  */
 package org.openbel.rest.common;
 
+import static java.lang.String.format;
+import static org.openbel.rest.common.Objects.*;
+import static org.openbel.rest.Util.*;
+import static org.openbel.rest.main.*;
+import org.openbel.rest.common.Objects;
+import org.jongo.*;
+import org.openbel.rest.Path;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
-import org.openbel.rest.Path;
+import org.restlet.representation.Representation;
+import org.restlet.data.Status;
+import java.util.*;
 
-import java.util.Map;
-
-@Path("/api/v1/namespace")
-public class Namespace extends ServerResource {
-
-    class Root {
-        private String root;
-
-        Root() {
-            root = "namespace";
-        }
-        public String getRoot() {
-            return root;
-        }
+@Path("/api/v1/namespaces/{keyword}")
+public class Namespaces extends ServerResource {
+    private static final String RSRC_FIND;
+    static {
+        RSRC_FIND = "{keyword: '%s'}";
     }
 
     @Get("json")
-    public Root _get() {
-        return new Root();
+    public Representation _get() {
+        String keyword = getAttribute("keyword");
+        String query = format(RSRC_FIND, keyword);
+        Map<?, ?> ns = $namespaces.findOne(query).as(Map.class);
+        if (ns == null) {
+            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            return null;
+        }
+
+        String name = (String) ns.get("name");
+        String kword = (String) ns.get("keyword");
+        String desc = (String) ns.get("description");
+        Objects.Namespace objn = new Objects.Namespace(name, kword, desc);
+
+        // links
+        String path = declaredPath(Objects.Namespaces.class);
+        objn.addLink("self", urlify(path, keyword));
+        objn.addLink("related", urlify(path, keyword, "values"));
+        NamespacesRoot.linkResource(objn);
+        return objn.json();
     }
 
 }

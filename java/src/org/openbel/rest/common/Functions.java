@@ -66,9 +66,9 @@ public class Functions extends ServerResource {
 
         // links
         String path = declaredPath(Objects.Functions.class);
-        objf.addLink("self", path + "/" + function);
+        objf.addLink("self", urlify(path, function));
         path = declaredPath(Objects.Signatures.class);
-        objf.addLink("related", path + "/" + function);
+        objf.addLink("related", urlify(path, function));
         FunctionsRoot.linkResource(objf);
 
         return objf.json();

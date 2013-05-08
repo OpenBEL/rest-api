@@ -74,15 +74,15 @@ public class RelationshipsRoot extends ServerResource {
             String abbrev = r.getAbbreviation();
             Objects.Relationship objr = new Objects.Relationship(name, abbrev);
             objr.put("description", description(r));
-            objr.addLink("self", MY_PATH + "/" + name);
+            objr.addLink("self", urlify(MY_PATH, name));
             RELATIONSHIPS.addRelationship(objr);
             RESOURCES.add(name);
         }
         sort(RESOURCES);
         START = RESOURCES.get(0);
         END = RESOURCES.get(RESOURCES.size() - 1);
-        RELATIONSHIPS.addLink("start", MY_PATH + "/" + START);
-        RELATIONSHIPS.addLink("end", MY_PATH + "/" + END);
+        RELATIONSHIPS.addLink("start", urlify(MY_PATH, START));
+        RELATIONSHIPS.addLink("end", urlify(MY_PATH, END));
     }
 
     @Get("json")
@@ -92,17 +92,17 @@ public class RelationshipsRoot extends ServerResource {
 
     static void linkResource(Relationship resource) {
         resource.addLink("index", RelationshipsRoot.class);
-        resource.addLink("first", MY_PATH + "/" + START);
-        resource.addLink("last", MY_PATH + "/" + END);
+        resource.addLink("first", urlify(MY_PATH, START));
         int i = RESOURCES.indexOf(resource.name);
-        if (i > 0) {
-            String prev = RESOURCES.get(i - 1);
-            resource.addLink("prev", MY_PATH + "/" + prev);
-        }
         if ((i + 1) < (RESOURCES.size())) {
             String next = RESOURCES.get(i + 1);
-            resource.addLink("next", MY_PATH + "/" + next);
+            resource.addLink("next", urlify(MY_PATH, next));
         }
+        if (i > 0) {
+            String prev = RESOURCES.get(i - 1);
+            resource.addLink("prev", urlify(MY_PATH, prev));
+        }
+        resource.addLink("last", urlify(MY_PATH, END));
     }
 
 }

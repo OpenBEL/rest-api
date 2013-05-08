@@ -36,57 +36,56 @@
  */
 package org.openbel.rest.common;
 
-import static org.openbel.framework.common.enums.RelationshipType.*;
+import static java.lang.String.format;
+import static org.openbel.rest.common.Objects.*;
 import static org.openbel.rest.Util.*;
-import static org.openbel.rest.common.Objects.*;
-import static java.net.URLDecoder.*;
-import org.openbel.framework.common.enums.RelationshipType;
-import static org.openbel.rest.common.Objects.*;
+import static org.openbel.rest.main.*;
+import org.openbel.rest.common.Objects;
+import org.jongo.*;
+import org.openbel.rest.Path;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
-import org.openbel.rest.Path;
 import org.restlet.data.Status;
 import java.util.*;
-import java.io.*;
 
-@Path("/api/v1/lang/relationships/{relationship}")
-public class Relationships extends ServerResource {
+@Path("/api/v1/namespaces/{keyword}/values")
+public class NamespaceValues extends ServerResource {
+    private static final String FIND_RSRC;
+    private static final String FIND_VALUES;
+    static {
+        FIND_RSRC = "{keyword: '%s'}";
+        FIND_VALUES = "{nsmeta-id: #}";
+    }
 
     @Get("json")
     public Representation _get() {
-        String relationship = getAttribute("relationship");
-        try {
-            relationship = decode(relationship, "UTF-8");
-        } catch (UnsupportedEncodingException e) {}
-        RelationshipType r = fromString(relationship);
-        if (r == null) r = fromAbbreviation(relationship);
-        if (r == null) {
+        String keyword = getAttribute("keyword");
+        String query = format(FIND_RSRC, keyword);
+        Map<?, ?> ns = $namespaces.findOne(query).as(Map.class);
+        if (ns == null) {
             setStatus(Status.CLIENT_ERROR_NOT_FOUND);
             return null;
         }
-        String name = r.getDisplayValue();
-        String abbrev = r.getAbbreviation();
-        Objects.Relationship objr = new Objects.Relationship(name, abbrev);
 
-        Map<String, Boolean> metadata = new HashMap<>();
-        objr.put("metadata", metadata);
-        metadata.put("causal", r.isCausal());
-        metadata.put("correlative", r.isCorrelative());
-        metadata.put("decreasing", r.isDecreasing());
-        metadata.put("direct", r.isDirect());
-        metadata.put("directed", r.isDirected());
-        metadata.put("genomic", r.isGenomic());
-        metadata.put("increasing", r.isIncreasing());
-        metadata.put("indirect", r.isIndirect());
-        metadata.put("listable", r.isListable());
-        metadata.put("self", r.isSelf());
+        String name = (String) ns.get("name");
+        String kword = (String) ns.get("keyword");
+        String desc = (String) ns.get("description");
+        Object _id = ns.get("_id");
+        Objects.Namespace objn = new Objects.Namespace(name, kword, desc);
 
-        objr.put("description", description(r));
-        String path = declaredPath(RelationshipsRoot.class);
-        objr.addLink("self", urlify(path, name));
-        RelationshipsRoot.linkResource(objr);
-        return objr.json();
+        Find find = $nsvalues.find(FIND_VALUES, _id);
+        List<String> values = new LinkedList<>();
+        for (Map<?, ?> map : find.as(Map.class)) {
+            values.add((String) map.get("val"));
+        }
+        objn.put("values", values);
+
+        // links
+        String path = declaredPath(Objects.Namespaces.class);
+        objn.addLink("self", urlify(path, keyword, "values"));
+        objn.addLink("related", urlify(path, keyword));
+        return objn.json();
     }
 
 }
