@@ -11,6 +11,7 @@ import pymongo
 conn = None
 restapi_db = None
 nsvalues_norm_index = True
+namespaces_keyword_index = True
 
 
 def out(msg):
@@ -37,6 +38,17 @@ def check():
         nsvalues_norm_index = False
         status = False
 
+    # INDEX PRESENT ON NAMESPACES KEYWORD
+    coll = restapi_db.namespaces
+    out('Checking for an index on keyword in namespaces... ')
+    if 'keyword' in coll.index_information():
+        print('yes')
+    else:
+        print('no')
+        global namespaces_keyword_index
+        namespaces_keyword_index = False
+        status = False
+
     print('Finished checks.')
     print()
     return status
@@ -57,6 +69,14 @@ def fix():
         kwargs = {'name': 'norm'}
         kwargs.update(fg_index_args)
         coll.create_index('norm', **kwargs)
+        print('done')
+
+    if not namespaces_keyword_index:
+        out('Creating index on keyword in namespaces... ')
+        coll = restapi_db.namespaces
+        kwargs = {'name': 'keyword'}
+        kwargs.update(fg_index_args)
+        coll.create_index('keyword', **kwargs)
         print('done')
 
     print('Finished applying changes.')
