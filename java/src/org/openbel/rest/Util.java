@@ -74,6 +74,22 @@ public class Util {
     }
 
     /**
+     * Inserts {@code "/"} between each element.
+     *
+     * @param elements
+     * @return String in the form {@code elem1/elem2/elem3/.../elemN}
+     */
+    public static String urlify(String... elements) {
+        if (elements == null) return null;
+        final StringBuilder bldr = new StringBuilder();
+        for (final String elem : elements) {
+            if (bldr.length() != 0) bldr.append("/");
+            bldr.append(elem);
+        }
+        return bldr.toString();
+    }
+
+    /**
      * Escape any metacharacters contains in {@code regex}.
      *
      * @param regex Regular expression

@@ -161,9 +161,12 @@ public class Objects {
 
     @Path("/api/v1/namespaces")
     public static class Namespaces extends Base {
+        public List<Namespace> namespaces;
         {
-
+            namespaces = new ArrayList<>();
+            put("namespaces", namespaces);
         }
+        public void addNamespace(Namespace n) { namespaces.add(n); }
     }
 
     @Path("/api/v1/statements")
