@@ -36,29 +36,21 @@
  */
 package org.openbel.rest.common;
 
+import static org.openbel.rest.main.*;
+import org.openbel.rest.Path;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
-import org.openbel.rest.Path;
-
-import java.util.Map;
+import org.restlet.representation.Representation;
+import java.util.*;
 
 @Path("/api/v1/namespaces")
 public class NamespacesRoot extends ServerResource {
 
-    class Root {
-        private String root;
-
-        Root() {
-            root = "namespaces";
-        }
-        public String getRoot() {
-            return root;
-        }
-    }
-
     @Get("json")
-    public Root _get() {
-        return new Root();
+    public Representation _get() {
+        for (Map<?, ?> map : $namespaces.find().as(Map.class)) {
+        }
+        return null;
     }
 
 }
