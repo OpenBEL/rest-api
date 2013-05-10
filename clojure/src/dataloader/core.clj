@@ -54,8 +54,8 @@
   "Printlns x to stdout."
   (. (. System out) println x))
 
-(defn download-ns [url fname]
-  "Downloads a BEL namespace (.belns) URL and saves it to fname."
+(defn download-url [url fname]
+  "Download a URL and save it to fname."
   (->> (slurp url) (spit fname)))
 
 (defn namespace-urls [idx]
@@ -63,9 +63,52 @@
   (def ret [])
   (doseq [x (xml-seq (parse idx))
     :when (= :idx:namespace (:tag x))]
-      (doseq [y (:attrs x)]
-        (def ret (conj ret (y 1)))))
+    (doseq [y (:attrs x)]
+      (def ret (conj ret (y 1)))))
   (lazy-seq ret))
+
+(defn anno-urls [idx]
+  "Get BEL annotation (.belanno) URLs from the resource index idx."
+  (def ret[])
+  (doseq [x (xml-seq (parse idx))
+    :when (= :idx:annotationdefinition (:tag x))]
+    (doseq [y (:attrs x)]
+      (def ret (conj ret (y 1)))))
+  (lazy-seq ret))
+
+(defn parse-annotation [annofile]
+  "Get a map representation of a BEL annotation (.belanno)."
+  (def annomap {})
+  (def values[])
+  (with-open [rdr (reader annofile)]
+    (def val-block false)
+    ; for keyword, type, description, and usage
+    (def ad-block false)
+
+  ;   (doseq [line (line-seq rdr)]
+  ;     (if (true? val-block)
+  ;       (do
+  ;         (def tokens (split line #"\|"))
+  ;         (def value [(tokens 0) (tokens 1)])
+  ;         (def values (conj values value))))
+  ;     (if (true? ns-block)
+  ;       (do
+  ;         (def tokens (split line #"="))
+  ;         (if (= "Keyword" (tokens 0))
+  ;           (def nsmap (merge nsmap {:keyword (tokens 1)})))
+  ;         (if (= "NameString" (tokens 0))
+  ;           (def nsmap (merge nsmap {:name (tokens 1)})))
+  ;         (if (= "DescriptionString" (tokens 0))
+  ;           (def nsmap (merge nsmap {:description (tokens 1)})))))
+  ;     (if (re-matches #"\[.*\]" line)
+  ;       (do
+  ;         (def ns-block false)
+  ;         (def val-block false)
+  ;         (if (= line "[Values]")
+  ;           (def val-block true))
+  ;         (if (= line "[Namespace]")
+  ;           (def ns-block true))))))
+  ; (merge nsmap {:values values}))
 
 (defn parse-namespace [nsfile]
   "Get a map representation of a BEL namespace (.belns)."
@@ -127,21 +170,26 @@
   (mg/set-db! (mg/get-db db))
   (outln "okay")
   (out "Dropping collections... ")
-  (coll/drop "namespaces")
-  (coll/drop "nsvalues")
+  ; (coll/drop "namespaces")
+  ; (coll/drop "nsvalues")
   (outln "okay")
-  (doseq [x (namespace-urls residx)]
+  ; (doseq [x (namespace-urls residx)]
+  ;   (out (str x "... "))
+  ;   (download-url x "temp.belns")
+  ;   (def nsmap (parse-namespace "temp.belns"))
+  ;   (def nsmeta-id (ObjectId.))
+  ;   (def nsmeta-doc (assoc (dissoc nsmap :values) :_id nsmeta-id))
+  ;   (coll/insert "namespaces" nsmeta-doc)
+  ;   (doseq [value (nsmap :values)]
+  ;     (def nsval-id (ObjectId.))
+  ;     (def nsval-meta {:_id nsval-id :nsmeta-id nsmeta-id})
+  ;     (def nsval-norm (clojure.string/lower-case (value 0)))
+  ;     (def nsval-data {:enc (value 1) :val (value 0) :norm nsval-norm})
+  ;     (coll/insert "nsvalues" (conj nsval-meta nsval-data)))
+  ;   (outln "okay"))
+  (doseq [x (anno-urls residx)]
     (out (str x "... "))
-    (download-ns x "temp.belns")
-    (def nsmap (parse-namespace "temp.belns"))
-    (def nsmeta-id (ObjectId.))
-    (def nsmeta-doc (assoc (dissoc nsmap :values) :_id nsmeta-id))
-    (coll/insert "namespaces" nsmeta-doc)
-    (doseq [value (nsmap :values)]
-      (def nsval-id (ObjectId.))
-      (def nsval-meta {:_id nsval-id :nsmeta-id nsmeta-id})
-      (def nsval-norm (clojure.string/lower-case (value 0)))
-      (def nsval-data {:enc (value 1) :val (value 0) :norm nsval-norm})
-      (coll/insert "nsvalues" (conj nsval-meta nsval-data)))
+    (download-url x "temp.belanno")
+    (def annomap (parse-annotation "temp.belanno"))
     (outln "okay"))
   (mg/disconnect!))
