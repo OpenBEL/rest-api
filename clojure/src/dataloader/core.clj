@@ -109,7 +109,7 @@
               (def val-block true))
             (if (= line "[AnnotationDefinition]")
               (def ad-block true))))))
-    (merge annomap {:valaues values}))
+    (merge annomap {:values values}))
 
   ;   (doseq [line (line-seq rdr)]
   ;     (if (true? val-block)
@@ -198,6 +198,8 @@
   (out "Dropping collections... ")
   ; (coll/drop "namespaces")
   ; (coll/drop "nsvalues")
+  ; (coll/drop "annotations")
+  ; (coll/drop "annovalues")
   (outln "okay")
   ; (doseq [x (namespace-urls residx)]
   ;   (out (str x "... "))
@@ -217,5 +219,16 @@
     (out (str x "... "))
     (download-url x "temp.belanno")
     (def annomap (parse-annotation "temp.belanno"))
+    (def annometa-id (ObjectId.))
+    (def annometa-doc (assoc (dissoc annomap :values) :_id annometa-id))
+    (coll/insert "annotations" annometa-doc)
+    (doseq [value (annomap :values)]
+      (def annoval-id (ObjectId.))
+      (def annoval-meta {:_id annoval-id :annometa-id annometa-id})
+      (println value)
+      (def annoval-norm (clojure.string/lower-case (value 0)))
+      )
+      ; (def annoval-data {:val (value 0) :norm annoval-norm})
+      ; (coll/insert "annovalues" (conj annoval-meta annoval-data)))
     (outln "okay"))
   (mg/disconnect!))
