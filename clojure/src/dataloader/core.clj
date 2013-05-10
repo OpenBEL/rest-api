@@ -84,6 +84,32 @@
     (def val-block false)
     ; for keyword, type, description, and usage
     (def ad-block false)
+      (doseq [line (line-seq rdr)]
+        (if (true? val-block)
+          (do
+            (def tokens (split line #"\|"))
+            (def value (tokens 0))
+            (def values (conj values value))))
+        (if (true? ad-block)
+          (do
+            (def tokens (split line #"="))
+            (if (= "Keyword" (tokens 0))
+              (def annomap (merge annomap {:keyword (tokens 1)})))
+            (if (= "TypeString" (tokens 0))
+              (def annomap (merge annomap {:type (tokens 1)})))
+            (if (= "DescriptionString" (tokens 0))
+              (def annomap (merge annomap {:description (tokens 1)})))
+            (if (= "UsageString" (tokens 0))
+              (def annomap (merge annomap {:usage (tokens 1)})))))
+        (if (re-matches #"\[.*\]" line)
+          (do
+            (def ad-block false)
+            (def val-block false)
+            (if (= line "[Values]")
+              (def val-block true))
+            (if (= line "[AnnotationDefinition]")
+              (def ad-block true))))))
+    (merge annomap {:valaues values}))
 
   ;   (doseq [line (line-seq rdr)]
   ;     (if (true? val-block)
