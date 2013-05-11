@@ -43,7 +43,7 @@
 (use '[clojure.tools.namespace.repl :only (refresh)]
      '[clojure.xml]
      '[clojure.java.io]
-     '[clojure.string :only (split)])
+     '[clojure.string :only (split lower-case)])
 
 (defn out [x]
   "Prints and flushes x to stdout."
@@ -84,57 +84,42 @@
     (def val-block false)
     ; for keyword, type, description, and usage
     (def ad-block false)
-      (doseq [line (line-seq rdr)]
-        (if (true? val-block)
-          (do
-            (def tokens (split line #"\|"))
-            (def value (tokens 0))
-            (def values (conj values value))))
-        (if (true? ad-block)
-          (do
-            (def tokens (split line #"="))
-            (if (= "Keyword" (tokens 0))
-              (def annomap (merge annomap {:keyword (tokens 1)})))
-            (if (= "TypeString" (tokens 0))
-              (def annomap (merge annomap {:type (tokens 1)})))
-            (if (= "DescriptionString" (tokens 0))
-              (def annomap (merge annomap {:description (tokens 1)})))
-            (if (= "UsageString" (tokens 0))
-              (def annomap (merge annomap {:usage (tokens 1)})))))
-        (if (re-matches #"\[.*\]" line)
-          (do
-            (def ad-block false)
-            (def val-block false)
-            (if (= line "[Values]")
-              (def val-block true))
-            (if (= line "[AnnotationDefinition]")
-              (def ad-block true))))))
-    (merge annomap {:values values}))
-
-  ;   (doseq [line (line-seq rdr)]
-  ;     (if (true? val-block)
-  ;       (do
-  ;         (def tokens (split line #"\|"))
-  ;         (def value [(tokens 0) (tokens 1)])
-  ;         (def values (conj values value))))
-  ;     (if (true? ns-block)
-  ;       (do
-  ;         (def tokens (split line #"="))
-  ;         (if (= "Keyword" (tokens 0))
-  ;           (def nsmap (merge nsmap {:keyword (tokens 1)})))
-  ;         (if (= "NameString" (tokens 0))
-  ;           (def nsmap (merge nsmap {:name (tokens 1)})))
-  ;         (if (= "DescriptionString" (tokens 0))
-  ;           (def nsmap (merge nsmap {:description (tokens 1)})))))
-  ;     (if (re-matches #"\[.*\]" line)
-  ;       (do
-  ;         (def ns-block false)
-  ;         (def val-block false)
-  ;         (if (= line "[Values]")
-  ;           (def val-block true))
-  ;         (if (= line "[Namespace]")
-  ;           (def ns-block true))))))
-  ; (merge nsmap {:values values}))
+    ; for name
+    (def cit-block false)
+    (doseq [line (line-seq rdr)]
+      (if (true? val-block)
+        (do
+          (def tokens (split line #"\|"))
+          (def value (tokens 0))
+          (def values (conj values value))))
+      (if (true? ad-block)
+        (do
+          (def tokens (split line #"="))
+          (if (= "Keyword" (tokens 0))
+            (def annomap (merge annomap {:keyword (tokens 1)})))
+          (if (= "TypeString" (tokens 0))
+            (def annomap (merge annomap {:type (tokens 1)})))
+          (if (= "DescriptionString" (tokens 0))
+            (def annomap (merge annomap {:description (tokens 1)})))
+          (if (= "UsageString" (tokens 0))
+            (def annomap (merge annomap {:usage (tokens 1)})))))
+      (if (true? cit-block)
+        (do
+          (def tokens (split line #"="))
+          (if (= "NameString" (tokens 0))
+            (def annomap (merge annomap {:name (tokens 1)})))))
+      (if (re-matches #"\[.*\]" line)
+        (do
+          (def ad-block false)
+          (def val-block false)
+          (def cit-block false)
+          (if (= line "[Values]")
+            (def val-block true))
+          (if (= line "[Citation]")
+            (def cit-block true))
+          (if (= line "[AnnotationDefinition]")
+            (def ad-block true))))))
+  (merge annomap {:values values}))
 
 (defn parse-namespace [nsfile]
   "Get a map representation of a BEL namespace (.belns)."
@@ -196,25 +181,27 @@
   (mg/set-db! (mg/get-db db))
   (outln "okay")
   (out "Dropping collections... ")
-  ; (coll/drop "namespaces")
-  ; (coll/drop "nsvalues")
-  ; (coll/drop "annotations")
-  ; (coll/drop "annovalues")
+  (coll/drop "namespaces")
+  (coll/drop "nsvalues")
+  (coll/drop "annotations")
+  (coll/drop "annovalues")
   (outln "okay")
-  ; (doseq [x (namespace-urls residx)]
-  ;   (out (str x "... "))
-  ;   (download-url x "temp.belns")
-  ;   (def nsmap (parse-namespace "temp.belns"))
-  ;   (def nsmeta-id (ObjectId.))
-  ;   (def nsmeta-doc (assoc (dissoc nsmap :values) :_id nsmeta-id))
-  ;   (coll/insert "namespaces" nsmeta-doc)
-  ;   (doseq [value (nsmap :values)]
-  ;     (def nsval-id (ObjectId.))
-  ;     (def nsval-meta {:_id nsval-id :nsmeta-id nsmeta-id})
-  ;     (def nsval-norm (clojure.string/lower-case (value 0)))
-  ;     (def nsval-data {:enc (value 1) :val (value 0) :norm nsval-norm})
-  ;     (coll/insert "nsvalues" (conj nsval-meta nsval-data)))
-  ;   (outln "okay"))
+  (outln "\nNAMESPACES\n--")
+  (doseq [x (namespace-urls residx)]
+    (out (str x "... "))
+    (download-url x "temp.belns")
+    (def nsmap (parse-namespace "temp.belns"))
+    (def nsmeta-id (ObjectId.))
+    (def nsmeta-doc (assoc (dissoc nsmap :values) :_id nsmeta-id))
+    (coll/insert "namespaces" nsmeta-doc)
+    (doseq [value (nsmap :values)]
+      (def nsval-id (ObjectId.))
+      (def nsval-meta {:_id nsval-id :nsmeta-id nsmeta-id})
+      (def nsval-norm (clojure.string/lower-case (value 0)))
+      (def nsval-data {:enc (value 1) :val (value 0) :norm nsval-norm})
+      (coll/insert "nsvalues" (conj nsval-meta nsval-data)))
+    (outln "okay"))
+  (outln "\nANNOTATIONS\n--")
   (doseq [x (anno-urls residx)]
     (out (str x "... "))
     (download-url x "temp.belanno")
@@ -225,10 +212,8 @@
     (doseq [value (annomap :values)]
       (def annoval-id (ObjectId.))
       (def annoval-meta {:_id annoval-id :annometa-id annometa-id})
-      (println value)
-      (def annoval-norm (clojure.string/lower-case (value 0)))
-      )
-      ; (def annoval-data {:val (value 0) :norm annoval-norm})
-      ; (coll/insert "annovalues" (conj annoval-meta annoval-data)))
+      (def annoval-norm (lower-case value))
+      (def annoval-data {:val value :norm annoval-norm})
+      (coll/insert "annovalues" (conj annoval-meta annoval-data)))
     (outln "okay"))
   (mg/disconnect!))

@@ -11,6 +11,7 @@ import pymongo
 conn = None
 restapi_db = None
 nsvalues_norm_index = True
+annovalues_norm_index = True
 namespaces_keyword_index = True
 
 
@@ -27,7 +28,7 @@ def check():
     print('Starting checks.')
     status = True
 
-    # INDEX PRESENT ON NSVALUES VAL FIELD
+    # INDEX PRESENT ON NSVALUES NORM FIELD
     coll = restapi_db.nsvalues
     out('Checking for an index on norm in nsvalues... ')
     if 'norm' in coll.index_information():
@@ -47,6 +48,17 @@ def check():
         print('no')
         global namespaces_keyword_index
         namespaces_keyword_index = False
+        status = False
+
+    # INDEX PRESENT ON ANNOVALUES NORM FIELD
+    coll = restapi_db.nsvalues
+    out('Checking for an index on norm in annovalues... ')
+    if 'norm' in coll.index_information():
+        print('yes')
+    else:
+        print('no')
+        global annovalues_norm_index
+        annovalues_norm_index = False
         status = False
 
     print('Finished checks.')
@@ -77,6 +89,14 @@ def fix():
         kwargs = {'name': 'keyword'}
         kwargs.update(fg_index_args)
         coll.create_index('keyword', **kwargs)
+        print('done')
+
+    if not annovalues_norm_index:
+        out('Creating index on norm in annovalues... ')
+        coll = restapi_db.annovalues
+        kwargs = {'name': 'norm'}
+        kwargs.update(fg_index_args)
+        coll.create_index('norm', **kwargs)
         print('done')
 
     print('Finished applying changes.')

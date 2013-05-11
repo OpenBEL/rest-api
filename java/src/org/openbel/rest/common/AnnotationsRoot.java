@@ -36,29 +36,70 @@
  */
 package org.openbel.rest.common;
 
+import static java.util.Collections.*;
+import static org.openbel.rest.Util.*;
+import static org.openbel.rest.main.*;
+import org.openbel.rest.common.Objects;
+import org.jongo.*;
+import org.openbel.rest.Path;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
-import org.openbel.rest.Path;
-
-import java.util.Map;
+import org.restlet.representation.Representation;
+import java.util.*;
 
 @Path("/api/v1/annotations")
 public class AnnotationsRoot extends ServerResource {
-
-    class Root {
-        private String root;
-
-        Root() {
-            root = "annotations";
-        }
-        public String getRoot() {
-            return root;
-        }
+    private static final List<String> RESOURCES;
+    private static final String ROOT_FIND;
+    private static final String ROOT_PROJECTION;
+    private static final String START;
+    private static final String END;
+    private static final String MY_PATH;
+    static {
+        ROOT_FIND = "{}";
+        ROOT_PROJECTION = "{description: 0}";
+        RESOURCES = new ArrayList<>();
+        MY_PATH = declaredPath(AnnotationsRoot.class);
+        Find find = $annotations.find(ROOT_FIND);
+        for (Map<?, ?> map : find.as(Map.class))
+            RESOURCES.add((String) map.get("keyword"));
+        sort(RESOURCES);
+        START = RESOURCES.get(0);
+        END = RESOURCES.get(RESOURCES.size() - 1);
     }
 
     @Get("json")
-    public Root _get() {
-        return new Root();
+    public Representation _get() {
+        Objects.Annotations ret = new Objects.Annotations();
+        Find find = $annotations.find(ROOT_FIND).projection(ROOT_PROJECTION);
+        for (Map<?, ?> map : find.as(Map.class)) {
+            String name = (String) map.get("name");
+            String kword = (String) map.get("keyword");
+            String type = (String) map.get("type");
+            // no usage or description
+            Objects.Annotation obja = new Objects.Annotation(name, kword, type);
+            ret.addAnnotation(obja);
+            obja.addLink("related", urlify(MY_PATH, kword, "values"));
+            obja.addLink("self", urlify(MY_PATH, kword));
+        }
+        ret.addLink("start", urlify(MY_PATH, START));
+        ret.addLink("end", urlify(MY_PATH, END));
+        return ret.json();
+    }
+
+    static void linkResource(Objects.Annotation resource) {
+        resource.addLink("index", AnnotationsRoot.class);
+        resource.addLink("first", urlify(MY_PATH, START));
+        int i = RESOURCES.indexOf(resource.keyword);
+        if ((i + 1) < (RESOURCES.size())) {
+            String next = RESOURCES.get(i + 1);
+            resource.addLink("next", urlify(MY_PATH, next));
+        }
+        if (i > 0) {
+            String prev = RESOURCES.get(i - 1);
+            resource.addLink("prev", urlify(MY_PATH, prev));
+        }
+        resource.addLink("last", urlify(MY_PATH, END));
     }
 
 }

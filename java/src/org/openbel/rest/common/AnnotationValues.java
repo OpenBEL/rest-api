@@ -36,7 +36,8 @@
  */
 package org.openbel.rest.common;
 
-import static java.util.Collections.*;
+import static java.lang.String.format;
+import static org.openbel.rest.common.Objects.*;
 import static org.openbel.rest.Util.*;
 import static org.openbel.rest.main.*;
 import org.openbel.rest.common.Objects;
@@ -45,59 +46,50 @@ import org.openbel.rest.Path;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
+import org.restlet.data.Status;
 import java.util.*;
 
-@Path("/api/v1/namespaces")
-public class NamespacesRoot extends ServerResource {
-	private static final List<String> RESOURCES;
-	private static final String ROOT_FIND;
-	private static final String ROOT_PROJECTION;
-    private static final String START;
-    private static final String END;
-    private static final String MY_PATH;
-	static {
-		ROOT_FIND = "{}";
-		ROOT_PROJECTION = "{description: 0}";
-		RESOURCES = new ArrayList<>();
-        MY_PATH = declaredPath(NamespacesRoot.class);
-    	Find find = $namespaces.find(ROOT_FIND);
-        for (Map<?, ?> map : find.as(Map.class))
-        	RESOURCES.add((String) map.get("keyword"));
-        sort(RESOURCES);
-        START = RESOURCES.get(0);
-        END = RESOURCES.get(RESOURCES.size() - 1);
-	}
+@Path("/api/v1/annotations/{keyword}/values")
+public class AnnotationValues extends ServerResource {
+    private static final String FIND_RSRC;
+    private static final String FIND_VALUES;
+    static {
+        FIND_RSRC = "{keyword: '%s'}";
+        FIND_VALUES = "{annometa-id: #}";
+    }
 
     @Get("json")
     public Representation _get() {
-    	Objects.Namespaces ret = new Objects.Namespaces();
-    	Find find = $namespaces.find(ROOT_FIND).projection(ROOT_PROJECTION);
-        for (Map<?, ?> map : find.as(Map.class)) {
-        	String name = (String) map.get("name");
-        	String kword = (String) map.get("keyword");
-        	Objects.Namespace objn = new Objects.Namespace(name, kword, null);
-        	ret.addNamespace(objn);
-            objn.addLink("related", urlify(MY_PATH, kword, "values"));
-            objn.addLink("self", urlify(MY_PATH, kword));
+        String keyword = getAttribute("keyword");
+        String query = format(FIND_RSRC, keyword);
+        Map<?, ?> anno = $annotations.findOne(query).as(Map.class);
+        if (anno == null) {
+            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            return null;
         }
-        ret.addLink("start", urlify(MY_PATH, START));
-        ret.addLink("end", urlify(MY_PATH, END));
-        return ret.json();
-    }
 
-    static void linkResource(Objects.Namespace resource) {
-        resource.addLink("index", NamespacesRoot.class);
-        resource.addLink("first", urlify(MY_PATH, START));
-        int i = RESOURCES.indexOf(resource.keyword);
-        if ((i + 1) < (RESOURCES.size())) {
-            String next = RESOURCES.get(i + 1);
-            resource.addLink("next", urlify(MY_PATH, next));
+        String name = (String) anno.get("name");
+        String kword = (String) anno.get("keyword");
+        String type = (String) anno.get("type");
+        String usage = (String) anno.get("usage");
+        String desc = (String) anno.get("description");
+        Objects.Annotation obja = new Objects.Annotation(name, kword, type);
+        obja.setUsage(usage);
+        obja.setDescription(desc);
+        Object _id = anno.get("_id");
+
+        Find find = $annovalues.find(FIND_VALUES, _id);
+        List<String> values = new LinkedList<>();
+        for (Map<?, ?> map : find.as(Map.class)) {
+            values.add((String) map.get("val"));
         }
-        if (i > 0) {
-            String prev = RESOURCES.get(i - 1);
-            resource.addLink("prev", urlify(MY_PATH, prev));
-        }
-        resource.addLink("last", urlify(MY_PATH, END));
+        obja.put("values", values);
+
+        // links
+        String path = declaredPath(Objects.Annotations.class);
+        obja.addLink("self", urlify(path, keyword, "values"));
+        obja.addLink("related", urlify(path, keyword));
+        return obja.json();
     }
 
 }

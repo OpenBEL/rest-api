@@ -67,6 +67,12 @@ public class APIApplication extends Application {
         path = declaredPath(AnnotationsRoot.class);
         router.attach(path, AnnotationsRoot.class);
 
+        path = declaredPath(Annotations.class);
+        router.attach(path, Annotations.class);
+
+        path = declaredPath(AnnotationValues.class);
+        router.attach(path, AnnotationValues.class);
+
         path = declaredPath(NamespacesRoot.class);
         router.attach(path, NamespacesRoot.class);
 
