@@ -155,8 +155,12 @@ public class Objects {
 
     @Path("/api/v1/annotations")
     public static class Annotations extends Base {
+        public List<Annotation> annotations;
         {
+            annotations = new ArrayList<>();
+            put("annotations", annotations);
         }
+        public void addAnnotation(Annotation a) { annotations.add(a); }
     }
 
     @Path("/api/v1/namespaces")
@@ -292,6 +296,30 @@ public class Objects {
             put("name", name);
             put("keyword", keyword);
             if (description != null) put("description", description);
+        }
+    }
+
+    public static class Annotation extends Base {
+        public String description; // not required
+        public String usage; // not required
+        public String name; // required
+        public String keyword; // required
+        public String type; // required
+        public Annotation(String name, String keyword, String type) {
+            this.name = name;
+            this.keyword = keyword;
+            this.type = type;
+            put("name", name);
+            put("keyword", keyword);
+            put("type", type);
+        }
+        public void setDescription(String s) {
+            put("description", s);
+            this.description = s;
+        }
+        public void setUsage(String s) {
+            put("usage", s);
+            this.usage = s;
         }
     }
 

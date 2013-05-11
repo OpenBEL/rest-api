@@ -63,6 +63,8 @@ public class main extends Component {
     public static APIApplication $apiapp;
     public static MongoCollection $namespaces;
     public static MongoCollection $nsvalues;
+    public static MongoCollection $annotations;
+    public static MongoCollection $annovalues;
 
     main() {
         getServers().add(HTTP, $port);
@@ -81,6 +83,8 @@ public class main extends Component {
         Jongo jongo = new Jongo($db);
         $nsvalues = jongo.getCollection("nsvalues");
         $namespaces = jongo.getCollection("namespaces");
+        $annovalues = jongo.getCollection("annovalues");
+        $annotations = jongo.getCollection("annotations");
         out.println("okay");
     }
 
