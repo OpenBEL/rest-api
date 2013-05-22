@@ -3,10 +3,9 @@
 Overview
 ========
 
-This API is located under the following URL:
+This API is located under the following URL::
 
     http://demo.openbel.org/api
-
 
 Requirements
 ------------
