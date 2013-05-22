@@ -1,24 +1,22 @@
-BEL REST API Documentation
-==========================
-
-General:
+Introduction
+------------
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    overview
 
-REST resources:
+The API
+-------
 
 .. toctree::
    :maxdepth: 2
 
+   api
    versions
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
+   v1
+   lang
+   functions
+   relationships
+   annotations
+   namespaces
