@@ -18,5 +18,6 @@ The API
    lang
    functions
    relationships
+   validater
    annotations
    namespaces

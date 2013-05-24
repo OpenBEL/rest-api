@@ -8,9 +8,9 @@ BEL language information.
 .. ############################################################################
 .. http:get:: /api/v1/lang
 
-	| **Description**
-	| Links to resources pertaining to the language.
-	| (try it: http://demo.openbel.org/api/v1/lang)
+    | **Description**
+    | Links to resources pertaining to the language.
+    | (try it: http://demo.openbel.org/api/v1/lang)
 
     **Links**
 

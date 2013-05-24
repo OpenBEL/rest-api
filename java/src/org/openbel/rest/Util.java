@@ -36,13 +36,17 @@
  */
 package org.openbel.rest;
 
+import static org.openbel.framework.common.enums.FunctionEnum.*;
+import static org.openbel.framework.common.enums.RelationshipType.*;
+import static java.lang.System.*;
 import org.restlet.Request;
 import java.net.*;
 import java.util.*;
-import static org.openbel.framework.common.enums.FunctionEnum.*;
+import java.io.IOException;
 import org.openbel.framework.common.enums.FunctionEnum;
-import static org.openbel.framework.common.enums.RelationshipType.*;
+import org.restlet.representation.Representation;
 import org.openbel.framework.common.enums.RelationshipType;
+import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.util.Series;
 
 /**
@@ -71,6 +75,18 @@ public class Util {
         METASTR[16] = new String[] { "+", "\\+" };
         METASTR[17] = new String[] { ".", "\\." };
         METASTR[18] = new String[] { ">", "\\>" };
+    }
+
+    /**
+     * Cast {@code o} to {@code T}, returning {@code null} if not possible.
+     *
+     * @param o Object to cast
+     * @param cls Class to cast to
+     */
+    public static <T> T cast(Object o, Class<T> cls) {
+        if (o == null || cls == null) return null;
+        if (cls.isAssignableFrom(o.getClass())) return cls.cast(o);
+        return null;
     }
 
     /**
@@ -129,7 +145,36 @@ public class Util {
     }
 
     /**
-     * Gets the value of a class annotated with the
+     * Get a map from a representation.
+     *
+     * @param r Representation
+     * @return {@link Map}; may be null if conversion fails
+     */
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> mapify(Representation r) {
+        try {
+            return new JacksonRepresentation<Map>(r, Map.class).getObject();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get text from a representation.
+     *
+     * @param r Representation
+     * @return {@link String}; may be null if conversion fails
+     */
+    public static String textify(Representation r) {
+        try {
+            return r.getText();
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get the value of a class annotated with the
      * {@link org.openbel.rest.Path} annotation.
      *
      * @param cls Class

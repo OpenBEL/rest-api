@@ -7,9 +7,9 @@ Version 1 of the BEL REST API.
 
 .. http:get:: /api/v1
 
-	| **Description**
-	| Version information and links from version 1 of the API.
-	| (try it: http://demo.openbel.org/api/v1)
+    | **Description**
+    | Version information and links from version 1 of the API.
+    | (try it: http://demo.openbel.org/api/v1)
 
-	| **Status codes**:
-	| 	:http:statuscode:`200`
+    | **Status codes**:
+    |   :http:statuscode:`200`

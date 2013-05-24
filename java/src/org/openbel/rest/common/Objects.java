@@ -323,4 +323,42 @@ public class Objects {
         }
     }
 
+    public static class Validation extends Base {
+        public boolean valid;
+        public Validation(boolean valid) {
+            this.valid = valid;
+            put("valid", valid);
+        }
+    }
+
+    public static class ScriptValidation extends Validation {
+        public ScriptValidation(boolean valid) {
+            super(valid);
+            put("syntax_errors", new ArrayList<String>());
+            put("syntax_warnings", new ArrayList<String>());
+        }
+        public void addSyntaxError(String error) {
+            @SuppressWarnings("unchecked")
+            List<String> list = (List<String>) get("syntax_errors");
+            list.add(error);
+        }
+        public void addSyntaxWarning(String warning) {
+            @SuppressWarnings("unchecked")
+            List<String> list = (List<String>) get("syntax_warnings");
+            list.add(warning);
+        }
+    }
+
+    public static class Validations extends Base {
+        public void addTermValidation(Validation v) {
+            put("term", v);
+        }
+        public void addStatementValidation(Validation v) {
+            put("statement", v);
+        }
+        public void addScriptValidation(ScriptValidation v) {
+            put("script", v);
+        }
+    }
+
 }
