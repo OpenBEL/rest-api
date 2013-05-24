@@ -64,6 +64,18 @@ public class APIApplication extends Application {
         path = declaredPath(V1Root.class);
         router.attach(path, V1Root.class);
 
+        path = declaredPath(Validater.class);
+        router.attach(path, Validater.class);
+
+        path = declaredPath(TermValidater.class);
+        router.attach(path, TermValidater.class);
+
+        path = declaredPath(StatementValidater.class);
+        router.attach(path, StatementValidater.class);
+
+        path = declaredPath(ScriptValidater.class);
+        router.attach(path, ScriptValidater.class);
+
         path = declaredPath(AnnotationsRoot.class);
         router.attach(path, AnnotationsRoot.class);
 
