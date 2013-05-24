@@ -68,7 +68,6 @@ public class ScriptValidater extends ServerResource {
         Validations objv = new Validations();
         Validation v;
 
-        System.out.println(txt);
         BELParseResults rslts = parse(txt);
         List<BELParseErrorException> errors = rslts.getSyntaxErrors();
         List<BELParseWarningException> warns = rslts.getSyntaxWarnings();
