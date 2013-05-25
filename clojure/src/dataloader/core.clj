@@ -192,7 +192,7 @@
     (download-url x "temp.belns")
     (def nsmap (parse-namespace "temp.belns"))
     (def nsmeta-id (ObjectId.))
-    (def nsmeta-doc (assoc (dissoc nsmap :values) :_id nsmeta-id))
+    (def nsmeta-doc (assoc (dissoc nsmap :values) :_id nsmeta-id :url x))
     (coll/insert "namespaces" nsmeta-doc)
     (doseq [value (nsmap :values)]
       (def nsval-id (ObjectId.))
@@ -207,7 +207,7 @@
     (download-url x "temp.belanno")
     (def annomap (parse-annotation "temp.belanno"))
     (def annometa-id (ObjectId.))
-    (def annometa-doc (assoc (dissoc annomap :values) :_id annometa-id))
+    (def annometa-doc (assoc (dissoc annomap :values) :_id annometa-id :url x))
     (coll/insert "annotations" annometa-doc)
     (doseq [value (annomap :values)]
       (def annoval-id (ObjectId.))
