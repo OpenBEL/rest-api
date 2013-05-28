@@ -37,7 +37,6 @@
 package org.openbel.rest.common;
 
 import static java.lang.String.format;
-import static org.openbel.rest.common.Objects.*;
 import static org.openbel.rest.Util.*;
 import static org.openbel.rest.main.*;
 import static org.openbel.framework.common.bel.parser.BELParser.*;
@@ -52,13 +51,68 @@ import org.restlet.resource.ServerResource;
 import org.openbel.framework.common.model.*;
 import org.openbel.framework.common.bel.parser.BELParseResults;
 import org.openbel.bel.model.*;
+import org.openbel.rest.common.Objects;
 import org.restlet.representation.Representation;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.data.Status;
 import java.util.*;
 
+import org.openbel.framework.compiler.DefaultPhaseOne;
+import org.openbel.framework.compiler.PhaseOneImpl;
+import org.openbel.framework.core.*;
+import org.openbel.framework.core.annotation.*;
+import org.openbel.framework.core.compiler.*;
+import org.openbel.framework.core.compiler.expansion.*;
+import org.openbel.framework.core.df.cache.*;
+import org.openbel.framework.core.indexer.IndexingFailure;
+import org.openbel.framework.core.namespace.*;
+import org.openbel.framework.core.protocol.ResourceDownloadError;
+import org.openbel.framework.core.protonetwork.*;
+
+
 @Path("/api/v1/compiler")
 public class CompilerRoot extends ServerResource {
+    private static final Document DOCUMENT;
+    static {
+        DOCUMENT = document();
+    }
+    private final DefaultPhaseOne p1;
+    private final XBELValidatorService validator;
+    private final XBELConverterService converter;
+    private final BELValidatorService bv;
+    private final BELConverterService bc;
+    private final NamespaceIndexerService nsi;
+    private final CacheableResourceService cache;
+    private final CacheLookupService cl;
+    private final NamespaceService nss;
+    private final ProtoNetworkService pnsvc;
+    private final SemanticService semantics;
+    private final ExpansionService expansion;
+    private final AnnotationService annosvc;
+    private final AnnotationDefinitionService ads;
+
+    {
+        try {
+            validator = new XBELValidatorServiceImpl();
+            converter = new XBELConverterServiceImpl();
+            bv = new BELValidatorServiceImpl();
+            bc = new BELConverterServiceImpl();
+            cache = new DefaultCacheableResourceService();
+            cl = new DefaultCacheLookupService();
+            nsi = new NamespaceIndexerServiceImpl();
+            nss = new DefaultNamespaceService(cache, cl, nsi);
+            semantics = new SemanticServiceImpl(nss);
+            expansion = new ExpansionServiceImpl();
+            pnsvc = new ProtoNetworkServiceImpl();
+            annosvc = new DefaultAnnotationService();
+            ads = new DefaultAnnotationDefinitionService(cache, cl);
+            p1 = new PhaseOneImpl(validator, converter, bv, bc, nss, semantics,
+                                  expansion, pnsvc, annosvc, ads);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     @Post("json")
     public Representation _post1(Representation body) {
@@ -86,11 +140,61 @@ public class CompilerRoot extends ServerResource {
             stmt = null;
         }
 
-        Validation objv;
-        if (stmt == null) objv = new Validation(false);
-        else objv = new Validation(true);
+        Objects.Validation objv;
+        if (stmt == null) {
+            objv = new Objects.Validation(false);
+            return objv.json();
+        }
+        else objv = new Objects.Validation(true);
 
-        return null;
+        Document document = DOCUMENT.clone();
+
+        // Fix all parameter namespaces
+        Map<String, Namespace> nsmap = document.getNamespaceMap();
+        for (final Term term : stmt) {
+            for (final Parameter param : term) {
+                Namespace ns = param.getNamespace();
+                if (ns == null) continue;
+                Namespace known = nsmap.get(ns.getPrefix());
+                if (known == null) continue;
+                param.setNamespace(known);
+            }
+        }
+
+        StatementGroup sg = document.getStatementGroups().get(0);
+        List<Statement> stmts = new ArrayList<>();
+        stmts.add(stmt);
+        sg.setStatements(stmts);
+
+        List<String> messages = new ArrayList<>();
+        try {
+            p1.stage2NamespaceCompilation(document);
+        } catch (IndexingFailure f) {
+            messages.add(f.getUserFacingMessage());
+        } catch (ResourceDownloadError e) {
+            messages.add(e.getUserFacingMessage());
+        }
+
+        try {
+            p1.stage3SymbolVerification(document);
+        } catch (SymbolWarning w) {
+            messages.add(w.getUserFacingMessage());
+        } catch (IndexingFailure f) {
+            messages.add(f.getUserFacingMessage());
+        } catch (ResourceDownloadError e) {
+            messages.add(e.getUserFacingMessage());
+        }
+
+        try {
+            p1.stage4SemanticVerification(document);
+        } catch (SemanticFailure f) {
+            messages.add(f.getUserFacingMessage());
+        } catch (IndexingFailure f) {
+            messages.add(f.getUserFacingMessage());
+        }
+
+        objv.put("messages", messages);
+        return objv.json();
     }
 
     @Post("txt")
@@ -113,7 +217,7 @@ public class CompilerRoot extends ServerResource {
         }
 
         AnnotationDefinition ad;
-        List<AnnotationDefinitions> annotations = new ArrayList<>();
+        List<AnnotationDefinition> definitions = new ArrayList<>();
         find = $annotations.find("{}");
         for (Map<?, ?> map : find.as(Map.class)) {
             String keyword = (String) map.get("keyword");
@@ -122,8 +226,16 @@ public class CompilerRoot extends ServerResource {
             String usage = (String) map.get("usage");
             AnnotationType at = AnnotationType.ENUMERATION;
             ad = new AnnotationDefinition(keyword, at, desc, usage, url);
-            annotations.add(ad);
+            definitions.add(ad);
         }
+
+        Header hdr = new Header("", "", "");
+        Document ret = new Document(hdr, new StatementGroup());
+        ret.setDefinitions(definitions);
+        NamespaceGroup nsgroup = new NamespaceGroup();
+        nsgroup.setNamespaces(namespaces);
+        ret.setNamespaceGroup(nsgroup);
+        return ret;
     }
 
 }
