@@ -41,6 +41,9 @@ import static org.openbel.rest.common.Objects.*;
 import static org.openbel.rest.Util.*;
 import static org.openbel.rest.main.*;
 import static org.openbel.framework.common.bel.parser.BELParser.*;
+
+import org.openbel.framework.common.enums.AnnotationType;
+import org.openbel.framework.common.model.AnnotationDefinition;
 import org.openbel.rest.common.Objects;
 import org.jongo.*;
 import org.openbel.rest.Path;
@@ -98,6 +101,29 @@ public class CompilerRoot extends ServerResource {
         }
         String txt = textify(body);
         return null;
+    }
+
+    private static Document document() {
+        Find find = $namespaces.find("{}");
+        List<Namespace> namespaces = new ArrayList<>();
+        for (Map<?, ?> map : find.as(Map.class)) {
+            String keyword = (String) map.get("keyword");
+            String url = (String) map.get("url");
+            namespaces.add(new Namespace(keyword, url));
+        }
+
+        AnnotationDefinition ad;
+        List<AnnotationDefinitions> annotations = new ArrayList<>();
+        find = $annotations.find("{}");
+        for (Map<?, ?> map : find.as(Map.class)) {
+            String keyword = (String) map.get("keyword");
+            String url = (String) map.get("url");
+            String desc = (String) map.get("description");
+            String usage = (String) map.get("usage");
+            AnnotationType at = AnnotationType.ENUMERATION;
+            ad = new AnnotationDefinition(keyword, at, desc, usage, url);
+            annotations.add(ad);
+        }
     }
 
 }
