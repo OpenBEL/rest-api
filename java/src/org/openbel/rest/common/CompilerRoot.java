@@ -41,6 +41,7 @@ import static org.openbel.rest.Util.*;
 import static org.openbel.rest.main.*;
 import static org.openbel.framework.common.bel.parser.BELParser.*;
 
+import org.openbel.framework.common.*;
 import org.openbel.framework.common.enums.AnnotationType;
 import org.openbel.framework.common.model.AnnotationDefinition;
 import org.openbel.rest.common.Objects;
@@ -166,34 +167,75 @@ public class CompilerRoot extends ServerResource {
         stmts.add(stmt);
         sg.setStatements(stmts);
 
-        List<String> messages = new ArrayList<>();
+        List<String> warns = new ArrayList<>();
+        List<String> errs = new ArrayList<>();
         try {
             p1.stage2NamespaceCompilation(document);
         } catch (IndexingFailure f) {
-            messages.add(f.getUserFacingMessage());
+            String name = f.getName();
+            String msg = f.getMessage();
+            StringBuilder bldr = new StringBuilder();
+            bldr.append("indexing failure");
+            if (name != null) bldr.append(" in " + name);
+            bldr.append(": " + msg);
+            errs.add(bldr.toString());
         } catch (ResourceDownloadError e) {
-            messages.add(e.getUserFacingMessage());
+            String name = e.getName();
+            String msg = e.getMessage();
+            StringBuilder bldr = new StringBuilder();
+            bldr.append("error downloading resource");
+            if (name != null) bldr.append(" for " + name);
+            bldr.append(": " + msg);
+            errs.add(bldr.toString());
         }
 
         try {
             p1.stage3SymbolVerification(document);
         } catch (SymbolWarning w) {
-            messages.add(w.getUserFacingMessage());
+            List<?> causes = w.getResourceSyntaxWarnings();
+            for (Object o : causes) {
+                BELWarningException bwe = (BELWarningException) o;
+                warns.add(bwe.getUserFacingMessage());
+            }
         } catch (IndexingFailure f) {
-            messages.add(f.getUserFacingMessage());
+            String name = f.getName();
+            String msg = f.getMessage();
+            StringBuilder bldr = new StringBuilder();
+            bldr.append("indexing failure");
+            if (name != null) bldr.append(" in " + name);
+            bldr.append(": " + msg);
+            errs.add(bldr.toString());
         } catch (ResourceDownloadError e) {
-            messages.add(e.getUserFacingMessage());
+            String name = e.getName();
+            String msg = e.getMessage();
+            StringBuilder bldr = new StringBuilder();
+            bldr.append("error downloading resource");
+            if (name != null) bldr.append(" for " + name);
+            bldr.append(": " + msg);
+            errs.add(bldr.toString());
         }
 
         try {
             p1.stage4SemanticVerification(document);
         } catch (SemanticFailure f) {
-            messages.add(f.getUserFacingMessage());
+            List<SemanticWarning> causes = f.getCauses();
+            for (SemanticWarning sw : causes) {
+                warns.add(sw.getMessage());
+            }
         } catch (IndexingFailure f) {
-            messages.add(f.getUserFacingMessage());
+            String name = f.getName();
+            String msg = f.getMessage();
+            StringBuilder bldr = new StringBuilder();
+            bldr.append("indexing failure");
+            if (name != null) bldr.append(" in " + name);
+            bldr.append(": " + msg);
+            errs.add(bldr.toString());
         }
 
-        objv.put("messages", messages);
+        if (warns.size() != 0) objv.put("warnings", warns);
+        if (errs.size() != 0) {
+            objv.put("errors", errs);
+        }
         return objv.json();
     }
 
