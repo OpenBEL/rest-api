@@ -3,13 +3,13 @@
 /api/v1/lang/validater
 ======================
 
-BEL script, statement, and term validation.
+BEL script, statement, and term syntax validation.
 
 .. ############################################################################
 .. http:post:: /api/v1/lang/validater
 
     | **Description**
-    | Validates a BEL statement, term, or script.
+    | Validates the syntax of a BEL statement, term, or script.
 
     Example request:
 
@@ -69,7 +69,7 @@ BEL script, statement, and term validation.
 .. http:post:: /api/v1/lang/validater/term
 
     | **Description**
-    | Validates a BEL term.
+    | Validates the syntax of a BEL term.
 
     Example request:
 
@@ -93,7 +93,7 @@ BEL script, statement, and term validation.
 .. http:post:: /api/v1/lang/validater/statement
 
     | **Description**
-    | Validates a BEL statement.
+    | Validates the syntax of a BEL statement.
 
     Example request:
 
@@ -117,7 +117,7 @@ BEL script, statement, and term validation.
 .. http:post:: /api/v1/lang/validater/script
 
     | **Description**
-    | Validates a BEL script.
+    | Validates the syntax of a BEL script.
 
     Example request:
 
