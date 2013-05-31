@@ -69,6 +69,7 @@ import org.openbel.framework.core.indexer.IndexingFailure;
 import org.openbel.framework.core.namespace.*;
 import org.openbel.framework.core.protocol.ResourceDownloadError;
 import org.openbel.framework.core.protonetwork.*;
+import java.util.concurrent.Semaphore;
 
 
 @Path("/api/v1/compiler")
@@ -77,22 +78,24 @@ public class CompilerRoot extends ServerResource {
     static {
         DOCUMENT = document();
     }
-    private final DefaultPhaseOne p1;
-    private final XBELValidatorService validator;
-    private final XBELConverterService converter;
-    private final BELValidatorService bv;
-    private final BELConverterService bc;
-    private final NamespaceIndexerService nsi;
-    private final CacheableResourceService cache;
-    private final CacheLookupService cl;
-    private final NamespaceService nss;
-    private final ProtoNetworkService pnsvc;
-    private final SemanticService semantics;
-    private final ExpansionService expansion;
-    private final AnnotationService annosvc;
-    private final AnnotationDefinitionService ads;
+    private static final Semaphore sem;
+    private static final DefaultPhaseOne p1;
+    private static final XBELValidatorService validator;
+    private static final XBELConverterService converter;
+    private static final BELValidatorService bv;
+    private static final BELConverterService bc;
+    private static final NamespaceIndexerService nsi;
+    private static final CacheableResourceService cache;
+    private static final CacheLookupService cl;
+    private static final NamespaceService nss;
+    private static final ProtoNetworkService pnsvc;
+    private static final SemanticService semantics;
+    private static final ExpansionService expansion;
+    private static final AnnotationService annosvc;
+    private static final AnnotationDefinitionService ads;
 
-    {
+    static {
+        sem = new Semaphore(1, true);
         try {
             validator = new XBELValidatorServiceImpl();
             converter = new XBELConverterServiceImpl();
@@ -167,6 +170,16 @@ public class CompilerRoot extends ServerResource {
         stmts.add(stmt);
         sg.setStatements(stmts);
 
+        sem.acquireUninterruptibly();
+        try {
+            compile(objv, document);
+        } finally {
+            sem.release();
+        }
+        return objv.json();
+    }
+
+    private static void compile(Objects.Validation objv, Document document) {
         List<String> warns = new ArrayList<>();
         List<String> errs = new ArrayList<>();
         try {
@@ -236,7 +249,6 @@ public class CompilerRoot extends ServerResource {
         if (errs.size() != 0) {
             objv.put("errors", errs);
         }
-        return objv.json();
     }
 
     @Post("txt")
