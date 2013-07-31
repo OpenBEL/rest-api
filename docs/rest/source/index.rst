@@ -19,5 +19,6 @@ The API
    functions
    relationships
    validater
+   translater
    annotations
    namespaces
