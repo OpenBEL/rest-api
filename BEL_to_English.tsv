@@ -1,0 +1,153 @@
+# This file defines the translations used to convert a subset of BEL syntax
+# to English. Lines beginning with a '#' character are ignored.
+#
+# The format of this file is:
+# <regular expression><tab><replacement>
+#
+# The <regular expression> values are used by Java 7's regular expression
+# engine. Refer to your resident cryptographer for reference. ;)
+#
+
+# BEL language relationship: decreases
+(?<SUB>.*) (decreases|-\|) (?<OBJ>.*)	${SUB} decreases ${OBJ}
+
+# BEL language relationship; increases
+(?<SUB>.*) (increases|->) (?<OBJ>.*)	${SUB} increases ${OBJ}
+
+# BEL language relationship; causesNoChange
+(?<SUB>.*) causesNoChange (?<OBJ>.*)	${SUB} causes no significant change of ${OBJ}
+
+# BEL language relationship; directlyDecreases
+(?<SUB>.*) (directlyDecreases|=\|) (?<OBJ>.*)	${SUB} decreases ${OBJ} through direct physical interaction
+
+# BEL language relationship; directlyIncreases
+(?<SUB>.*) (directlyIncreases|=>) (?<OBJ>.*)	${SUB} increases ${OBJ} through direct physical interaction
+
+# BEL language relationship; negativeCorrelation
+(?<SUB>.*) negativeCorrelation (?<OBJ>.*)	${SUB} and ${OBJ} are negatively correlated
+
+# BEL language relationship; positiveCorrelation
+(?<SUB>.*) positiveCorrelation (?<OBJ>.*)	${SUB} and ${OBJ} are positively correlated
+
+# BEL language relationship; orthologous
+(?<SUB>.*) orthologous (?<OBJ>.*)	${SUB} and ${OBJ} are orthologous
+
+# BEL language relationship; transcribedTo
+(?<SUB>.*) (transcribedTo|:>) (?<OBJ>.*)	${SUB} is transcribed to ${OBJ}
+
+# BEL language relationship; translatedTo
+(?<SUB>.*) (translatedTo|>>) (?<OBJ>.*)	${SUB} is translated to ${OBJ}
+
+# BEL language relationship; association
+(?<SUB>.*) (association|--) (?<OBJ>.*)	${SUB} and ${OBJ} are associated
+
+# BEL language relationship; biomarkerFor
+(?<SUB>.*) biomarkerFor (?<OBJ>.*)	${SUB} is a biomarker for ${OBJ}
+
+# BEL language relationship; hasMember
+(?<SUB>.*) hasMember (?<OBJ>.*)	${SUB} has the member ${OBJ}
+
+# BEL language relationship; hasMembers
+(?<SUB>.*) hasMembers (?<OBJ>.*)	${SUB} has the members ${OBJ}
+
+# BEL language relationship; hasComponent
+(?<SUB>.*) hasComponent (?<OBJ>.*)	${SUB} has the component ${OBJ}
+
+# BEL language relationship; hasComponents
+(?<SUB>.*) hasComponents (?<OBJ>.*)	${SUB} has the components ${OBJ}
+
+# BEL language relationship; isA
+(?<SUB>.*) isA (?<OBJ>.*)	${SUB} is a ${OBJ}
+
+# BEL language relationship; prognosticBiomarkerFor
+(?<SUB>.*) prognosticBiomarkerFor (?<OBJ>.*)	${SUB} is a prognostic biomarker for ${OBJ}
+
+# BEL language relationship; rateLimitingStepOf
+(?<SUB>.*) rateLimitingStepOf (?<OBJ>.*)	${SUB} is a rate-limiting step of ${OBJ}
+
+# BEL language relationship; subprocess
+(?<SUB>.*) subProcessOf (?<OBJ>.*)	${SUB} is a subprocess of ${OBJ}
+
+# BEL language function; abundance
+((( )+|^)(?<FX>(a|abundance))\()((?<NS>.*):(?<VAL>.*)\))	the abundance of ${NS} namespace ${VAL}
+
+# BEL language function; proteinAbundance
+((( )+|^)(?<FX>(p|proteinAbundance))\()((?<NS>.*):(?<VAL>.*)\))	the abundance of ${NS} namespace ${VAL} protein
+
+# BEL language function; complexAbundance
+((( )+|^)(?<FX>(complex|complexAbundance))\()((?<NS>.*):(?<VAL>.*)\))	the complex of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(complex|complexAbundance))\()((?<ARGS>.*)\))
+
+# BEL language function; compositebundance
+((( )+|^)(?<FX>(composite|compositeAbundance))\()((?<ARGS>.*)\))	${ARGS} together
+
+# BEL language function; geneAbundance
+((( )+|^)(?<FX>(g|geneAbundance))\()((?<NS>.*):(?<VAL>.*)\))	the abundance of ${NS} namespace ${VAL} gene
+
+# BEL language function; microRNAAbundance
+((( )+|^)(?<FX>(m|microRNAAbundance))\()((?<NS>.*):(?<VAL>.*)\))	the abundance of ${NS} namespace ${VAL} microRNA
+
+# BEL language function; rna
+((( )+|^)(?<FX>(r|rnaAbundance))\()((?<NS>.*):(?<VAL>.*)\))	the abundance of ${NS} namespace ${VAL} RNA
+
+# BEL language function; proteinAbundance w/ proteinModification
+((( )+|^)(?<OUTERFX>(p|proteinAbundance))\()((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\()((?<TYPE>\w+),( )*(?<AA>\w+),( )*(?<POS>\w+)\)\))	the abundance of ${NS} namespace ${VAL} protein modified by ${TYPE} at ${AA} ${POS}
+((( )+|^)(?<OUTERFX>(p|proteinAbundance))\()((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\()((?<TYPE>\w+),( )*(?<AA>\w+)\)\))	the abundance of ${NS} namespace ${VAL} protein modified by ${TYPE} at ${AA}
+((( )+|^)(?<OUTERFX>(p|proteinAbundance))\()((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\()((?<TYPE>\w+)\)\))	the abundance of ${NS} namespace ${VAL} protein modified by ${TYPE}
+
+# BEL language function; proteinAbundance w/ substitution
+((( )+|^)(?<OUTERFX>(p|proteinAbundance))\()((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(sub|substitution))\()((?<AAREF>\w+),( )*(?<AAVAR>\w+),( )*(?<POS>\w+)\)\))	the abundance of ${NS} namespace ${VAL} protein in which ${AAREF} is substituted with ${AAVAR} at codon ${POS}
+
+# BEL language function;
+((( )+|^)(?<OUTERFX>(g|geneAbundance))\()((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(fus|substitution))\()((?<AAREF>\w+),( )*(?<AAVAR>\w+),( )*(?<POS>\w+)\)\))	the abundance of ${NS} namespace ${VAL} protein in which ${AAREF} is substituted with ${AAVAR} at codon ${POS}
+
+# BEL language function; proteinAbundance w/ truncation
+((( )+|^)(?<OUTERFX>(p|proteinAbundance))\()((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(trunc|truncation))\()((?<POS>\w+)\)\))	the abundance of ${NS} namespace ${VAL} protein truncated at ${POS}
+
+# BEL language function; biologicalProcess
+((( )+|^)(?<FX>(bp|biologicalProcess))\()((?<NS>.*):(?<VAL>.*)\))	the biological process of ${NS} namespace ${VAL}
+
+# BEL language function; pathology
+((( )+|^)(?<FX>(path|pathology))\()((?<NS>.*):(?<VAL>.*)\))	the pathology of ${NS} namespace ${VAL}
+
+# BEL language function; catalyticActivity
+((( )+|^)(?<FX>(cat|catalyticActivity))\()((?<NS>.*):(?<VAL>.*)\))	the catalytic activity of ${NS} namespace ${VAL}
+
+# BEL language function; chaperoneActivity
+((( )+|^)(?<FX>(chap|chaperoneActivity))\()((?<NS>.*):(?<VAL>.*)\))	the chaperone activity of ${NS} namespace ${VAL}
+
+# BEL language function; gtpBoundActivity
+((( )+|^)(?<FX>(gtp|gtpBoundActivity))\()((?<NS>.*):(?<VAL>.*)\))	the GTP-bound activity of ${NS} namespace ${VAL}
+
+# BEL language function; kinaseActivity
+((( )+|^)(?<FX>(kin|kinaseActivity))\()((?<NS>.*):(?<VAL>.*)\))	the kinase activity of ${NS} namespace ${VAL}
+
+# BEL language function; molecularActivity
+((( )+|^)(?<FX>(act|molecularActivity))\()((?<NS>.*):(?<VAL>.*)\))	the molecular activity of ${NS} namespace ${VAL}
+
+# BEL language function; peptidaseActivity
+((( )+|^)(?<FX>(pep|peptidaseActivity))\()((?<NS>.*):(?<VAL>.*)\))	the peptidase activity of ${NS} namespace ${VAL}
+
+# BEL language function; phosphataseActivity
+((( )+|^)(?<FX>(phos|phosphataseActivity))\()((?<NS>.*):(?<VAL>.*)\))	the phosphatase activity of ${NS} namespace ${VAL}
+
+# BEL language function; ribosylationActivity
+((( )+|^)(?<FX>(ribo|ribosylationActivity))\()((?<NS>.*):(?<VAL>.*)\))	the ribosylation activity of ${NS} namespace ${VAL}
+
+# BEL language function; transcriptionalActivity
+((( )+|^)(?<FX>(tscript|transcriptionalActivity))\()((?<NS>.*):(?<VAL>.*)\))	the transcriptional activity of ${NS} namespace ${VAL}
+
+# BEL language function; transportActivity
+((( )+|^)(?<FX>(tport|transportActivity))\()((?<NS>.*):(?<VAL>.*)\))	the transport activity of ${NS} namespace ${VAL}
+
+# BEL language function; translocation
+((( )+|^)(?<FX>(tloc|translocation))\()((?<NS1>.*):(?<VAL1>.*),( )*(?<NS2>.*):(?<VAL2>.*)\))	the translocation of ${NS1} namespace ${VAL1}
+
+# BEL language function; cellSecretion
+
+# BEL language function; cellSurfaceExpression
+
+# BEL language function; degradation
+
+# BEL language function; reaction
+
