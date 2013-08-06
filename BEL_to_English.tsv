@@ -111,43 +111,77 @@
 ((( )+|^)(?<FX>(path|pathology))\()((?<NS>.*):(?<VAL>.*)\))	the pathology of ${NS} namespace ${VAL}
 
 # BEL language function; catalyticActivity
-((( )+|^)(?<FX>(cat|catalyticActivity))\()((?<NS>.*):(?<VAL>.*)\))	the catalytic activity of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(cat|catalyticActivity))\()((?<ARGS>.*)\))	the catalytic activity of ${ARGS}
 
 # BEL language function; chaperoneActivity
-((( )+|^)(?<FX>(chap|chaperoneActivity))\()((?<NS>.*):(?<VAL>.*)\))	the chaperone activity of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(chap|chaperoneActivity))\()((?<ARGS>.*)\))	the chaperone activity of ${NS} namespace ${VAL}
 
 # BEL language function; gtpBoundActivity
-((( )+|^)(?<FX>(gtp|gtpBoundActivity))\()((?<NS>.*):(?<VAL>.*)\))	the GTP-bound activity of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(gtp|gtpBoundActivity))\()((?<ARGS>.*)\))	the GTP-bound activity of ${NS} namespace ${VAL}
 
 # BEL language function; kinaseActivity
-((( )+|^)(?<FX>(kin|kinaseActivity))\()((?<NS>.*):(?<VAL>.*)\))	the kinase activity of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(kin|kinaseActivity))\()((?<ARGS>.*)\))	the kinase activity of ${NS} namespace ${VAL}
 
 # BEL language function; molecularActivity
-((( )+|^)(?<FX>(act|molecularActivity))\()((?<NS>.*):(?<VAL>.*)\))	the molecular activity of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(act|molecularActivity))\()((?<ARGS>.*)\))	the molecular activity of ${NS} namespace ${VAL}
 
 # BEL language function; peptidaseActivity
-((( )+|^)(?<FX>(pep|peptidaseActivity))\()((?<NS>.*):(?<VAL>.*)\))	the peptidase activity of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(pep|peptidaseActivity))\()((?<ARGS>.*)\))	the peptidase activity of ${NS} namespace ${VAL}
 
 # BEL language function; phosphataseActivity
-((( )+|^)(?<FX>(phos|phosphataseActivity))\()((?<NS>.*):(?<VAL>.*)\))	the phosphatase activity of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(phos|phosphataseActivity))\()((?<ARGS>.*)\))	the phosphatase activity of ${NS} namespace ${VAL}
 
 # BEL language function; ribosylationActivity
-((( )+|^)(?<FX>(ribo|ribosylationActivity))\()((?<NS>.*):(?<VAL>.*)\))	the ribosylation activity of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(ribo|ribosylationActivity))\()((?<ARGS>.*)\))	the ribosylation activity of ${NS} namespace ${VAL}
 
 # BEL language function; transcriptionalActivity
-((( )+|^)(?<FX>(tscript|transcriptionalActivity))\()((?<NS>.*):(?<VAL>.*)\))	the transcriptional activity of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(tscript|transcriptionalActivity))\()((?<ARGS>.*)\))	the transcriptional activity of ${NS} namespace ${VAL}
 
 # BEL language function; transportActivity
-((( )+|^)(?<FX>(tport|transportActivity))\()((?<NS>.*):(?<VAL>.*)\))	the transport activity of ${NS} namespace ${VAL}
+((( )+|^)(?<FX>(tport|transportActivity))\()((?<ARGS>.*)\))	the transport activity of ${NS} namespace ${VAL}
 
 # BEL language function; translocation
-((( )+|^)(?<FX>(tloc|translocation))\()((?<NS1>.*):(?<VAL1>.*),( )*(?<NS2>.*):(?<VAL2>.*)\))	the translocation of ${NS1} namespace ${VAL1}
+((( )+|^)(?<FX>(tloc|translocation))\()((?<ARGS>.*),( )*(?<NS1>.*):(?<VAL1>.*),( )*(?<NS2>.*):(?<VAL2>.*)\))	the translocation of ${ARGS} from the ${NS1} namespace cellular location ${VAL1} to the ${NS2} namespace cellular location ${VAL2}
 
 # BEL language function; cellSecretion
+((( )+|^)(?<FX>(sec|cellSecretion))\()((?<ARGS>.*)\))	the secretion of ${ARGS}
 
 # BEL language function; cellSurfaceExpression
+((( )+|^)(?<FX>(surf|cellSurfaceExpression))\()((?<ARGS>.*)\))	the cell surface expression of ${ARGS}
 
 # BEL language function; degradation
+((( )+|^)(?<FX>(deg|degradation))\()((?<ARGS>.*)\))	the degradation of ${ARGS}
 
 # BEL language function; reaction
+((( )+|^)(?<FX1>(rxn|reaction))\()((?<FX2>(reactants))\((?<ARGS1>.*)\),( )*(?<FX3>(products))\((?<ARGS2>.*)\)\))	the reaction with reactants ${ARGS1} and products ${ARGS2}
 
+# Improve modification and substitution functions
+^protein modified by P(?<SP> )?	protein modified by phosphorylation${SP}
+^protein modified by A(?<SP> )?	protein modified by acetylation${SP}
+^protein modified by F(?<SP> )?	protein modified by farnesylation${SP}
+^protein modified by G(?<SP> )?	protein modified by glycosylation${SP}
+^protein modified by H(?<SP> )?	protein modified by hydroxylation${SP}
+^protein modified by M(?<SP> )?	protein modified by methylation${SP}
+^protein modified by R(?<SP> )?	protein modified by ribosylation${SP}
+^protein modified by S(?<SP> )?	protein modified by sumoylation${SP}
+^protein modified by U(?<SP> )?	protein modified by ubiquitination${SP}
+^protein modified by (?<TYPE>(.)*) at A(?<SP> )?	protein modified by ${TYPE} at alanine${SP}
+^protein modified by (?<TYPE>(.)*) at R(?<SP> )?	protein modified by ${TYPE} at arginine${SP}
+^protein modified by (?<TYPE>(.)*) at N(?<SP> )?	protein modified by ${TYPE} at asparagine${SP}
+^protein modified by (?<TYPE>(.)*) at D(?<SP> )?	protein modified by ${TYPE} at aspartic acid${SP}
+^protein modified by (?<TYPE>(.)*) at C(?<SP> )?	protein modified by ${TYPE} at cysteine${SP}
+^protein modified by (?<TYPE>(.)*) at E(?<SP> )?	protein modified by ${TYPE} at glutamic acid${SP}
+^protein modified by (?<TYPE>(.)*) at Q(?<SP> )?	protein modified by ${TYPE} at glutamine${SP}
+^protein modified by (?<TYPE>(.)*) at G(?<SP> )?	protein modified by ${TYPE} at glycine${SP}
+^protein modified by (?<TYPE>(.)*) at H(?<SP> )?	protein modified by ${TYPE} at histidine${SP}
+^protein modified by (?<TYPE>(.)*) at I(?<SP> )?	protein modified by ${TYPE} at isoleucine${SP}
+^protein modified by (?<TYPE>(.)*) at L(?<SP> )?	protein modified by ${TYPE} at leucine${SP}
+^protein modified by (?<TYPE>(.)*) at K(?<SP> )?	protein modified by ${TYPE} at lysine${SP}
+^protein modified by (?<TYPE>(.)*) at M(?<SP> )?	protein modified by ${TYPE} at methionine${SP}
+^protein modified by (?<TYPE>(.)*) at F(?<SP> )?	protein modified by ${TYPE} at phenylalanine${SP}
+^protein modified by (?<TYPE>(.)*) at P(?<SP> )?	protein modified by ${TYPE} at proline${SP}
+^protein modified by (?<TYPE>(.)*) at S(?<SP> )?	protein modified by ${TYPE} at serine${SP}
+^protein modified by (?<TYPE>(.)*) at T(?<SP> )?	protein modified by ${TYPE} at threonine${SP}
+^protein modified by (?<TYPE>(.)*) at W(?<SP> )?	protein modified by ${TYPE} at tryptophan${SP}
+^protein modified by (?<TYPE>(.)*) at Y(?<SP> )?	protein modified by ${TYPE} at tyrosine${SP}
+^protein modified by (?<TYPE>(.)*) at V(?<SP> )?	protein modified by ${TYPE} at valine${SP}
