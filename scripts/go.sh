@@ -44,27 +44,27 @@ function _3 {
 }
 
 function _4 {
-    echo "Running..."
-    echo
-    script "run.sh" || return $?
-}
-
-function _5 {
-    echo "Documenting..."
-    echo
-    script "docs.sh" || return $?
-}
-
-function _6 {
     echo "Loading..."
     echo
     script "load.sh" || return $?
 }
 
-function _7 {
+function _5 {
     echo "Check..."
     echo
     script "mongo-check.sh" || script "mongo-check.sh --fix" || return $?
+}
+
+function _6 {
+    echo "Running..."
+    echo
+    script "run.sh" || return $?
+}
+
+function _7 {
+    echo "Documenting..."
+    echo
+    script "docs.sh" || return $?
 }
 
 function _8 {
@@ -83,10 +83,10 @@ CHOICES=(
          "clean" \
          "build" \
          "test" \
-         "run" \
-         "docs" \
          "load" \
          "check" \
+         "run" \
+         "docs" \
          "build loop" \
          )
 

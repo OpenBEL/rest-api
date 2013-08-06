@@ -71,13 +71,20 @@ import org.openbel.framework.core.protocol.ResourceDownloadError;
 import org.openbel.framework.core.protonetwork.*;
 import java.util.concurrent.Semaphore;
 
+import org.antlr.runtime.*;
+import org.openbel.bel.model.BELDocument;
+import org.openbel.framework.common.model.Term;
+import org.antlr.runtime.tree.CommonTreeNodeStream;
+import org.antlr.runtime.tree.CommonTree;
+import org.openbel.bel.model.BELParseErrorException;
+import org.openbel.bel.model.BELParseWarningException;
+import org.openbel.framework.common.bel.parser.BELScriptWalker.document_return;
+import org.openbel.framework.common.model.Statement;
+import org.openbel.framework.common.bel.converters.BELStatementConverter;
 
 @Path("/api/v1/compiler")
 public class CompilerRoot extends ServerResource {
     private static final Document DOCUMENT;
-    static {
-        DOCUMENT = document();
-    }
     private static final Semaphore sem;
     private static final DefaultPhaseOne p1;
     private static final XBELValidatorService validator;
@@ -95,6 +102,7 @@ public class CompilerRoot extends ServerResource {
     private static final AnnotationDefinitionService ads;
 
     static {
+        DOCUMENT = document();
         sem = new Semaphore(1, true);
         try {
             validator = new XBELValidatorServiceImpl();
@@ -116,7 +124,6 @@ public class CompilerRoot extends ServerResource {
             throw new RuntimeException(e);
         }
     }
-
 
     @Post("json")
     public Representation _post1(Representation body) {
@@ -140,6 +147,56 @@ public class CompilerRoot extends ServerResource {
         Statement stmt;
         try {
             stmt = parseStatement(stmt_str);
+        } catch (Exception e) {
+            stmt = null;
+        }
+
+        Objects.Validation objv;
+        if (stmt == null) {
+            objv = new Objects.Validation(false);
+            return objv.json();
+        }
+        else objv = new Objects.Validation(true);
+
+        Document document = DOCUMENT.clone();
+
+        // Fix all parameter namespaces
+        Map<String, Namespace> nsmap = document.getNamespaceMap();
+        for (final Term term : stmt) {
+            for (final Parameter param : term) {
+                Namespace ns = param.getNamespace();
+                if (ns == null) continue;
+                Namespace known = nsmap.get(ns.getPrefix());
+                if (known == null) continue;
+                param.setNamespace(known);
+            }
+        }
+
+        StatementGroup sg = document.getStatementGroups().get(0);
+        List<Statement> stmts = new ArrayList<>();
+        stmts.add(stmt);
+        sg.setStatements(stmts);
+
+        sem.acquireUninterruptibly();
+        try {
+            compile(objv, document);
+        } finally {
+            sem.release();
+        }
+        return objv.json();
+    }
+
+    @Post("txt")
+    public Representation _post2(Representation body) {
+        if (body == null) {
+            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
+            return null;
+        }
+        String txt = textify(body);
+
+        Statement stmt;
+        try {
+            stmt = parseStatement(txt);
         } catch (Exception e) {
             stmt = null;
         }
@@ -249,16 +306,6 @@ public class CompilerRoot extends ServerResource {
         if (errs.size() != 0) {
             objv.put("errors", errs);
         }
-    }
-
-    @Post("txt")
-    public Representation _post2(Representation body) {
-        if (body == null) {
-            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            return null;
-        }
-        String txt = textify(body);
-        return null;
     }
 
     private static Document document() {

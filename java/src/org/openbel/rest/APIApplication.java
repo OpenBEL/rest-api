@@ -121,6 +121,9 @@ public class APIApplication extends Application {
         path = declaredPath(Signatures.class);
         router.attach(path, Signatures.class);
 
+        path = declaredPath(Translater.class);
+        router.attach(path, Translater.class);
+
         return router;
     }
 }
