@@ -52,33 +52,75 @@ import org.openbel.bel.model.*;
 import org.restlet.representation.Representation;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.data.Status;
+import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 
-@Path("/api/v1/lang/translater/statement")
-public class StatementTranslater extends ServerResource {
+@Path("/api/v1/lang/translater")
+public class Translater extends ServerResource {
+    private final static String[][] REGEXES;
+    static {
+        List<List<String>> strs = new ArrayList<>();
+        try {
+            File tsv = new File($top, "BEL_to_English.tsv");
+            FileReader fr = new FileReader(tsv);
+            BufferedReader br = new BufferedReader(fr);
+            String input;
+            while ((input = br.readLine()) != null) {
+                if ("".equals(input)) continue;
+                if (input.charAt(0) == '#') continue;
+                StringTokenizer st = new StringTokenizer(input, "\t");
+                assert st.countTokens() == 2;
+                String re = st.nextToken();
+                try {
+                    Pattern.compile(re);
+                } catch (Exception e) {
+                    System.out.println(re);
+                    System.out.println(e);
+                    System.out.println();
+                }
+                String replacement = st.nextToken();
+                List<String> entry = new ArrayList<>();
+                entry.add(re);
+                entry.add(replacement);
+                strs.add(entry);
+            }
+            br.close();
+        } catch (IOException ioex) {
+            ioex.printStackTrace();
+            System.exit(1);
+        }
+        REGEXES = new String[strs.size()][];
+        for (int i = 0; i < REGEXES.length; i++) {
+            List<String> entry = strs.get(i);
+            String[] rerepPair = new String[] { entry.get(0), entry.get(1) };
+            REGEXES[i] = rerepPair;
+        }
+    }
 
     @Post("txt")
-    public Representation _post(Representation body) {
+    public String _post(Representation body) {
+        if (body == null) return "";
         String txt = textify(body);
-        if (txt == null) {
-            setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
-            return null;
+        if ("".equals(txt) || txt == null) return "";
+
+        String ret = "";
+        for (int i = 0; i < REGEXES.length; i++) {
+            Pattern p = Pattern.compile(REGEXES[i][0]);
+            String repl = REGEXES[i][1];
+            Matcher m = p.matcher(txt);
+            if (m.find()) {
+                txt = m.replaceFirst(repl);
+            }
+            txt = txt.trim();
+            // Keep going until each iteration
+            if ((i + 1) == REGEXES.length) {
+                if (!ret.equals(txt)) i = 0;
+                ret = txt;
+                continue;
+            }
         }
-
-        Validations objv = new Validations();
-        Validation v;
-
-        Statement stmt;
-        try {
-            stmt = parseStatement(txt);
-        } catch (Exception e) {
-            stmt = null;
-        }
-        if (stmt == null) v = new Validation(false);
-        else v = new Validation(true);
-        objv.addTermValidation(v);
-
-        return objv.json();
+        return txt;
     }
 
 }

@@ -52,6 +52,7 @@ import static java.lang.Integer.*;
 import static org.openbel.framework.common.cfg.SystemConfiguration.*;
 
 public class main extends Component {
+    public static String $top;
     public static int $port;
     public static String $cache;
     public static String $work;
@@ -91,6 +92,11 @@ public class main extends Component {
     public static void main(String... args) {
         String value = getenv("_ENV_PORT");
         boolean configured = true;
+        $top = getenv("_ENV_TOPDIR");
+        if ($top == null) {
+            err.println("no _ENV_TOPDIR");
+            configured = false;
+        }
         if (value == null) {
             err.println("no _ENV_PORT is set");
             configured = false;
