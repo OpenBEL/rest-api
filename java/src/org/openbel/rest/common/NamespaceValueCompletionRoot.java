@@ -50,19 +50,20 @@ import org.restlet.representation.Representation;
 import org.restlet.data.Status;
 import org.openbel.rest.Path;
 
-@Path("/api/v1/complete/{input}")
-public class CompleteRoot extends ServerResource {
-    private static final String FIND;
+@Path("/api/v1/completion")
+public class NamespaceValueCompletionRoot extends ServerResource {
+    // private static final String FIND;
     static {
-        FIND = "{norm:#}";
+        // FIND = "{norm:#}";
     }
 
     @Get("json")
     public Representation _get() {
+        /*
     	String input = format("^%s", escapeRE(getAttribute("input")));
     	Pattern ptrn = compile(input.toLowerCase());
         Find find = $nsvalues.find(FIND, ptrn);
-        Complete ret = new Complete();
+        Completion ret = new Completion();
         for (Map<?, ?> map : find.as(Map.class)) {
             ret.addResult((String) map.get("val"));
         }
@@ -71,6 +72,8 @@ public class CompleteRoot extends ServerResource {
     		return null;
     	}
     	return ret.json();
+        */
+        return new Completion().json();
     }
 
 }

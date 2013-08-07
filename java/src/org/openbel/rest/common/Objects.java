@@ -137,6 +137,7 @@ public class Objects {
             addLink("subsection", Statements.class);
             addLink("subsection", Terms.class);
             addLink("subsection", Lang.class);
+            addLink("subsection", Completion.class);
         }
     }
 
@@ -161,6 +162,28 @@ public class Objects {
             put("annotations", annotations);
         }
         public void addAnnotation(Annotation a) { annotations.add(a); }
+    }
+
+    @Path("/api/v1/completion")
+    public static class Completion extends Base {
+        {
+            addLink("subsection", KeywordCompletion.class);
+            addLink("subsection", NamespaceValueCompletion.class);
+        }
+    }
+
+    @Path("/api/v1/completion/namespace/keyword")
+    public static class KeywordCompletion extends Base {
+        {
+            addLink("related", NamespaceValueCompletion.class);
+        }
+    }
+
+    @Path("/api/v1/completion/namespace/value")
+    public static class NamespaceValueCompletion extends Base {
+        {
+            addLink("related", KeywordCompletion.class);
+        }
     }
 
     @Path("/api/v1/namespaces")
@@ -274,15 +297,6 @@ public class Objects {
             put("return_type", returnType);
         }
 
-    }
-
-    public static class Complete extends Base {
-        public List<String> results;
-        public Complete() {
-            results = new ArrayList<>();
-            put("results", results);
-        }
-        public void addResult(String s) { results.add(s); }
     }
 
     public static class Namespace extends Base {
