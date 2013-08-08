@@ -23,6 +23,10 @@ Namespace value completion.
 
     Example request:
 
+    In this example, namespace values belonging to the ``MESHPP`` namespace
+    starting with *Auto* are matched and returned in the response's values.
+    E.g., ``response["values"]``.
+
     .. sourcecode:: http
 
         GET /api/v1/completion/namespace/MESHPP/Auto HTTP/1.1

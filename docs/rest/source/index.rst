@@ -19,7 +19,7 @@ The API
    functions
    relationships
    validater
-   translater
+   translation
    annotations
    annotation-keyword-completion
    annotation-value-completion

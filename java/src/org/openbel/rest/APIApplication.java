@@ -118,8 +118,8 @@ public class APIApplication extends Application {
         path = declaredPath(Signatures.class);
         router.attach(path, Signatures.class);
 
-        path = declaredPath(Translater.class);
-        router.attach(path, Translater.class);
+        path = declaredPath(Translation.class);
+        router.attach(path, Translation.class);
 
         path = declaredPath(NamespaceKeywordCompletion.class);
         router.attach(path, NamespaceKeywordCompletion.class);

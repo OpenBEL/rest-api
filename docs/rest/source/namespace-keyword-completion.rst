@@ -23,6 +23,9 @@ Namespace keyword completion.
 
     Example request:
 
+    In this example, namespaces whose keywords begin with *MESH* are matched
+    and returned in the response's values. E.g., ``response["values"]``.
+
     .. sourcecode:: http
 
         GET /api/v1/completion/namespace/MESH HTTP/1.1
