@@ -1,7 +1,7 @@
 .. _annotation-keyword-completion:
 
 /api/v1/completion/annotation/{keyword}
-======================================
+=======================================
 
 Annotation keyword completion.
 
