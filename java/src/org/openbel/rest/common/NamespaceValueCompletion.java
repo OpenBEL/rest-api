@@ -50,32 +50,58 @@ import org.restlet.representation.Representation;
 import org.restlet.data.Status;
 import org.openbel.rest.Path;
 
-@Path("/api/v1/completion")
+@Path("/api/v1/completion/namespace/{keyword}/{value}")
 public class NamespaceValueCompletion extends ServerResource {
-    private static final Completion COMPLETION;
-    // private static final String FIND;
+    private static final String ALT_URL;
+    private static final String FIND_ONE;
+    private static final String FIND_VALS;
     static {
-        COMPLETION = new Completion();
-        // FIND = "{norm:#}";
+        ALT_URL = "/api/v1/completion/namespace/";
+        FIND_ONE = "{keyword: '%s'}";
+        FIND_VALS = "{nsmeta-id:#, norm:#}";
     }
 
     @Get("json")
     public Representation _get() {
-        /*
-    	String input = format("^%s", escapeRE(getAttribute("input")));
-    	Pattern ptrn = compile(input.toLowerCase());
-        Find find = $nsvalues.find(FIND, ptrn);
-        Completion ret = new Completion();
-        for (Map<?, ?> map : find.as(Map.class)) {
-            ret.addResult((String) map.get("val"));
+        String keyword = getAttribute("keyword");
+        String value = getAttribute("value");
+
+        String query = format(FIND_ONE, keyword);
+        @SuppressWarnings("unchecked")
+        Map<?, ?> ns = $namespaces.findOne(query).as(Map.class);
+        if (ns == null) {
+            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            return null;
         }
-    	if (ret.results.size() == 0) {
-    		setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-    		return null;
-    	}
-    	return ret.json();
-        */
-        return COMPLETION.json();
+
+        String input = format("^%s", escapeRE(value));
+        Pattern ptrn = compile(input.toLowerCase());
+        Find find = $nsvalues.find(FIND_VALS, (ns.get("_id")), ptrn);
+
+        List<String> rslts = new ArrayList<>();
+        for (Map<?, ?> map : find.as(Map.class)) {
+            rslts.add((String) map.get("val"));
+        }
+        if (rslts.size() == 0) {
+            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            return null;
+        }
+
+        if (rslts.size() == 1) {
+            NSValueCompletion ret = new NSValueCompletion();
+            ret.addValue(rslts.get(0));
+            ret.addLink("self", ALT_URL + keyword + "/" + value);
+            return ret.json();
+        }
+
+        NSValueCompletion ret = new NSValueCompletion();
+        for (String rslt : rslts) {
+            ret.addLink("result", ALT_URL + keyword + "/" + rslt);
+            ret.addValue(rslt);
+        }
+        ret.addLink("self", ALT_URL + keyword + "/" + value);
+        setStatus(Status.REDIRECTION_MULTIPLE_CHOICES);
+        return ret.json();
     }
 
 }

@@ -69,6 +69,11 @@ public class Objects {
             }
         }
 
+        public void addDocumentation(String page) {
+            page = "/docs/api/" + page + ".html";
+            addLink("describedby", page);
+        }
+
         public void addLink(String rel, Object href) {
             if (!this.containsKey("_links")) {
                 put("_links", new ArrayList<Link>());
@@ -137,7 +142,6 @@ public class Objects {
             addLink("subsection", Statements.class);
             addLink("subsection", Terms.class);
             addLink("subsection", Lang.class);
-            addLink("subsection", Completion.class);
         }
     }
 
@@ -164,25 +168,30 @@ public class Objects {
         public void addAnnotation(Annotation a) { annotations.add(a); }
     }
 
-    @Path("/api/v1/completion")
-    public static class Completion extends Base {
+    public static class NSKeywordCompletion extends Base {
+        public List<String> values;
         {
-            addLink("subsection", KeywordCompletion.class);
-            addLink("subsection", NamespaceValueCompletion.class);
+            addDocumentation("namespace-keyword-completion");
+            values = new ArrayList<>();
+            put("values", values);
         }
+        public void addValue(String s) { values.add(s); }
     }
 
-    @Path("/api/v1/completion/namespace/keyword")
-    public static class KeywordCompletion extends Base {
+    public static class NSValueCompletion extends Base {
+        public List<String> values;
         {
-            addLink("related", NamespaceValueCompletion.class);
+            addDocumentation("namespace-value-completion");
+            values = new ArrayList<>();
+            put("values", values);
         }
+        public void addValue(String s) { values.add(s); }
     }
 
     @Path("/api/v1/completion/namespace/value")
     public static class NamespaceValueCompletion extends Base {
         {
-            addLink("related", KeywordCompletion.class);
+            addLink("related", NSKeywordCompletion.class);
         }
     }
 

@@ -52,28 +52,39 @@ import org.openbel.rest.Path;
 
 @Path("/api/v1/completion/namespace/{keyword}")
 public class NamespaceKeywordCompletion extends ServerResource {
-    // private static final String FIND;
+    private static final String ALT_URL = "/api/v1/completion/namespace/";
+    private static final String FIND;
     static {
-        // FIND = "{norm:#}";
+        FIND = "{norm:#}";
     }
 
     @Get("json")
     public Representation _get() {
-        /*
-    	String input = format("^%s", escapeRE(getAttribute("input")));
+        String keyword = getAttribute("keyword");
+    	String input = format("^%s", escapeRE(keyword));
     	Pattern ptrn = compile(input.toLowerCase());
-        Find find = $nsvalues.find(FIND, ptrn);
-        Completion ret = new Completion();
+        Find find = $namespaces.find(FIND, ptrn);
+
+        List<String> rslts = new ArrayList<>();
         for (Map<?, ?> map : find.as(Map.class)) {
-            ret.addResult((String) map.get("val"));
+            rslts.add((String) map.get("keyword"));
         }
-    	if (ret.results.size() == 0) {
-    		setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-    		return null;
-    	}
-    	return ret.json();
-        */
-        return new Completion().json();
+
+        if (rslts.size() == 1) {
+            NSKeywordCompletion ret = new NSKeywordCompletion();
+            ret.addValue(rslts.get(0));
+            ret.addLink("self", ALT_URL + keyword);
+            return ret.json();
+        }
+
+        NSKeywordCompletion ret = new NSKeywordCompletion();
+        for (String rslt : rslts) {
+            ret.addLink("result", ALT_URL + rslt);
+            ret.addValue(rslt);
+        }
+        ret.addLink("self", ALT_URL + keyword);
+        setStatus(Status.REDIRECTION_MULTIPLE_CHOICES);
+        return ret.json();
     }
 
 }

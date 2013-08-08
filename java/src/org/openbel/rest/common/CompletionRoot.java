@@ -37,29 +37,20 @@
 package org.openbel.rest.common;
 
 import static org.openbel.rest.common.Objects.*;
-import static org.openbel.rest.main.*;
-import static org.openbel.rest.Util.*;
-import static java.util.regex.Pattern.*;
-import static java.lang.String.format;
-import org.jongo.*;
 import java.util.*;
-import java.util.regex.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
-import org.restlet.data.Status;
 import org.openbel.rest.Path;
 
 @Path("/api/v1/completion")
 public class CompletionRoot extends ServerResource {
-    private static final Completion COMPLETION;
     static {
-        COMPLETION = new Completion();
     }
 
     @Get("json")
     public Representation _get() {
-        return COMPLETION.json();
+        return null;
     }
 
 }
