@@ -10,7 +10,7 @@ Namespace value completion.
 
     | **Description**
     | Complete a namespace value given its prefix.
-    | (try it: http://demo.openbel.org/api/v1/namespace/MESHPP/Auto)
+    | (try it: http://demo.openbel.org/api/v1/completion/namespace/MESHPP/Auto)
 
     **Links**
 
