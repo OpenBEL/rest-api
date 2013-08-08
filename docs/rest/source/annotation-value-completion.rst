@@ -1,7 +1,7 @@
 .. _annotation-value-completion:
 
 /api/v1/completion/annotation/{keyword}/{value}
-==============================================
+===============================================
 
 Annotation value completion.
 
