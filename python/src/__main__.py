@@ -13,6 +13,7 @@ restapi_db = None
 nsvalues_norm_index = True
 annovalues_norm_index = True
 namespaces_keyword_index = True
+annotations_keyword_index = True
 
 
 def out(msg):
@@ -61,6 +62,17 @@ def check():
         annovalues_norm_index = False
         status = False
 
+    # INDEX PRESENT ON ANNOTATIONS KEYWORD
+    coll = restapi_db.annotations
+    out('Checking for an index on keyword in annotations... ')
+    if 'keyword' in coll.index_information():
+        print('yes')
+    else:
+        print('no')
+        global annotations_keyword_index
+        annotations_keyword_index = False
+        status = False
+
     print('Finished checks.')
     print()
     return status
@@ -97,6 +109,14 @@ def fix():
         kwargs = {'name': 'norm'}
         kwargs.update(fg_index_args)
         coll.create_index('norm', **kwargs)
+        print('done')
+
+    if not annotations_keyword_index:
+        out('Creating index on keyword in annotations... ')
+        coll = restapi_db.annotations
+        kwargs = {'name': 'keyword'}
+        kwargs.update(fg_index_args)
+        coll.create_index('keyword', **kwargs)
         print('done')
 
     print('Finished applying changes.')
