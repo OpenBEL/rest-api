@@ -23,6 +23,9 @@ Annotation keyword completion.
 
     Example request:
 
+    In this example, annotations whose keywords begin with *S* are matched and
+    returned in the response's values. E.g., ``response["values"]``.
+
     .. sourcecode:: http
 
         GET /api/v1/completion/annotation/S HTTP/1.1

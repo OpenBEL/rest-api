@@ -23,6 +23,10 @@ Annotation value completion.
 
     Example request:
 
+    In this example, annotation values belonging to the ``Species`` annotation
+    starting with *1* are matched and returned in the response's values. E.g.,
+    ``response["values"]``.
+
     .. sourcecode:: http
 
         GET /api/v1/completion/annotation/Species/1 HTTP/1.1
