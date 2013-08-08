@@ -211,7 +211,11 @@
     (download-url x "temp.belanno")
     (def annomap (parse-annotation "temp.belanno"))
     (def annometa-id (ObjectId.))
-    (def annometa-doc (assoc (dissoc annomap :values) :_id annometa-id :url x))
+    (def annometa-kwnorm (clojure.string/lower-case (get annomap :keyword)))
+    (def annometa-doc (assoc (dissoc annomap :values)
+      :_id annometa-id
+      :url x
+      :norm annometa-kwnorm))
     (coll/insert "annotations" annometa-doc)
     (doseq [value (annomap :values)]
       (def annoval-id (ObjectId.))

@@ -188,11 +188,24 @@ public class Objects {
         public void addValue(String s) { values.add(s); }
     }
 
-    @Path("/api/v1/completion/namespace/value")
-    public static class NamespaceValueCompletion extends Base {
+    public static class AOKeywordCompletion extends Base {
+        public List<String> values;
         {
-            addLink("related", NSKeywordCompletion.class);
+            addDocumentation("annotation-keyword-completion");
+            values = new ArrayList<>();
+            put("values", values);
         }
+        public void addValue(String s) { values.add(s); }
+    }
+
+    public static class AOValueCompletion extends Base {
+        public List<String> values;
+        {
+            addDocumentation("annotation-value-completion");
+            values = new ArrayList<>();
+            put("values", values);
+        }
+        public void addValue(String s) { values.add(s); }
     }
 
     @Path("/api/v1/namespaces")
