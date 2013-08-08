@@ -192,7 +192,11 @@
     (download-url x "temp.belns")
     (def nsmap (parse-namespace "temp.belns"))
     (def nsmeta-id (ObjectId.))
-    (def nsmeta-doc (assoc (dissoc nsmap :values) :_id nsmeta-id :url x))
+    (def nsmeta-kwnorm (clojure.string/lower-case (get nsmap :keyword)))
+    (def nsmeta-doc (assoc (dissoc nsmap :values)
+      :_id nsmeta-id
+      :url x
+      :norm nsmeta-kwnorm))
     (coll/insert "namespaces" nsmeta-doc)
     (doseq [value (nsmap :values)]
       (def nsval-id (ObjectId.))

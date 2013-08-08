@@ -91,9 +91,6 @@ public class APIApplication extends Application {
         path = declaredPath(NamespacesRoot.class);
         router.attach(path, NamespacesRoot.class);
 
-        path = declaredPath(CompleteRoot.class);
-        router.attach(path, CompleteRoot.class);
-
         path = declaredPath(Namespaces.class);
         router.attach(path, Namespaces.class);
 
@@ -123,6 +120,12 @@ public class APIApplication extends Application {
 
         path = declaredPath(Translater.class);
         router.attach(path, Translater.class);
+
+        path = declaredPath(NamespaceKeywordCompletion.class);
+        router.attach(path, NamespaceKeywordCompletion.class);
+
+        path = declaredPath(NamespaceValueCompletion.class);
+        router.attach(path, NamespaceValueCompletion.class);
 
         return router;
     }

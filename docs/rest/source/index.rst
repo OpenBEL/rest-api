@@ -22,3 +22,5 @@ The API
    translater
    annotations
    namespaces
+   namespace-keyword-completion
+   namespace-value-completion

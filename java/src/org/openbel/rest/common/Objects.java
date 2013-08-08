@@ -69,6 +69,11 @@ public class Objects {
             }
         }
 
+        public void addDocumentation(String page) {
+            page = "/docs/api/" + page + ".html";
+            addLink("describedby", page);
+        }
+
         public void addLink(String rel, Object href) {
             if (!this.containsKey("_links")) {
                 put("_links", new ArrayList<Link>());
@@ -161,6 +166,33 @@ public class Objects {
             put("annotations", annotations);
         }
         public void addAnnotation(Annotation a) { annotations.add(a); }
+    }
+
+    public static class NSKeywordCompletion extends Base {
+        public List<String> values;
+        {
+            addDocumentation("namespace-keyword-completion");
+            values = new ArrayList<>();
+            put("values", values);
+        }
+        public void addValue(String s) { values.add(s); }
+    }
+
+    public static class NSValueCompletion extends Base {
+        public List<String> values;
+        {
+            addDocumentation("namespace-value-completion");
+            values = new ArrayList<>();
+            put("values", values);
+        }
+        public void addValue(String s) { values.add(s); }
+    }
+
+    @Path("/api/v1/completion/namespace/value")
+    public static class NamespaceValueCompletion extends Base {
+        {
+            addLink("related", NSKeywordCompletion.class);
+        }
     }
 
     @Path("/api/v1/namespaces")
@@ -274,15 +306,6 @@ public class Objects {
             put("return_type", returnType);
         }
 
-    }
-
-    public static class Complete extends Base {
-        public List<String> results;
-        public Complete() {
-            results = new ArrayList<>();
-            put("results", results);
-        }
-        public void addResult(String s) { results.add(s); }
     }
 
     public static class Namespace extends Base {
