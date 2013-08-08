@@ -10,7 +10,7 @@ Namespace keyword completion.
 
     | **Description**
     | Complete a namespace keyword.
-    | (try it: http://demo.openbel.org/api/v1/namespace/MESH)
+    | (try it: http://demo.openbel.org/api/v1/completion/namespace/MESH)
 
     **Links**
 
