@@ -1,12 +1,12 @@
-.. _translater:
+.. _translation:
 
-/api/v1/lang/translater
-=======================
+/api/v1/lang/translation
+========================
 
 BEL script statement and term translation.
 
 .. ############################################################################
-.. http:post:: /api/v1/lang/validater
+.. http:post:: /api/v1/lang/translation
 
     | **Description**
     | Produces a ``text/plain`` translation of a BEL statement or term.
@@ -15,7 +15,7 @@ BEL script statement and term translation.
 
     .. sourcecode:: http
 
-        POST /api/v1/lang/translater HTTP/1.1
+        POST /api/v1/lang/translation HTTP/1.1
         Host: demo.openbel.org
         Accept: */*
         Content-Type: text/plain; charset=utf-8

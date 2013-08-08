@@ -56,8 +56,8 @@ import java.io.*;
 import java.util.*;
 import java.util.regex.*;
 
-@Path("/api/v1/lang/translater")
-public class Translater extends ServerResource {
+@Path("/api/v1/lang/translation")
+public class Translation extends ServerResource {
     private final static String[][] REGEXES;
     static {
         List<List<String>> strs = new ArrayList<>();
