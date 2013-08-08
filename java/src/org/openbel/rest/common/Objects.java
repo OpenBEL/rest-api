@@ -188,13 +188,6 @@ public class Objects {
         public void addValue(String s) { values.add(s); }
     }
 
-    @Path("/api/v1/completion/namespace/value")
-    public static class NamespaceValueCompletion extends Base {
-        {
-            addLink("related", NSKeywordCompletion.class);
-        }
-    }
-
     @Path("/api/v1/namespaces")
     public static class Namespaces extends Base {
         public List<Namespace> namespaces;
