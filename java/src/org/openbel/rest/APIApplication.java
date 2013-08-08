@@ -127,6 +127,12 @@ public class APIApplication extends Application {
         path = declaredPath(NamespaceValueCompletion.class);
         router.attach(path, NamespaceValueCompletion.class);
 
+        path = declaredPath(AnnotationKeywordCompletion.class);
+        router.attach(path, AnnotationKeywordCompletion.class);
+
+        path = declaredPath(AnnotationValueCompletion.class);
+        router.attach(path, AnnotationValueCompletion.class);
+
         return router;
     }
 }

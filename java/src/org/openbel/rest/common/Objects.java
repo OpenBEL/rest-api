@@ -188,6 +188,26 @@ public class Objects {
         public void addValue(String s) { values.add(s); }
     }
 
+    public static class AOKeywordCompletion extends Base {
+        public List<String> values;
+        {
+            addDocumentation("annotation-keyword-completion");
+            values = new ArrayList<>();
+            put("values", values);
+        }
+        public void addValue(String s) { values.add(s); }
+    }
+
+    public static class AOValueCompletion extends Base {
+        public List<String> values;
+        {
+            addDocumentation("annotation-value-completion");
+            values = new ArrayList<>();
+            put("values", values);
+        }
+        public void addValue(String s) { values.add(s); }
+    }
+
     @Path("/api/v1/namespaces")
     public static class Namespaces extends Base {
         public List<Namespace> namespaces;

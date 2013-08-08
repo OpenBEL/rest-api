@@ -21,6 +21,8 @@ The API
    validater
    translater
    annotations
+   annotation-keyword-completion
+   annotation-value-completion
    namespaces
    namespace-keyword-completion
    namespace-value-completion
