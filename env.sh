@@ -1,5 +1,5 @@
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export _ENV_VERSION=${_ENV_VERSION:-experimental}
+export _ENV_VERSION=${_ENV_VERSION:-stable}
 
 ### Special rules on syntax ###
 #
