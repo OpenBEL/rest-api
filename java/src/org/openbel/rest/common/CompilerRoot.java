@@ -19,6 +19,8 @@ import static java.lang.String.format;
 import static org.openbel.rest.Util.*;
 import static org.openbel.rest.main.*;
 import static org.openbel.framework.common.bel.parser.BELParser.*;
+import static org.openbel.framework.common.BELUtilities.*;
+import static org.openbel.framework.compiler.DefaultPhaseOne.*;
 
 import org.openbel.framework.common.*;
 import org.openbel.framework.common.enums.AnnotationType;
@@ -36,6 +38,7 @@ import org.restlet.representation.Representation;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.data.Status;
 import java.util.*;
+import java.io.*;
 
 import org.openbel.framework.compiler.DefaultPhaseOne;
 import org.openbel.framework.compiler.PhaseOneImpl;
@@ -57,12 +60,14 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.antlr.runtime.tree.CommonTree;
 import org.openbel.bel.model.BELParseErrorException;
 import org.openbel.bel.model.BELParseWarningException;
+import org.openbel.framework.common.bel.parser.BELParser;
 import org.openbel.framework.common.bel.parser.BELScriptWalker.document_return;
 import org.openbel.framework.common.model.Statement;
 import org.openbel.framework.common.bel.converters.BELStatementConverter;
 
 @Path("/api/v1/compiler")
 public class CompilerRoot extends ServerResource {
+    private static final File TEMPLATE;
     private static final Document DOCUMENT;
     private static final Semaphore sem;
     private static final DefaultPhaseOne p1;
@@ -81,6 +86,7 @@ public class CompilerRoot extends ServerResource {
     private static final AnnotationDefinitionService ads;
 
     static {
+        TEMPLATE = new File("document_template.bel");
         DOCUMENT = document();
         sem = new Semaphore(1, true);
         try {
@@ -158,7 +164,7 @@ public class CompilerRoot extends ServerResource {
 
         sem.acquireUninterruptibly();
         try {
-            compile(objv, document);
+            //compile(objv, new String());
         } finally {
             sem.release();
         }
@@ -173,51 +179,84 @@ public class CompilerRoot extends ServerResource {
         }
         String txt = textify(body);
 
-        Statement stmt;
-        try {
-            stmt = parseStatement(txt);
-        } catch (Exception e) {
-            stmt = null;
-        }
-
-        Objects.Validation objv;
+        /*
         if (stmt == null) {
             objv = new Objects.Validation(false);
             return objv.json();
         }
         else objv = new Objects.Validation(true);
+        */
 
-        Document document = DOCUMENT.clone();
+        // Document document = DOCUMENT.clone();
 
-        // Fix all parameter namespaces
-        Map<String, Namespace> nsmap = document.getNamespaceMap();
-        for (final Term term : stmt) {
-            for (final Parameter param : term) {
-                Namespace ns = param.getNamespace();
-                if (ns == null) continue;
-                Namespace known = nsmap.get(ns.getPrefix());
-                if (known == null) continue;
-                param.setNamespace(known);
-            }
-        }
+        // // Fix all parameter namespaces
+        // Map<String, Namespace> nsmap = document.getNamespaceMap();
+        // for (final Term term : stmt) {
+        //     for (final Parameter param : term) {
+        //         Namespace ns = param.getNamespace();
+        //         if (ns == null) continue;
+        //         Namespace known = nsmap.get(ns.getPrefix());
+        //         if (known == null) continue;
+        //         param.setNamespace(known);
+        //     }
+        // }
 
-        StatementGroup sg = document.getStatementGroups().get(0);
-        List<Statement> stmts = new ArrayList<>();
-        stmts.add(stmt);
-        sg.setStatements(stmts);
+        // StatementGroup sg = document.getStatementGroups().get(0);
+        // List<Statement> stmts = new ArrayList<>();
+        // stmts.add(stmt);
+        // sg.setStatements(stmts);
 
         sem.acquireUninterruptibly();
+
+        File dest = null;
+        FileWriter writer = null;
+        Objects.Base response = null;
         try {
-            compile(objv, document);
+            dest = File.createTempFile("compiler_root", "bel");
+            copyFile(TEMPLATE, dest);
+            writer = new FileWriter(dest, true);
+            writer.write(txt + "\n");
+            writer.close();
+            response = compile(dest);
+        } catch (IOException ioex) {
+            ioex.printStackTrace();
         } finally {
+            //if (dest != null) dest.delete();
+            if (writer != null) closeQuietly(writer);
             sem.release();
         }
-        return objv.json();
+        return response.json();
     }
 
-    private static void compile(Objects.Validation objv, Document document) {
+    private static Objects.Base compile(File file) {
         List<String> warns = new ArrayList<>();
         List<String> errs = new ArrayList<>();
+        Objects.Validation objv = new Objects.Validation(true);
+        if (warns.size() != 0) objv.put("warnings", warns);
+        if (errs.size() != 0) {
+            objv.put("errors", errs);
+        }
+
+        Stage1Output s1 = p1.stage1BELValidation(file);
+        if (s1.hasValidationErrors()) {
+            for (final ValidationError error : s1.getValidationErrors()) {
+                System.out.println(error.getUserFacingMessage());
+                errs.add(error.getUserFacingMessage());
+            }
+        }
+        if (s1.hasConversionError()) {
+            System.out.println(s1.getConversionError().getUserFacingMessage());
+            errs.add(s1.getConversionError().getUserFacingMessage());
+        }
+        if (s1.getSymbolWarning() != null) {
+            System.out.println(s1.getSymbolWarning().getUserFacingMessage());
+            warns.add(s1.getSymbolWarning().getUserFacingMessage());
+        }
+        if (errs.size() != 0) {
+            return objv;
+        }
+        Document document = s1.getDocument();
+
         try {
             p1.stage2NamespaceCompilation(document);
         } catch (IndexingFailure f) {
@@ -262,6 +301,9 @@ public class CompilerRoot extends ServerResource {
             if (name != null) bldr.append(" for " + name);
             bldr.append(": " + msg);
             errs.add(bldr.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println(e.getCause());
         }
 
         try {
@@ -281,10 +323,7 @@ public class CompilerRoot extends ServerResource {
             errs.add(bldr.toString());
         }
 
-        if (warns.size() != 0) objv.put("warnings", warns);
-        if (errs.size() != 0) {
-            objv.put("errors", errs);
-        }
+        return objv;
     }
 
     private static Document document() {
