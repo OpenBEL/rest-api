@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2013 OpenBEL Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,7 @@ package org.openbel.rest;
 
 import java.lang.annotation.*;
 
-/**
+/*
  * Type annotation used to indicate the path to a resource.
  */
 @Retention(RetentionPolicy.RUNTIME)

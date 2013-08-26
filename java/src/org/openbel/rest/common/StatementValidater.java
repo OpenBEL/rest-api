@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2013 OpenBEL Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -55,7 +55,7 @@ public class StatementValidater extends ServerResource {
         }
         if (stmt == null) v = new Validation(false);
         else v = new Validation(true);
-        objv.addTermValidation(v);
+        objv.addStatementValidation(v);
 
         return objv.json();
     }

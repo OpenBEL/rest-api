@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2013 OpenBEL Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,7 @@ import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
 
-/**
+/*
  * Provides API version information.
  */
 @Path("/api/versions")

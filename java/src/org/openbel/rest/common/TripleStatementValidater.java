@@ -20,6 +20,7 @@ import static org.openbel.rest.common.Objects.*;
 import static org.openbel.rest.Util.*;
 import static org.openbel.rest.main.*;
 import static org.openbel.framework.common.bel.parser.BELParser.*;
+import org.openbel.framework.common.enums.RelationshipType;
 import org.openbel.rest.common.Objects;
 import org.jongo.*;
 import org.openbel.rest.Path;
@@ -33,8 +34,8 @@ import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.data.Status;
 import java.util.*;
 
-@Path("/api/v1/lang/validater/script")
-public class ScriptValidater extends ServerResource {
+@Path("/api/v1/lang/validater/statement/triple")
+public class TripleStatementValidater extends ServerResource {
 
     @Post("txt")
     public Representation _post(Representation body) {
@@ -47,17 +48,46 @@ public class ScriptValidater extends ServerResource {
         Validations objv = new Validations();
         Validation v;
 
-        BELParseResults rslts = parse(txt);
-        List<BELParseErrorException> errors = rslts.getSyntaxErrors();
-        List<BELParseWarningException> warns = rslts.getSyntaxWarnings();
-        ScriptValidation sv;
-        if (errors.size() != 0) sv = new ScriptValidation(false);
-        else sv = new ScriptValidation(true);
-        for (BELParseErrorException e : errors)
-            sv.addSyntaxError(e.getMessage());
-        for (BELParseWarningException e : warns)
-            sv.addSyntaxWarning(e.getMessage());
-        objv.addScriptValidation(sv);
+        // return invalid statement if subject-relationship-object
+        // is not detected in the tokenized form
+        boolean found = false;
+        for (RelationshipType rel : RelationshipType.values()) {
+            // try tokenizing by display value first
+            String dispval = rel.getDisplayValue();
+            dispval = " " + dispval + " ";
+            StringTokenizer st = new StringTokenizer(txt, dispval);
+            if (st.countTokens() == 3) {
+                // subject relationship object match
+                found = true;
+                break;
+            }
+
+            // fallback to tokenizing by abbreviation
+            String abbrev = rel.getAbbreviation();
+            if (abbrev == null) continue;
+            abbrev = " " + abbrev + " ";
+            st = new StringTokenizer(txt, abbrev);
+            if (st.countTokens() == 3) {
+                // subject relationship object match
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            v = new Validation(false);
+            objv.addStatementValidation(v);
+            return objv.json();
+        }
+
+        Statement stmt;
+        try {
+            stmt = parseStatement(txt);
+        } catch (Exception e) {
+            stmt = null;
+        }
+        if (stmt == null) v = new Validation(false);
+        else v = new Validation(true);
+        objv.addStatementValidation(v);
 
         return objv.json();
     }
