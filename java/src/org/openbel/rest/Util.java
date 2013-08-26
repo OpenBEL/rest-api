@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2013 OpenBEL Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,7 +28,7 @@ import org.openbel.framework.common.enums.RelationshipType;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.util.Series;
 
-/**
+/*
  * BEL REST API Utilities.
  */
 public class Util {

@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2013 OpenBEL Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,7 +20,7 @@ import org.openbel.rest.common.*;
 import org.restlet.*;
 import org.restlet.routing.*;
 
-/**
+/*
  * This application Restlet manages the BEL REST API resources and services.
  */
 public class APIApplication extends Application {

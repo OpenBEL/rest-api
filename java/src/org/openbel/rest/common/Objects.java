@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright 2013 OpenBEL Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +26,7 @@ import org.codehaus.jackson.annotate.*;
 import org.codehaus.jackson.map.annotate.*;
 import org.openbel.rest.Path;
 
-/**
+/*
  * Objects used by common resources.
  */
 public class Objects {
