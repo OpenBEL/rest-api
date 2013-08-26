@@ -19,6 +19,11 @@ The API
    functions
    relationships
    validater
+   term-validater
+   statement-validater
+   simple-statement-validater
+   triple-statement-validater
+   script-validater
    translation
    annotations
    annotation-keyword-completion
