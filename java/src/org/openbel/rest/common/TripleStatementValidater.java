@@ -48,47 +48,23 @@ public class TripleStatementValidater extends ServerResource {
         Validations objv = new Validations();
         Validation v;
 
-        // return invalid statement if subject-relationship-object
-        // is not detected in the tokenized form
-        boolean found = false;
-        for (RelationshipType rel : RelationshipType.values()) {
-            // try tokenizing by display value first
-            String dispval = rel.getDisplayValue();
-            dispval = " " + dispval + " ";
-            StringTokenizer st = new StringTokenizer(txt, dispval);
-            if (st.countTokens() == 3) {
-                // subject relationship object match
-                found = true;
-                break;
-            }
-
-            // fallback to tokenizing by abbreviation
-            String abbrev = rel.getAbbreviation();
-            if (abbrev == null) continue;
-            abbrev = " " + abbrev + " ";
-            st = new StringTokenizer(txt, abbrev);
-            if (st.countTokens() == 3) {
-                // subject relationship object match
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            v = new Validation(false);
-            objv.addStatementValidation(v);
-            return objv.json();
-        }
-
         Statement stmt;
         try {
             stmt = parseStatement(txt);
         } catch (Exception e) {
             stmt = null;
         }
-        if (stmt == null) v = new Validation(false);
-        else v = new Validation(true);
-        objv.addStatementValidation(v);
 
+        // couldn't parse - invalid statement
+        if (stmt == null) v = new Validation(false);
+
+        // no object - invalid triple
+        else if (stmt.getObject() == null) v = new Validation(false);
+
+        // parsed w/ object, valid triple
+        else v = new Validation(true);
+
+        objv.addStatementValidation(v);
         return objv.json();
     }
 
