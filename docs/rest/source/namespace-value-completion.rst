@@ -1,7 +1,7 @@
 .. _namespace-value-completion:
 
 /api/v1/completion/namespace-value/{keyword}/{value}
-==============================================
+====================================================
 
 Namespace value completion.
 
