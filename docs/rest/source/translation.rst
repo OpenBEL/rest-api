@@ -37,4 +37,4 @@ BEL script statement and term translation.
 
     .. code::
 
-        the abundance of HGNC namespace MAPK1
+        the abundance of MAPK1
