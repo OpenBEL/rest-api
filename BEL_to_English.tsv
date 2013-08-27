@@ -69,36 +69,36 @@
 (?<SUB>.*) subProcessOf (?<OBJ>.*)	${SUB} is a subprocess of ${OBJ}
 
 # BEL language function; proteinAbundance w/ proteinModification
-^(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+),( )*(?<AA>\w+),( )*(?<POS>\w+)\)\)(?<SP>( )+)	 the abundance of ${NS} namespace ${VAL} protein modified by ${TYPE} at ${AA} ${POS}${SP}
-(?<SP>( )*)(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+),( )*(?<AA>\w+),( )*(?<POS>\w+)\)\)	${SP}the abundance of ${NS} namespace ${VAL} protein modified by ${TYPE} at ${AA} ${POS}
-^(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+),( )*(?<AA>\w+)\)\)(?<SP>( )+)	the abundance of ${NS} namespace ${VAL} protein modified by ${TYPE} at ${AA}${SP}
-(?<SP>( )*)(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+),( )*(?<AA>\w+)\)\)	${SP}the abundance of ${NS} namespace ${VAL} protein modified by ${TYPE} at ${AA}
-^(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+)\)\)(?<SP>( )+)	the abundance of ${NS} namespace ${VAL} protein modified by ${TYPE}${SP}
-(?<SP>( )*)(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+)\)\)	${SP}the abundance of ${NS} namespace ${VAL} protein modified by ${TYPE}
+^(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+),( )*(?<AA>\w+),( )*(?<POS>\w+)\)\)(?<SP>( )+)	 the abundance of ${VAL} protein modified by ${TYPE} at ${AA} ${POS}${SP}
+(?<SP>( )*)(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+),( )*(?<AA>\w+),( )*(?<POS>\w+)\)\)	${SP}the abundance of ${VAL} protein modified by ${TYPE} at ${AA} ${POS}
+^(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+),( )*(?<AA>\w+)\)\)(?<SP>( )+)	the abundance of ${VAL} protein modified by ${TYPE} at ${AA}${SP}
+(?<SP>( )*)(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+),( )*(?<AA>\w+)\)\)	${SP}the abundance of ${VAL} protein modified by ${TYPE} at ${AA}
+^(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+)\)\)(?<SP>( )+)	the abundance of ${VAL} protein modified by ${TYPE}${SP}
+(?<SP>( )*)(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(pmod|proteinModification))\((?<TYPE>\w+)\)\)	${SP}the abundance of ${VAL} protein modified by ${TYPE}
 
 # BEL language function; proteinAbundance w/ substitution
-^(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(sub|substitution))\((?<AAREF>\w+),( )*(?<AAVAR>\w+),( )*(?<POS>\w+)\)\)(?<SP>( )+)	the abundance of ${NS} namespace ${VAL} protein in which ${AAREF} is substituted with ${AAVAR} at codon ${POS}${SP}
-(?<SP>( )*)(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(sub|substitution))\((?<AAREF>\w+),( )*(?<AAVAR>\w+),( )*(?<POS>\w+)\)\)	${SP}the abundance of ${NS} namespace ${VAL} protein in which ${AAREF} is substituted with ${AAVAR} at codon ${POS}
+^(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(sub|substitution))\((?<AAREF>\w+),( )*(?<AAVAR>\w+),( )*(?<POS>\w+)\)\)(?<SP>( )+)	the abundance of ${VAL} protein in which ${AAREF} is substituted with ${AAVAR} at codon ${POS}${SP}
+(?<SP>( )*)(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(sub|substitution))\((?<AAREF>\w+),( )*(?<AAVAR>\w+),( )*(?<POS>\w+)\)\)	${SP}the abundance of ${VAL} protein in which ${AAREF} is substituted with ${AAVAR} at codon ${POS}
 
 # BEL language function;
-^(?<OUTERFX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(fus|fusion))\((?<AAREF>\w+),( )*(?<AAVAR>\w+),( )*(?<POS>\w+)\)\)(?<SP>( )+)	the abundance of ${NS} namespace ${VAL} protein in which ${AAREF} is substituted with ${AAVAR} at codon ${POS}${SP}
-(?<SP>( )*)(?<OUTERFX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(fus|fusion))\((?<AAREF>\w+),( )*(?<AAVAR>\w+),( )*(?<POS>\w+)\)\)	${SP}the abundance of ${NS} namespace ${VAL} protein in which ${AAREF} is substituted with ${AAVAR} at codon ${POS}
+^(?<OUTERFX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(fus|fusion))\((?<AAREF>\w+),( )*(?<AAVAR>\w+),( )*(?<POS>\w+)\)\)(?<SP>( )+)	the abundance of ${VAL} protein in which ${AAREF} is substituted with ${AAVAR} at codon ${POS}${SP}
+(?<SP>( )*)(?<OUTERFX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(fus|fusion))\((?<AAREF>\w+),( )*(?<AAVAR>\w+),( )*(?<POS>\w+)\)\)	${SP}the abundance of ${VAL} protein in which ${AAREF} is substituted with ${AAVAR} at codon ${POS}
 
 # BEL language function; proteinAbundance w/ truncation
-^(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(trunc|truncation))\((?<POS>\w+)\)\)(?<SP>( )+)	the abundance of ${NS} namespace ${VAL} protein truncated at ${POS}${SP}
-(?<SP>( )*)(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(trunc|truncation))\((?<POS>\w+)\)\)	${SP}the abundance of ${NS} namespace ${VAL} protein truncated at ${POS}
+^(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(trunc|truncation))\((?<POS>\w+)\)\)(?<SP>( )+)	the abundance of ${VAL} protein truncated at ${POS}${SP}
+(?<SP>( )*)(?<OUTERFX>(p|proteinAbundance))\((?<NS>.*):(?<VAL>.*),( )*(?<INNERFX>(trunc|truncation))\((?<POS>\w+)\)\)	${SP}the abundance of ${VAL} protein truncated at ${POS}
 
 # BEL language function; abundance
-^(?<FX>(a|abundance))\((?<NS>.*)(:)(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${NS} namespace ${VAL}${SP}
-(?<SP>( )*)(?<FX>(a|abundance))\((?<NS>.*)(:)(?<VAL>.*)\)$	${SP}the abundance of ${NS} namespace ${VAL}
+^(?<FX>(a|abundance))\((?<NS>.*)(:)(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${VAL}${SP}
+(?<SP>( )*)(?<FX>(a|abundance))\((?<NS>.*)(:)(?<VAL>.*)\)$	${SP}the abundance of ${VAL}
 
 # BEL language function; proteinAbundance
-^(?<FX>(p|proteinAbundance))\((?<NS>.*)(:)(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${NS} namespace ${VAL}${SP}
-(?<SP>( )*)(?<FX>(p|proteinAbundance))\((?<NS>.*)(:)(?<VAL>.*)\)$	${SP}the abundance of ${NS} namespace ${VAL}
+^(?<FX>(p|proteinAbundance))\((?<NS>.*)(:)(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${VAL}${SP}
+(?<SP>( )*)(?<FX>(p|proteinAbundance))\((?<NS>.*)(:)(?<VAL>.*)\)$	${SP}the abundance of ${VAL}
 
 # BEL language function; complexAbundance
-^(?<FX>(complex|complexAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the complex of ${NS} namespace ${VAL}${SP}
-(?<SP>( )*)(?<FX>(complex|complexAbundance))\((?<NS>.*):(?<VAL>.*)\)$	${SP}the complex of ${NS} namespace ${VAL}
+^(?<FX>(complex|complexAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the complex of ${VAL}${SP}
+(?<SP>( )*)(?<FX>(complex|complexAbundance))\((?<NS>.*):(?<VAL>.*)\)$	${SP}the complex of ${VAL}
 ^(?<FX>(complex|complexAbundance))\((?<ARGS>.*)\)(?<SP>( )+)	the complex of ${ARGS}${SP}
 (?<SP>( )*)(?<FX>(complex|complexAbundance))\((?<ARGS>.*)\)$	${SP}the complex of ${ARGS}
 
@@ -107,24 +107,24 @@
 (?<SP>( )*)(?<FX>(composite|compositeAbundance))\((?<ARGS>.*)\)$	${SP}${ARGS} together
 
 # BEL language function; geneAbundance
-^(?<FX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${NS} namespace ${VAL} gene${SP}
-(?<SP>( )*)(?<FX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*)\)$	${SP}the abundance of ${NS} namespace ${VAL} gene
+^(?<FX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${VAL} gene${SP}
+(?<SP>( )*)(?<FX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*)\)$	${SP}the abundance of ${VAL} gene
 
 # BEL language function; microRNAAbundance
-^(?<FX>(m|microRNAAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${NS} namespace ${VAL} microRNA${SP}
-(?<SP>( )*)(?<FX>(m|microRNAAbundance))\((?<NS>.*):(?<VAL>.*)\)$	${SP}the abundance of ${NS} namespace ${VAL} microRNA
+^(?<FX>(m|microRNAAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${VAL} microRNA${SP}
+(?<SP>( )*)(?<FX>(m|microRNAAbundance))\((?<NS>.*):(?<VAL>.*)\)$	${SP}the abundance of ${VAL} microRNA
 
 # BEL language function; rna
-^(?<FX>(r|rnaAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${NS} namespace ${VAL} RNA${SP}
-(?<SP>( )*)(?<FX>(r|rnaAbundance))\((?<NS>.*):(?<VAL>.*)\)	${SP}the abundance of ${NS} namespace ${VAL} RNA
+^(?<FX>(r|rnaAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${VAL} RNA${SP}
+(?<SP>( )*)(?<FX>(r|rnaAbundance))\((?<NS>.*):(?<VAL>.*)\)	${SP}the abundance of ${VAL} RNA
 
 # BEL language function; biologicalProcess
-^(?<FX>(bp|biologicalProcess))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the biological process of ${NS} namespace ${VAL}${SP}
-(?<SP>( )*)(?<FX>(bp|biologicalProcess))\((?<NS>.*):(?<VAL>.*)\)	${SP}the biological process of ${NS} namespace ${VAL}${SP}
+^(?<FX>(bp|biologicalProcess))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the biological process of ${VAL}${SP}
+(?<SP>( )*)(?<FX>(bp|biologicalProcess))\((?<NS>.*):(?<VAL>.*)\)	${SP}the biological process of ${VAL}${SP}
 
 # BEL language function; pathology
-^(?<FX>(path|pathology))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the pathology of ${NS} namespace ${VAL}${SP}
-(?<SP>( )*)(?<FX>(path|pathology))\((?<NS>.*):(?<VAL>.*)\)	${SP}the pathology of ${NS} namespace ${VAL}
+^(?<FX>(path|pathology))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the pathology of ${VAL}${SP}
+(?<SP>( )*)(?<FX>(path|pathology))\((?<NS>.*):(?<VAL>.*)\)	${SP}the pathology of ${VAL}
 
 # BEL language function; catalyticActivity
 ^(?<FX>(cat|catalyticActivity))\((?<ARGS>.*)\)(?<SP>( )+)	the catalytic activity of ${ARGS}${SP}
