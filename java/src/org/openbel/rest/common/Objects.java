@@ -147,6 +147,10 @@ public class Objects {
         public void addAnnotation(Annotation a) { annotations.add(a); }
     }
 
+    public static class NSCompletion extends Base {
+
+    }
+
     public static class NSKeywordCompletion extends Base {
         public List<String> values;
         {
@@ -165,6 +169,10 @@ public class Objects {
             put("values", values);
         }
         public void addValue(String s) { values.add(s); }
+    }
+
+    public static class AOCompletion extends Base {
+
     }
 
     public static class AOKeywordCompletion extends Base {
