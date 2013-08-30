@@ -33,5 +33,4 @@ fi
 . ${ENV}/bin/activate
 cd "${_ENV_PYTHON_SRC}" || exit 1
 exec python3 mongo_check $@
-deactivate
 
