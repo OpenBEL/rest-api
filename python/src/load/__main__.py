@@ -47,6 +47,7 @@ def queue_consumer():
         # this is a slow operation that results in...
         set_target_synonyms(prefix, target, syns)
         # ... write-heavy I/O
+        q.task_done()
 
 
 def main():
@@ -76,10 +77,8 @@ def main():
     print('done')
     print()
 
-    for x in range(0, 2):
-        print('[thread]')
-        t = threading.Thread(target=queue_consumer, daemon=True)
-        t.start()
+    consumer = threading.Thread(target=queue_consumer, daemon=True)
+    consumer.start()
 
     with open(os.path.join(topdir, 'Synonyms.tsv')) as synonym_data:
         for total_lines, line in enumerate(synonym_data, 1):
