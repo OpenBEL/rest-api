@@ -7,12 +7,18 @@ import os
 import re
 import sys
 import bson
+import queue
 import pymongo
+import threading
+from datetime import datetime
 conn = None
 restapi_db = None
 
 # maps namespace prefix to the doc _id representing it
 prefix_map = None
+
+# offloaded processing for write-heavy operations
+q = queue.Queue(maxsize=1000)
 
 
 def out(msg):
@@ -33,6 +39,14 @@ def set_target_synonyms(prefix, target, synonyms):
     query = {'nsmeta-id': prefix_map[prefix], 'val': target}
     update = {'$set': {'synonyms': synonyms}}
     restapi_db.nsvalues.update(query, update)
+
+
+def queue_consumer():
+    while True:
+        prefix, target, syns = q.get()
+        # this is a slow operation that results in...
+        set_target_synonyms(prefix, target, syns)
+        # ... write-heavy I/O
 
 
 def main():
@@ -62,6 +76,11 @@ def main():
     print('done')
     print()
 
+    for x in range(0, 2):
+        print('[thread]')
+        t = threading.Thread(target=queue_consumer, daemon=True)
+        t.start()
+
     with open(os.path.join(topdir, 'Synonyms.tsv')) as synonym_data:
         for total_lines, line in enumerate(synonym_data, 1):
             pass
@@ -72,13 +91,15 @@ def main():
             tokens = synonym.strip().split('\t')
             prefix, target, syns = tokens[0], tokens[1], tokens[2:]
             if has_target(prefix, target):
-                # this is a slow operation that results in...
-                set_target_synonyms(prefix, target, syns)
-                # ... heavy I/O writes
+                q.put((prefix, target, syns))
             i += 1
             if i % 10000 == 0:
                 print('Processed %d of %d synonym entries.' % (i, total_lines))
         print('Finished processing synonyms.')
+
+    out('Joining queue... ')
+    q.join()
+    print('done')
 
     out('Closing connection to MongoDB... ')
     sys.stdout.flush()
