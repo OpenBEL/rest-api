@@ -44,15 +44,15 @@ function _3 {
 }
 
 function _4 {
-    echo "Loading..."
-    echo
-    script "load.sh" || return $?
-}
-
-function _5 {
     echo "Check..."
     echo
     script "mongo-check.sh" || script "mongo-check.sh --fix" || return $?
+}
+
+function _5 {
+    echo "Loading..."
+    echo
+    script "load.sh" || return $?
 }
 
 function _6 {
@@ -83,8 +83,8 @@ CHOICES=(
          "clean" \
          "build" \
          "test" \
-         "load" \
          "check" \
+         "load" \
          "run" \
          "docs" \
          "build loop" \
