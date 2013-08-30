@@ -117,9 +117,9 @@ Follow these steps:
 
  #. ``scripts/build.sh``
 
- #. ``scripts/load.sh``
-
  #. ``scripts/mongo-check.sh``
+
+ #. ``scripts/load.sh``
 
 Once these three steps have completed, use ``scripts/run.sh`` to run.
 
