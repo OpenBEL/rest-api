@@ -11,6 +11,9 @@ import pymongo
 conn = None
 restapi_db = None
 nsvalues_norm_index = True
+nsvalues_nsmeta_index = True
+nsvalues_val_index = True
+nsvalues_synonyms_index = True
 annovalues_norm_index = True
 namespaces_keyword_index = True
 annotations_keyword_index = True
@@ -38,6 +41,39 @@ def check():
         print('no')
         global nsvalues_norm_index
         nsvalues_norm_index = False
+        status = False
+
+    # INDEX PRESENT ON VALUES NSMETA-ID FIELD
+    coll = restapi_db.nsvalues
+    out('Checking for an index on nsmeta-id in nsvalues... ')
+    if 'nsmeta-id' in coll.index_information():
+        print('yes')
+    else:
+        print('no')
+        global nsvalues_nsmeta_index
+        nsvalues_nsmeta_index = False
+        status = False
+
+    # INDEX PRESENT ON VALUES VAL FIELD
+    coll = restapi_db.nsvalues
+    out('Checking for an index on val in nsvalues... ')
+    if 'val' in coll.index_information():
+        print('yes')
+    else:
+        print('no')
+        global nsvalues_val_index
+        nsvalues_val_index = False
+        status = False
+
+    # INDEX PRESENT ON NSVALUES SYNONYMS FIELD
+    coll = restapi_db.nsvalues
+    out('Checking for an index on synonyms in nsvalues... ')
+    if 'synonyms' in coll.index_information():
+        print('yes')
+    else:
+        print('no')
+        global nsvalues_synonyms_index
+        nsvalues_synonyms_index = False
         status = False
 
     # INDEX PRESENT ON NAMESPACES KEYWORD
@@ -93,6 +129,30 @@ def fix():
         kwargs = {'name': 'norm'}
         kwargs.update(fg_index_args)
         coll.create_index('norm', **kwargs)
+        print('done')
+
+    if not nsvalues_nsmeta_index:
+        out('Creating index on nsmeta-id in nsvalues... ')
+        coll = restapi_db.nsvalues
+        kwargs = {'name': 'nsmeta-id'}
+        kwargs.update(fg_index_args)
+        coll.create_index('nsmeta-id', **kwargs)
+        print('done')
+
+    if not nsvalues_val_index:
+        out('Creating index on val in nsvalues... ')
+        coll = restapi_db.nsvalues
+        kwargs = {'name': 'val'}
+        kwargs.update(fg_index_args)
+        coll.create_index('val', **kwargs)
+        print('done')
+
+    if not nsvalues_synonyms_index:
+        out('Creating index on synonyms in nsvalues... ')
+        coll = restapi_db.nsvalues
+        kwargs = {'name': 'synonyms'}
+        kwargs.update(fg_index_args)
+        coll.create_index('synonyms', **kwargs)
         print('done')
 
     if not namespaces_keyword_index:
