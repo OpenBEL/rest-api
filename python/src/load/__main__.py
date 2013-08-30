@@ -72,7 +72,9 @@ def main():
             tokens = synonym.strip().split('\t')
             prefix, target, syns = tokens[0], tokens[1], tokens[2:]
             if has_target(prefix, target):
+                # this is a slow operation that results in...
                 set_target_synonyms(prefix, target, syns)
+                # ... heavy I/O writes
             i += 1
             if i % 10000 == 0:
                 print('Processed %d of %d synonym entries.' % (i, total_lines))
