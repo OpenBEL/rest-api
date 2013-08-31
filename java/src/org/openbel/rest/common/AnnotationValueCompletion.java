@@ -20,6 +20,7 @@ import static org.openbel.rest.main.*;
 import static org.openbel.rest.Util.*;
 import static java.util.regex.Pattern.*;
 import static java.lang.String.format;
+import static java.net.URLDecoder.*;
 import org.jongo.*;
 import java.util.*;
 import java.util.regex.*;
@@ -44,6 +45,9 @@ public class AnnotationValueCompletion extends ServerResource {
     public Representation _get() {
         String keyword = getAttribute("keyword");
         String value = getAttribute("value");
+        try {
+            value = decode(value, "UTF-8");
+        } catch (Exception e) {}
 
         String query = format(FIND_ONE, keyword);
         @SuppressWarnings("unchecked")

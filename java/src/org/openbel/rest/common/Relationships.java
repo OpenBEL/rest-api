@@ -37,7 +37,7 @@ public class Relationships extends ServerResource {
         String relationship = getAttribute("relationship");
         try {
             relationship = decode(relationship, "UTF-8");
-        } catch (UnsupportedEncodingException e) {}
+        } catch (Exception e) {}
         RelationshipType r = fromString(relationship);
         if (r == null) r = fromAbbreviation(relationship);
         if (r == null) {
