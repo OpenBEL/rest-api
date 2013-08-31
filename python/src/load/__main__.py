@@ -45,6 +45,7 @@ def queue_consumer():
     while True:
         prefix, target, syns = q.get()
         # this is a slow operation that results in...
+        syns = [x.lower() for x in syns]
         set_target_synonyms(prefix, target, syns)
         # ... write-heavy I/O
         q.task_done()
