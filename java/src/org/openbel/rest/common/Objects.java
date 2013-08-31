@@ -147,6 +147,10 @@ public class Objects {
         public void addAnnotation(Annotation a) { annotations.add(a); }
     }
 
+    public static class NSCompletion extends Base {
+
+    }
+
     public static class NSKeywordCompletion extends Base {
         public List<String> values;
         {
@@ -158,13 +162,41 @@ public class Objects {
     }
 
     public static class NSValueCompletion extends Base {
-        public List<String> values;
-        {
-            addDocumentation("namespace-value-completion");
-            values = new ArrayList<>();
-            put("values", values);
+        public String prefix; // required
+        public String value; // required
+        public List<String> synonyms; // not required
+        public NSValueCompletion(String prefix,
+                                 String value,
+                                List<String> synonyms) {
+            this.prefix = prefix;
+            put("prefix", prefix);
+            this.value = value;
+            put("value", value);
+            this.synonyms = synonyms;
+            if (synonyms != null) {
+                put("synonyms", synonyms);
+            }
+            put("matched_synonym", false);
         }
-        public void addValue(String s) { values.add(s); }
+
+        public void matchedSynonym() {
+            put("matched_synonym", true);
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return super.equals(o);
+        }
+
+    }
+
+    public static class AOCompletion extends Base {
+
     }
 
     public static class AOKeywordCompletion extends Base {

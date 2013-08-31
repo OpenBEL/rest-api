@@ -29,12 +29,13 @@ import org.restlet.representation.Representation;
 import org.restlet.data.Status;
 import org.openbel.rest.Path;
 
-@Path("/api/v1/completion/annotation/{keyword}")
+@Path("/api/v1/completion/annotation-keyword/{keyword}")
 public class AnnotationKeywordCompletion extends ServerResource {
-    private static final String ALT_URL = "/api/v1/completion/annotation/";
+    private static final String ALT_URL;
     private static final String FIND;
     static {
         FIND = "{norm:#}";
+        ALT_URL = "/api/v1/completion/annotation-keyword/";
     }
 
     @Get("json")

@@ -20,6 +20,7 @@ import static org.openbel.rest.main.*;
 import static org.openbel.rest.Util.*;
 import static java.util.regex.Pattern.*;
 import static java.lang.String.format;
+import static java.net.URLDecoder.*;
 import org.jongo.*;
 import java.util.*;
 import java.util.regex.*;
@@ -29,13 +30,13 @@ import org.restlet.representation.Representation;
 import org.restlet.data.Status;
 import org.openbel.rest.Path;
 
-@Path("/api/v1/completion/annotation/{keyword}/{value}")
+@Path("/api/v1/completion/annotation-value/{keyword}/{value}")
 public class AnnotationValueCompletion extends ServerResource {
     private static final String ALT_URL;
     private static final String FIND_ONE;
     private static final String FIND_VALS;
     static {
-        ALT_URL = "/api/v1/completion/annotation/";
+        ALT_URL = "/api/v1/completion/annotation-value/";
         FIND_ONE = "{keyword: '%s'}";
         FIND_VALS = "{annometa-id:#, norm:#}";
     }
@@ -44,6 +45,9 @@ public class AnnotationValueCompletion extends ServerResource {
     public Representation _get() {
         String keyword = getAttribute("keyword");
         String value = getAttribute("value");
+        try {
+            value = decode(value, "UTF-8");
+        } catch (Exception e) {}
 
         String query = format(FIND_ONE, keyword);
         @SuppressWarnings("unchecked")

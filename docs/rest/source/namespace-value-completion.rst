@@ -1,16 +1,16 @@
 .. _namespace-value-completion:
 
-/api/v1/completion/namespace/{keyword}/{value}
-==============================================
+/api/v1/completion/namespace-value/{keyword}/{value}
+====================================================
 
 Namespace value completion.
 
 .. ############################################################################
-.. http:get:: /api/v1/completion/namespace/{keyword}/{value}
+.. http:get:: /api/v1/completion/namespace-value/{keyword}/{value}
 
     | **Description**
     | Complete a namespace value given its prefix.
-    | (try it: http://demo.openbel.org/api/v1/completion/namespace/MESHPP/Auto)
+    | (try it: http://demo.openbel.org/api/v1/completion/namespace-value/MESHPP/Auto)
 
     **Links**
 
@@ -29,7 +29,7 @@ Namespace value completion.
 
     .. sourcecode:: http
 
-        GET /api/v1/completion/namespace/MESHPP/Auto HTTP/1.1
+        GET /api/v1/completion/namespace-value/MESHPP/Auto HTTP/1.1
         Host: demo.openbel.org
         Accept: */*
         Content-Type: text/plain; charset=utf-8
@@ -55,19 +55,19 @@ Namespace value completion.
               "rel": "describedby"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/namespace/MESHPP/Autocrine Communication",
+              "href": "http://localhost:60000/api/v1/completion/namespace-value/MESHPP/Autocrine Communication",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/namespace/MESHPP/Autoimmunity",
+              "href": "http://localhost:60000/api/v1/completion/namespace-value/MESHPP/Autoimmunity",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/namespace/MESHPP/Autophagy",
+              "href": "http://localhost:60000/api/v1/completion/namespace-value/MESHPP/Autophagy",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/namespace/MESHPP/Autotrophic Processes",
+              "href": "http://localhost:60000/api/v1/completion/namespace-value/MESHPP/Autotrophic Processes",
               "rel": "result"
             },
             {

@@ -29,9 +29,9 @@ import org.restlet.representation.Representation;
 import org.restlet.data.Status;
 import org.openbel.rest.Path;
 
-@Path("/api/v1/completion/namespace/{keyword}")
+@Path("/api/v1/completion/namespace-keyword/{keyword}")
 public class NamespaceKeywordCompletion extends ServerResource {
-    private static final String ALT_URL = "/api/v1/completion/namespace/";
+    private static final String ALT_URL = "/api/v1/completion/namespace-keyword/";
     private static final String FIND;
     static {
         FIND = "{norm:#}";
