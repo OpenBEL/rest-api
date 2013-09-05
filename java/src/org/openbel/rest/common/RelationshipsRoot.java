@@ -39,16 +39,6 @@ public class RelationshipsRoot extends ServerResource {
         RESOURCES = new ArrayList<>();
         MY_PATH = declaredPath(RelationshipsRoot.class);
         for (RelationshipType r : RelationshipType.values()) {
-            switch (r) {
-            case ACTS_IN:
-            case INCLUDES:
-            case TRANSLOCATES:
-            case HAS_PRODUCT:
-            case REACTANT_IN:
-            case HAS_MODIFICATION:
-            case HAS_VARIANT:
-                continue;
-            }
             String name = r.getDisplayValue();
             String abbrev = r.getAbbreviation();
             Objects.Relationship objr = new Objects.Relationship(name, abbrev);
