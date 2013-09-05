@@ -170,6 +170,16 @@ public class Util {
     public static String description(RelationshipType r) {
         String ret = null;
         switch (r) {
+        case ACTS_IN:
+            ret = "This relationship links an abundance term to the " +
+                  "activity term for the same abundance. This relationship " +
+                  "is direct because it is a self relationship, the " +
+                  "abundance acts in its own activity. For protein " +
+                  "abundance p(A) and its molecular activity kin(p(A)), " +
+                  "p(A) actsIn kin(p(A)). This relationship is introduced " +
+                  "by the BEL Compiler and may not be used by statements " +
+                  "in BEL documents.";
+            break;
         case ANALOGOUS:
             ret = "For terms A and B, A analogousTo B indicates that A " +
                   "and B represent abundances or molecular activities in " +
@@ -271,6 +281,39 @@ public class Util {
                   "that A is defined by its member abundance classes B, " +
                   "C and D.";
             break;
+        case HAS_MODIFICATION:
+            ret = "This relationship links abundance terms modified by the " +
+                  "pmod() function to the unmodified abundance term. This " +
+                  "is a direct relationship because it is a self " +
+                  "relationship. This relationship is introduced by the " +
+                  "BEL Compiler and may not be used by statements in BEL " +
+                  "documents.";
+            break;
+        case HAS_PRODUCT:
+            ret = "This relationship links abundance terms from the " +
+                  "products() function in a reaction to the reaction. " +
+                  "This is a direct relationship because it is a self " +
+                  "relationship. Products are produced directly by a " +
+                  "reaction. This relationship is introduced by the BEL " +
+                  "Compiler and may not be used by statements in BEL " +
+                  "documents.";
+            break;
+        case HAS_VARIANT:
+            ret = "This relationship links abundance terms modified by the " +
+                  "substitution(), fusion(), or truncation() functions to " +
+                  "the unmodified abundance term. This relationship is " +
+                  "introduced by the BEL Compiler and may not be used by " +
+                  "statements in BEL documents.";
+            break;
+        case INCLUDES:
+            ret = "This relationship links each individual abundance term " +
+                  "in a compositeAbundance() to the compositeAbundance. For " +
+                  "example, compositeAbundance(A, B) includes A and " +
+                  "compositeAbundance(A, B) includes B. This relationship " +
+                  "is direct because it is a self relationship. This " +
+                  "relationship is introduced by the BEL Compiler and may " +
+                  "not be used by statements in BEL documents.";
+            break;
         case INCREASES:
             ret = "For terms A and B, A increases B or A -> B indicates " +
                  "that increases in A have been observed to cause increases " +
@@ -324,6 +367,15 @@ public class Util {
                   "process term B, A rateLimitingStepOf B indicates A " +
                   "subProcessOf B and A -> B.";
             break;
+        case REACTANT_IN:
+            ret = "This relationship links abundance terms from the " +
+                  "reactants() function in a reaction to the reaction. " +
+                  "This is a direct relationship because it is a self " +
+                  "relationship. Reactants are consumed directly by a " +
+                  "reaction. This relationship is introduced by the BEL " +
+                  "Compiler and may not be used by statements in BEL " +
+                  "documents.";
+            break;
         case SUB_PROCESS_OF:
             ret = "For process, activity, or transformation term A and " +
                   "process term B, A subProcessOf B indicates that " +
@@ -343,6 +395,15 @@ public class Util {
                   "produced by the translation of members of R. For " +
                   "example: r(HGNC:AKT1) >> p(HGNC:AKT1) indicates that " +
                   "AKT1 protein is produced by translation of AKT1 RNA.";
+            break;
+        case TRANSLOCATES:
+            ret = "This relationship links the abundance term in a " +
+                  "translocation() to the translocation. This relationship " +
+                  "is direct because it is a self relationship. The " +
+                  "translocated abundance is directly acted on by the " +
+                  "translocation process. This relationship is introduced " +
+                  "by the BEL Compiler and may not be used by statements " +
+                  "in BEL documents.";
             break;
         }
         return ret;
