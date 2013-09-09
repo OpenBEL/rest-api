@@ -1,16 +1,16 @@
 .. _annotation-keyword-completion:
 
-/api/v1/completion/annotation/{keyword}
-=======================================
+/api/v1/completion/annotation-keyword/{keyword}
+===============================================
 
 Annotation keyword completion.
 
 .. ############################################################################
-.. http:get:: /api/v1/completion/annotation/{keyword}
+.. http:get:: /api/v1/completion/annotation-keyword/{keyword}
 
     | **Description**
     | Complete an annotation keyword.
-    | (try it: http://demo.openbel.org/api/v1/completion/annotation/S)
+    | (try it: http://demo.openbel.org/api/v1/completion/annotation-keyword/S)
 
     **Links**
 
@@ -28,7 +28,7 @@ Annotation keyword completion.
 
     .. sourcecode:: http
 
-        GET /api/v1/completion/annotation/S HTTP/1.1
+        GET /api/v1/completion/annotation-keyword/S HTTP/1.1
         Host: demo.openbel.org
         Accept: */*
         Content-Type: text/plain; charset=utf-8
@@ -54,19 +54,19 @@ Annotation keyword completion.
               "rel": "describedby"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/annotation/SenseOrgan",
+              "href": "http://localhost:60000/api/v1/completion/annotation-keyword/SenseOrgan",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/annotation/StomatognathicSystem",
+              "href": "http://localhost:60000/api/v1/completion/annotation-keyword/StomatognathicSystem",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/annotation/Species",
+              "href": "http://localhost:60000/api/v1/completion/annotation-keyword/Species",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/annotation/S",
+              "href": "http://localhost:60000/api/v1/completion/annotation-keyword/S",
               "rel": "self"
             }
           ],

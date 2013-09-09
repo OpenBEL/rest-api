@@ -15,6 +15,7 @@
  */
 package org.openbel.rest.common;
 
+import static java.lang.Character.*;
 import static java.lang.String.format;
 import static org.openbel.rest.common.Objects.*;
 import static org.openbel.rest.Util.*;
@@ -98,6 +99,11 @@ public class Translation extends ServerResource {
                 ret = txt;
                 continue;
             }
+        }
+        char[] carr = txt.toCharArray();
+        if (carr.length > 0) {
+            carr[0] = toUpperCase(carr[0]);
+            return new String(carr);
         }
         return txt;
     }

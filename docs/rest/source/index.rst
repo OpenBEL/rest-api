@@ -26,8 +26,10 @@ The API
    script-validater
    translation
    annotations
+   annotation-completion
    annotation-keyword-completion
    annotation-value-completion
    namespaces
+   namespace-completion
    namespace-keyword-completion
    namespace-value-completion

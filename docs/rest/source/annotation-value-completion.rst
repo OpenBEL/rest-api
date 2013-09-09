@@ -1,16 +1,16 @@
 .. _annotation-value-completion:
 
-/api/v1/completion/annotation/{keyword}/{value}
-===============================================
+/api/v1/completion/annotation-value/{keyword}/{value}
+=====================================================
 
 Annotation value completion.
 
 .. ############################################################################
-.. http:get:: /api/v1/completion/annotation/{keyword}/{value}
+.. http:get:: /api/v1/completion/annotation-value/{keyword}/{value}
 
     | **Description**
     | Complete an annotation value given its prefix.
-    | (try it: http://demo.openbel.org/api/v1/completion/annotation/Species/1)
+    | (try it: http://demo.openbel.org/api/v1/completion/annotation-value/Species/1)
 
     **Links**
 
@@ -29,7 +29,7 @@ Annotation value completion.
 
     .. sourcecode:: http
 
-        GET /api/v1/completion/annotation/Species/1 HTTP/1.1
+        GET /api/v1/completion/annotation-value/Species/1 HTTP/1.1
         Host: demo.openbel.org
         Accept: */*
         Content-Type: text/plain; charset=utf-8
@@ -55,15 +55,15 @@ Annotation value completion.
               "rel": "describedby"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/annotation/Species/10090",
+              "href": "http://localhost:60000/api/v1/completion/annotation-value/Species/10090",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/annotation/Species/10116",
+              "href": "http://localhost:60000/api/v1/completion/annotation-value/Species/10116",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/annotation/Species/1",
+              "href": "http://localhost:60000/api/v1/completion/annotation-value/Species/1",
               "rel": "self"
             }
           ],

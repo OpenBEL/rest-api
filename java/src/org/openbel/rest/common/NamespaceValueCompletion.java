@@ -20,6 +20,7 @@ import static org.openbel.rest.main.*;
 import static org.openbel.rest.Util.*;
 import static java.util.regex.Pattern.*;
 import static java.lang.String.format;
+import static java.net.URLDecoder.*;
 import org.jongo.*;
 import java.util.*;
 import java.util.regex.*;
@@ -28,22 +29,40 @@ import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
 import org.restlet.data.Status;
 import org.openbel.rest.Path;
+import org.bson.types.ObjectId;
 
-@Path("/api/v1/completion/namespace/{keyword}/{value}")
+@Path("/api/v1/completion/namespace-value/{keyword}/{value}")
 public class NamespaceValueCompletion extends ServerResource {
+    private static final String ROOT_FIND;
+    private static final String ROOT_PROJECTION;
+    private static final Map<ObjectId, String> PREFIX_MAP;
     private static final String ALT_URL;
     private static final String FIND_ONE;
     private static final String FIND_VALS;
+    private static final String FIND_SYNS;
     static {
-        ALT_URL = "/api/v1/completion/namespace/";
+        ROOT_FIND = "{}";
+        ROOT_PROJECTION = "{description: 0}";
+        ALT_URL = "/api/v1/completion/namespace-value/";
         FIND_ONE = "{keyword: '%s'}";
         FIND_VALS = "{nsmeta-id:#, norm:#}";
+        FIND_SYNS = "{nsmeta-id:#, synonyms:#}";
+        PREFIX_MAP = new HashMap<>();
+        Find find = $namespaces.find(ROOT_FIND);
+        for (Map<?, ?> map : find.as(Map.class)) {
+            ObjectId oid = (ObjectId) map.get("_id");
+            String keyword = (String) map.get("keyword");
+            PREFIX_MAP.put(oid, keyword);
+        }
     }
 
     @Get("json")
     public Representation _get() {
         String keyword = getAttribute("keyword");
         String value = getAttribute("value");
+        try {
+            value = decode(value, "UTF-8");
+        } catch (Exception e) {}
 
         String query = format(FIND_ONE, keyword);
         @SuppressWarnings("unchecked")
@@ -57,30 +76,60 @@ public class NamespaceValueCompletion extends ServerResource {
         Pattern ptrn = compile(input.toLowerCase());
         Find find = $nsvalues.find(FIND_VALS, (ns.get("_id")), ptrn);
 
-        List<String> rslts = new ArrayList<>();
+        List<NSValueCompletion> rslts = new ArrayList<>();
+
+        // Autocomplete values first
         for (Map<?, ?> map : find.as(Map.class)) {
-            rslts.add((String) map.get("val"));
+            String prefix = PREFIX_MAP.get((ObjectId) map.get("nsmeta-id"));
+            String val = (String) map.get("val");
+            @SuppressWarnings("unchecked")
+            List<String> syns = (List<String>) map.get("synonyms");
+            NSValueCompletion nvc = new NSValueCompletion(prefix, val, syns);
+            rslts.add(nvc);
         }
+
+        // Autocomplete synonyms second
+        find = $nsvalues.find(FIND_SYNS, (ns.get("_id")), ptrn);
+        for (Map<?, ?> map : find.as(Map.class)) {
+            String prefix = PREFIX_MAP.get((ObjectId) map.get("nsmeta-id"));
+            String val = (String) map.get("val");
+            @SuppressWarnings("unchecked")
+            List<String> syns = (List<String>) map.get("synonyms");
+            NSValueCompletion nvc = new NSValueCompletion(prefix, val, syns);
+            nvc.matchedSynonym();
+            rslts.add(nvc);
+        }
+
         if (rslts.size() == 0) {
             setStatus(Status.CLIENT_ERROR_NOT_FOUND);
             return null;
         }
 
-        if (rslts.size() == 1) {
-            NSValueCompletion ret = new NSValueCompletion();
-            ret.addValue(rslts.get(0));
-            ret.addLink("self", ALT_URL + keyword + "/" + value);
-            return ret.json();
-        }
+        Response ret = new Response();
+        ret.addLink("self", ALT_URL + keyword + "/" + value);
+        for (NSValueCompletion nvc : rslts) ret.addValue(nvc);
+        if (rslts.size() == 1) return ret.json();
 
-        NSValueCompletion ret = new NSValueCompletion();
-        for (String rslt : rslts) {
-            ret.addLink("result", ALT_URL + keyword + "/" + rslt);
-            ret.addValue(rslt);
+        for (NSValueCompletion nvc : rslts) {
+            ret.addLink("result", ALT_URL + keyword + "/" + nvc.value);
         }
         ret.addLink("self", ALT_URL + keyword + "/" + value);
         setStatus(Status.REDIRECTION_MULTIPLE_CHOICES);
         return ret.json();
+    }
+
+    static class Response extends Objects.Base {
+        List<NSValueCompletion> values;
+        {
+            addDocumentation("namespace-completion");
+        }
+        void addValue(NSValueCompletion nvc) {
+            if (values == null) {
+                values = new ArrayList<>();
+                put("values", values);
+            }
+            values.add(nvc);
+        }
     }
 
 }

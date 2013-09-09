@@ -1,16 +1,16 @@
 .. _namespace-keyword-completion:
 
-/api/v1/completion/namespace/{keyword}
-======================================
+/api/v1/completion/namespace-keyword/{keyword}
+==============================================
 
 Namespace keyword completion.
 
 .. ############################################################################
-.. http:get:: /api/v1/completion/namespace/{keyword}
+.. http:get:: /api/v1/completion/namespace-keyword/{keyword}
 
     | **Description**
     | Complete a namespace keyword.
-    | (try it: http://demo.openbel.org/api/v1/completion/namespace/MESH)
+    | (try it: http://demo.openbel.org/api/v1/completion/namespace-keyword/MESH)
 
     **Links**
 
@@ -28,7 +28,7 @@ Namespace keyword completion.
 
     .. sourcecode:: http
 
-        GET /api/v1/completion/namespace/MESH HTTP/1.1
+        GET /api/v1/completion/namespace-keyword/MESH HTTP/1.1
         Host: demo.openbel.org
         Accept: */*
         Content-Type: text/plain; charset=utf-8
@@ -54,19 +54,19 @@ Namespace keyword completion.
               "rel": "describedby"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/namespace/MESHPP",
+              "href": "http://localhost:60000/api/v1/completion/namespace-keyword/MESHPP",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/namespace/MESHD",
+              "href": "http://localhost:60000/api/v1/completion/namespace-keyword/MESHD",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/namespace/MESHCL",
+              "href": "http://localhost:60000/api/v1/completion/namespace-keyword/MESHCL",
               "rel": "result"
             },
             {
-              "href": "http://localhost:60000/api/v1/completion/namespace/MESH",
+              "href": "http://localhost:60000/api/v1/completion/namespace-keyword/MESH",
               "rel": "self"
             }
           ],

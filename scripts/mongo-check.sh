@@ -31,7 +31,6 @@ if [ $NEW_ENV -eq 1 ]; then
 fi
 
 . ${ENV}/bin/activate
-cd "${_ENV_PYTHON}" || exit 1
-exec python3 src $@
-deactivate
+cd "${_ENV_PYTHON_SRC}" || exit 1
+exec python3 mongo_check $@
 
