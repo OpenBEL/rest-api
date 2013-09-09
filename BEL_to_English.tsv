@@ -90,29 +90,29 @@
 
 # BEL language function; abundance
 ^(?<FX>(a|abundance))\((?<NS>.*)(:)(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${VAL}${SP}
-(?<SP>( )*)(?<FX>(a|abundance))\((?<NS>.*)(:)(?<VAL>.*)\)$	${SP}the abundance of ${VAL}
+(?<SP>( )*)(?<FX>(a|abundance))\((?<NS>.*)(:)(?<VAL>.*)\)	${SP}the abundance of ${VAL}
 
 # BEL language function; proteinAbundance
-^(?<FX>(p|proteinAbundance))\((?<NS>.*)(:)(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${VAL}${SP}
-(?<SP>( )*)(?<FX>(p|proteinAbundance))\((?<NS>.*)(:)(?<VAL>.*)\)$	${SP}the abundance of ${VAL}
+^(?<FX>(p|proteinAbundance))\((?<NS>\w*)(:)(?<VAL>\w*)\)(?<SP>( )+)	the abundance of ${VAL}${SP}
+(?<SP>( )*)(?<FX>(p|proteinAbundance))\((?<NS>\w*)(:)(?<VAL>\w*)\)	${SP}the abundance of ${VAL}
 
 # BEL language function; complexAbundance
 ^(?<FX>(complex|complexAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the complex of ${VAL}${SP}
 (?<SP>( )*)(?<FX>(complex|complexAbundance))\((?<NS>.*):(?<VAL>.*)\)$	${SP}the complex of ${VAL}
 ^(?<FX>(complex|complexAbundance))\((?<ARGS>.*)\)(?<SP>( )+)	the complex of ${ARGS}${SP}
-(?<SP>( )*)(?<FX>(complex|complexAbundance))\((?<ARGS>.*)\)$	${SP}the complex of ${ARGS}
+(?<SP>( )*)(?<FX>(complex|complexAbundance))\((?<ARGS>.*)\)	${SP}the complex of ${ARGS}
 
 # BEL language function; compositebundance
 ^(?<FX>(composite|compositeAbundance))\((?<ARGS>.*)\)(?<SP>( )+)	${ARGS} together${SP}
-(?<SP>( )*)(?<FX>(composite|compositeAbundance))\((?<ARGS>.*)\)$	${SP}${ARGS} together
+(?<SP>( )*)(?<FX>(composite|compositeAbundance))\((?<ARGS>.*)\)	${SP}${ARGS} together
 
 # BEL language function; geneAbundance
 ^(?<FX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${VAL} gene${SP}
-(?<SP>( )*)(?<FX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*)\)$	${SP}the abundance of ${VAL} gene
+(?<SP>( )*)(?<FX>(g|geneAbundance))\((?<NS>.*):(?<VAL>.*)\)	${SP}the abundance of ${VAL} gene
 
 # BEL language function; microRNAAbundance
 ^(?<FX>(m|microRNAAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${VAL} microRNA${SP}
-(?<SP>( )*)(?<FX>(m|microRNAAbundance))\((?<NS>.*):(?<VAL>.*)\)$	${SP}the abundance of ${VAL} microRNA
+(?<SP>( )*)(?<FX>(m|microRNAAbundance))\((?<NS>.*):(?<VAL>.*)\)	${SP}the abundance of ${VAL} microRNA
 
 # BEL language function; rna
 ^(?<FX>(r|rnaAbundance))\((?<NS>.*):(?<VAL>.*)\)(?<SP>( )+)	the abundance of ${VAL} RNA${SP}
@@ -167,8 +167,8 @@
 (?<SP>( )*)(?<FX>(tport|transportActivity))\((?<ARGS>.*)\)	${SP}the transport activity of ${ARGS}
 
 # BEL language function; translocation
-^(?<FX>(tloc|translocation))\((?<ARGS>.*),( )*(?<NS1>.*):(?<VAL1>.*),( )*(?<NS2>.*):(?<VAL2>.*)\)(?<SP>( )*)	the translocation of ${ARGS} from the ${NS1} namespace cellular location ${VAL1} to the ${NS2} namespace cellular location ${VAL2}${SP}
-(?<SP>( )*)(?<FX>(tloc|translocation))\((?<ARGS>.*),( )*(?<NS1>.*):(?<VAL1>.*),( )*(?<NS2>.*):(?<VAL2>.*)\)	${SP}the translocation of ${ARGS} from the ${NS1} namespace cellular location ${VAL1} to the ${NS2} namespace cellular location ${VAL2}
+^(?<FX>(tloc|translocation))\((?<ARGS>.*),( )*(?<NS1>\w*):(?<VAL1>\w*),( )*(?<NS2>\w*):(?<VAL2>\w*)\)(?<SP>( )*)	the translocation of ${ARGS} from the ${NS1} namespace cellular location ${VAL1} to the ${NS2} namespace cellular location ${VAL2}${SP}
+(?<SP>( )*)(?<FX>(tloc|translocation))\((?<ARGS>.*),( )*(?<NS1>\w*):(?<VAL1>\w*),( )*(?<NS2>\w*):(?<VAL2>\w*)\)	${SP}the translocation of ${ARGS} from the ${NS1} namespace cellular location ${VAL1} to the ${NS2} namespace cellular location ${VAL2}
 
 # BEL language function; cellSecretion
 ^(?<FX>(sec|cellSecretion))\((?<ARGS>.*)\)(?<SP>( )+)	the secretion of ${ARGS}${SP}
