@@ -182,42 +182,42 @@ public class Util {
             break;
         case ANALOGOUS:
             ret = "For terms A and B, A analogousTo B indicates that A and B" +
-                  "represent abundances or molecular activities which funct" +
+                  " represent abundances or molecular activities which funct" +
                   "ion in a similar manner.";
             break;
         case ASSOCIATION:
             ret = "For terms A and B, A association B or A -- B indicates th" +
                   "at A and B are associated in an unspecified manner. This" +
-                  "relationship is used when not enough information about th" +
+                  " relationship is used when not enough information about th" +
                   "e association is available to describe it using more spec" +
                   "ific relationships, like increases or positiveCorrelation" +
                   ". The order of the subject and object does not affect the" +
-                  "interpretation of the statement, thus B -- A is equivale" +
+                  " interpretation of the statement, thus B -- A is equivale" +
                   "nt to A -- B.";
             break;
         case BIOMARKER_FOR:
             ret = "For term A and process term P, A biomarkerFor P indicates" +
-                  "that changes in or detection of A is used in some way to" +
-                  "be a biomarker for pathology or biological process P.";
+                  " that changes in or detection of A is used in some way to" +
+                  " be a biomarker for pathology or biological process P.";
             break;
         case CAUSES_NO_CHANGE:
             ret = "For terms A and B, A causesNoChange B indicates that B wa" +
                   "s observed not to change in response to changes in A. Sta" +
                   "tements using this relationship correspond to cases where" +
-                  "explicit measurement of B demonstrates lack of significa" +
+                  " explicit measurement of B demonstrates lack of significa" +
                   "nt change, not for cases where the state of B is unknown.";
             break;
         case DECREASES:
             ret = "For terms A and B, A decreases B or A -| B indicate that" +
-                  "increases in A have been observed to cause decreases in B" +
+                  " increases in A have been observed to cause decreases in B" +
                   ". A decreases B also represents cases where decreases in" +
-                  "A have been observed to cause increases in B, for example" +
+                  " A have been observed to cause increases in B, for example" +
                   ", in recording the results of gene deletion or other inhi" +
                   "bition experiments. A is a BEL Term and B is either a BEL" +
-                  "Term or a BEL Statement. The decreases relationship does" +
-                  "not indicate that the changes in A are either necessary" +
-                  "for changes in B, nor does it indicate that changes in A" +
-                  "are sufficient to cause changes in B.";
+                  " Term or a BEL Statement. The decreases relationship does" +
+                  " not indicate that the changes in A are either necessary" +
+                  " for changes in B, nor does it indicate that changes in A" +
+                  " are sufficient to cause changes in B.";
             break;
         case DIRECTLY_DECREASES:
             ret = "For terms A and B, A directlyDecreases B or A =| B indica" +
@@ -241,7 +241,7 @@ public class Util {
                   "es that are instances of A have instances of B as possibl" +
                   "e components. Note that, the stoichiometry of A is not de" +
                   "scribed, nor is it stated that B is a required component." +
-                  "The use of hasComponent relationships is complementary t" +
+                  " The use of hasComponent relationships is complementary t" +
                   "o the use of functionally composed complexes and is inten" +
                   "ded to enable the assignment of components to complexes d" +
                   "esignated by names in external vocabularies. The assignme" +
@@ -263,22 +263,22 @@ public class Util {
         case HAS_MEMBER:
             ret = "For term abundances A and B, A hasMember B designates B a" +
                   "s a member class of A. A member class is a distinguished" +
-                  "sub-class. A is defined as a group by all of the members" +
-                  "assigned to it. The member classes may or may not be over" +
+                  " sub-class. A is defined as a group by all of the members" +
+                  " assigned to it. The member classes may or may not be over" +
                   "lapping and may or may not entirely cover all instances o" +
                   "f A. A term may not appear in both the subject and object" +
-                  "of the same hasMember statement";
+                  " of the same hasMember statement";
             break;
         case HAS_MEMBERS:
             ret = "The hasMembers relationship is a special form which enabl" +
                   "es the assignment of multiple member classes in a single" +
-                  "statement where the object of the statement is a set of a" +
+                  " statement where the object of the statement is a set of a" +
                   "bundance terms. A statement using hasMembers is exactly e" +
                   "quivalent to multiple hasMember statements. A term may no" +
                   "t appear in both the subject and object of the same hasMe" +
                   "mbers statement. For the abundance terms A, B, C and D," +
-                  "A hasMembers list(B, C, D) indicates that A is defined by" +
-                  "its member abundance classes B, C and D.";
+                  " A hasMembers list(B, C, D) indicates that A is defined by" +
+                  " its member abundance classes B, C and D.";
             break;
         case HAS_MODIFICATION:
             ret = "This relationship links abundance terms modified by the " +
@@ -315,15 +315,15 @@ public class Util {
             break;
         case INCREASES:
             ret = "For terms A and B, A increases B or A -> B indicate that" +
-                  "increases in A have been observed to cause increases in B" +
+                  " increases in A have been observed to cause increases in B" +
                   ". A increases B also represents cases where decreases in" +
-                  "A have been observed to cause decreases in B, for example" +
+                  " A have been observed to cause decreases in B, for example" +
                   ", in recording the results of gene deletion or other inhi" +
                   "bition experiments. A is a BEL Term and B is either a BEL" +
-                  "Term or a BEL Statement. The increases relationship does" +
-                  "not indicate that the changes in A are either necessary" +
-                  "for changes in B, nor does it indicate that changes in A" +
-                  "are sufficient to cause changes in B.";
+                  " Term or a BEL Statement. The increases relationship does" +
+                  " not indicate that the changes in A are either necessary" +
+                  " for changes in B, nor does it indicate that changes in A" +
+                  " are sufficient to cause changes in B.";
             break;
         case IS_A:
             ret = "For terms A and B, A isA B indicates that A is a subset o" +
@@ -331,27 +331,27 @@ public class Util {
             break;
         case NEGATIVE_CORRELATION:
             ret = "For terms A and B, A negativeCorrelation B indicates that" +
-                  "changes in A and B have been observed to be negatively c" +
+                  " changes in A and B have been observed to be negatively c" +
                   "orrelated. The order of the subject and object does not a" +
                   "ffect the interpretation of the statement, thus B negativ" +
                   "eCorrelation A is equivalent to A negativeCorrelation B.";
             break;
         case ORTHOLOGOUS:
             ret = "For terms A and B, A orthologous B indicates that A and B" +
-                  "represent entities in different species which are sequen" +
+                  " represent entities in different species which are sequen" +
                   "ce similar and which are therefore presumed to share a co" +
                   "mmon ancestor.";
             break;
         case POSITIVE_CORRELATION:
             ret = "For terms A and B, A positiveCorrelation B indicates that" +
-                  "changes in A and B have been observed to be positively c" +
+                  " changes in A and B have been observed to be positively c" +
                   "orrelated. The order of the subject and object does not a" +
                   "ffect the interpretation of the statement, thus B positiv" +
                   "eCorrelation A is equivalent to A positiveCorrelation B.";
             break;
         case PROGNOSTIC_BIOMARKER_FOR:
             ret = "For term A and process term P, A prognosticBiomarkerFor P" +
-                  "indicates that changes in or detection of A is used in s" +
+                  " indicates that changes in or detection of A is used in s" +
                   "ome way to be a prognostic biomarker for the subsequent d" +
                   "evelopment of pathology or biological process P.";
             break;
@@ -382,8 +382,8 @@ public class Util {
             break;
         case TRANSLATED_TO:
             ret = "For RNA abundance term R and protein abundance term P, R" +
-                  "translatedTo P or R >> P indicates that members of P are" +
-                  "produced by the translation of members of R.";
+                  " translatedTo P or R >> P indicates that members of P are" +
+                  " produced by the translation of members of R.";
             break;
         case TRANSLOCATES:
             ret = "This relationship links the abundance term in a " +
