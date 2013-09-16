@@ -63,7 +63,7 @@ public class AnnotationKeywordCompletion extends ServerResource {
             ret.addValue(rslt);
         }
         ret.addLink("self", ALT_URL + keyword);
-        setStatus(Status.REDIRECTION_MULTIPLE_CHOICES);
+        setStatus(Status.SUCCESS_ACCEPTED);
         return ret.json();
     }
 

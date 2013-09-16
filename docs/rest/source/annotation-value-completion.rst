@@ -38,7 +38,7 @@ Annotation value completion.
 
     .. sourcecode:: http
 
-        HTTP/1.1 300 Multiple Choices
+        HTTP/1.1 202 Accepted
         Content-Type: application/json; charset=UTF-8
         Connection: keep-alive
         Transfer-Encoding: chunked

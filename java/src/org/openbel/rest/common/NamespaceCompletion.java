@@ -105,7 +105,7 @@ public class NamespaceCompletion extends ServerResource {
             ret.addLink("result", ALT_URL + "/" + nvc.value);
         }
         ret.addLink("self", ALT_URL + "/" + value);
-        setStatus(Status.REDIRECTION_MULTIPLE_CHOICES);
+        setStatus(Status.SUCCESS_ACCEPTED);
         return ret.json();
     }
 

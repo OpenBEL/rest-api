@@ -83,7 +83,7 @@ public class AnnotationValueCompletion extends ServerResource {
             ret.addValue(rslt);
         }
         ret.addLink("self", ALT_URL + keyword + "/" + value);
-        setStatus(Status.REDIRECTION_MULTIPLE_CHOICES);
+        setStatus(Status.SUCCESS_ACCEPTED);
         return ret.json();
     }
 
