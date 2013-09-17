@@ -42,7 +42,7 @@ public class NamespaceKeywordCompletion extends ServerResource {
         String keyword = getAttribute("keyword");
     	String input = format("^%s", escapeRE(keyword));
     	Pattern ptrn = compile(input.toLowerCase());
-        Find find = $namespaces.find(FIND, ptrn);
+        Find find = $namespaces.find(FIND, ptrn).limit(20);
 
         List<String> rslts = new ArrayList<>();
         for (Map<?, ?> map : find.as(Map.class)) {
