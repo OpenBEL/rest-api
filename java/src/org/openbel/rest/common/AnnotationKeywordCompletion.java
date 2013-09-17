@@ -43,7 +43,7 @@ public class AnnotationKeywordCompletion extends ServerResource {
         String keyword = getAttribute("keyword");
     	String input = format("^%s", escapeRE(keyword));
     	Pattern ptrn = compile(input.toLowerCase());
-        Find find = $annotations.find(FIND, ptrn);
+        Find find = $annotations.find(FIND, ptrn).limit(50);
 
         List<String> rslts = new ArrayList<>();
         for (Map<?, ?> map : find.as(Map.class)) {
