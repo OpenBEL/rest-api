@@ -60,6 +60,7 @@ public class AnnotationValueCompletion extends ServerResource {
         String input = format("^%s", escapeRE(value));
         Pattern ptrn = compile(input.toLowerCase());
         Find find = $annovalues.find(FIND_VALS, (ao.get("_id")), ptrn);
+        find = find.limit(50);
 
         List<String> rslts = new ArrayList<>();
         for (Map<?, ?> map : find.as(Map.class)) {
