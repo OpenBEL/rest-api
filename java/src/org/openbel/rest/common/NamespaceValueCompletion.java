@@ -80,7 +80,7 @@ public class NamespaceValueCompletion extends ServerResource {
 
         // Autocomplete values first
         for (Map<?, ?> map : find.as(Map.class)) {
-            if (rslts.size() == 50) break;
+            if (rslts.size() == 20) break;
             String prefix = PREFIX_MAP.get((ObjectId) map.get("nsmeta-id"));
             String val = (String) map.get("val");
             @SuppressWarnings("unchecked")
@@ -92,7 +92,7 @@ public class NamespaceValueCompletion extends ServerResource {
         // Autocomplete synonyms second
         find = $nsvalues.find(FIND_SYNS, (ns.get("_id")), ptrn);
         for (Map<?, ?> map : find.as(Map.class)) {
-            if (rslts.size() == 50) break;
+            if (rslts.size() == 20) break;
             String prefix = PREFIX_MAP.get((ObjectId) map.get("nsmeta-id"));
             String val = (String) map.get("val");
             @SuppressWarnings("unchecked")
