@@ -27,7 +27,6 @@ import java.util.regex.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
-import org.restlet.data.Status;
 import org.openbel.rest.Path;
 import org.bson.types.ObjectId;
 
@@ -70,7 +69,6 @@ public class NamespaceValueCompletion extends ServerResource {
         @SuppressWarnings("unchecked")
         Map<?, ?> ns = $namespaces.findOne(query).as(Map.class);
         if (ns == null) {
-            setStatus(Status.SUCCESS_NO_CONTENT);
             return ret.json();
         }
 
@@ -105,7 +103,6 @@ public class NamespaceValueCompletion extends ServerResource {
         }
 
         if (rslts.size() == 0) {
-            setStatus(Status.SUCCESS_NO_CONTENT);
             return ret.json();
         }
 
@@ -116,7 +113,6 @@ public class NamespaceValueCompletion extends ServerResource {
             ret.addLink("result", ALT_URL + keyword + "/" + nvc.value);
         }
         ret.addLink("self", ALT_URL + keyword + "/" + value);
-        setStatus(Status.SUCCESS_ACCEPTED);
         return ret.json();
     }
 
@@ -124,12 +120,10 @@ public class NamespaceValueCompletion extends ServerResource {
         List<NSValueCompletion> values;
         {
             addDocumentation("namespace-completion");
+            values = new ArrayList<>();
+            put("values", values);
         }
         void addValue(NSValueCompletion nvc) {
-            if (values == null) {
-                values = new ArrayList<>();
-                put("values", values);
-            }
             values.add(nvc);
         }
     }

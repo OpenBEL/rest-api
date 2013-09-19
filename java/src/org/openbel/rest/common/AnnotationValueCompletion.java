@@ -27,7 +27,6 @@ import java.util.regex.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
-import org.restlet.data.Status;
 import org.openbel.rest.Path;
 
 @Path("/api/v1/completion/annotation-value/{keyword}/{value}")
@@ -55,7 +54,6 @@ public class AnnotationValueCompletion extends ServerResource {
         if (ao == null) {
             AOValueCompletion ret = new AOValueCompletion();
             ret.addLink("self", ALT_URL + keyword + "/" + value);
-            setStatus(Status.SUCCESS_NO_CONTENT);
             return ret.json();
         }
 
@@ -71,7 +69,6 @@ public class AnnotationValueCompletion extends ServerResource {
         if (rslts.size() == 0) {
             AOValueCompletion ret = new AOValueCompletion();
             ret.addLink("self", ALT_URL + keyword + "/" + value);
-            setStatus(Status.SUCCESS_NO_CONTENT);
             return ret.json();
         }
 
@@ -88,7 +85,6 @@ public class AnnotationValueCompletion extends ServerResource {
             ret.addValue(rslt);
         }
         ret.addLink("self", ALT_URL + keyword + "/" + value);
-        setStatus(Status.SUCCESS_ACCEPTED);
         return ret.json();
     }
 
