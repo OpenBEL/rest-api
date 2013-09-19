@@ -58,13 +58,13 @@ public class NamespaceValueCompletion extends ServerResource {
 
     @Get("json")
     public Representation _get() {
-        Response ret = new Response();
-        ret.addLink("self", ALT_URL + keyword + "/" + value);
         String keyword = getAttribute("keyword");
         String value = getAttribute("value");
         try {
             value = decode(value, "UTF-8");
         } catch (Exception e) {}
+        Response ret = new Response();
+        ret.addLink("self", ALT_URL + keyword + "/" + value);
 
         String query = format(FIND_ONE, keyword);
         @SuppressWarnings("unchecked")
@@ -103,9 +103,6 @@ public class NamespaceValueCompletion extends ServerResource {
             nvc.matchedSynonym();
             rslts.add(nvc);
         }
-
-        Response ret = new Response();
-        ret.addLink("self", ALT_URL + keyword + "/" + value);
 
         if (rslts.size() == 0) {
             setStatus(Status.SUCCESS_NO_CONTENT);
