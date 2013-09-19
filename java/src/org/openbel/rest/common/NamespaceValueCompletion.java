@@ -58,6 +58,8 @@ public class NamespaceValueCompletion extends ServerResource {
 
     @Get("json")
     public Representation _get() {
+        Response ret = new Response();
+        ret.addLink("self", ALT_URL + keyword + "/" + value);
         String keyword = getAttribute("keyword");
         String value = getAttribute("value");
         try {
@@ -68,8 +70,8 @@ public class NamespaceValueCompletion extends ServerResource {
         @SuppressWarnings("unchecked")
         Map<?, ?> ns = $namespaces.findOne(query).as(Map.class);
         if (ns == null) {
-            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-            return null;
+            setStatus(Status.SUCCESS_NO_CONTENT);
+            return ret.json();
         }
 
         String input = format("^%s", escapeRE(value));
@@ -102,13 +104,14 @@ public class NamespaceValueCompletion extends ServerResource {
             rslts.add(nvc);
         }
 
-        if (rslts.size() == 0) {
-            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-            return null;
-        }
-
         Response ret = new Response();
         ret.addLink("self", ALT_URL + keyword + "/" + value);
+
+        if (rslts.size() == 0) {
+            setStatus(Status.SUCCESS_NO_CONTENT);
+            return ret.json();
+        }
+
         for (NSValueCompletion nvc : rslts) ret.addValue(nvc);
         if (rslts.size() == 1) return ret.json();
 

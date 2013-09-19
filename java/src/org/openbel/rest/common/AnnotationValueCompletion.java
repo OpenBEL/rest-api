@@ -53,8 +53,10 @@ public class AnnotationValueCompletion extends ServerResource {
         @SuppressWarnings("unchecked")
         Map<?, ?> ao = $annotations.findOne(query).as(Map.class);
         if (ao == null) {
-            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-            return null;
+            AOValueCompletion ret = new AOValueCompletion();
+            ret.addLink("self", ALT_URL + keyword + "/" + value);
+            setStatus(Status.SUCCESS_NO_CONTENT);
+            return ret.json();
         }
 
         String input = format("^%s", escapeRE(value));
@@ -67,8 +69,10 @@ public class AnnotationValueCompletion extends ServerResource {
             rslts.add((String) map.get("val"));
         }
         if (rslts.size() == 0) {
-            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-            return null;
+            AOValueCompletion ret = new AOValueCompletion();
+            ret.addLink("self", ALT_URL + keyword + "/" + value);
+            setStatus(Status.SUCCESS_NO_CONTENT);
+            return ret.json();
         }
 
         if (rslts.size() == 1) {

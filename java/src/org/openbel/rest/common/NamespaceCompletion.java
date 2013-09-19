@@ -94,8 +94,10 @@ public class NamespaceCompletion extends ServerResource {
         }
 
         if (rslts.size() == 0) {
-            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-            return null;
+            Response ret = new Response();
+            ret.addLink("self", ALT_URL + "/" + value);
+            setStatus(Status.SUCCESS_NO_CONTENT);
+            return ret.json();
         }
 
         Response ret = new Response();
