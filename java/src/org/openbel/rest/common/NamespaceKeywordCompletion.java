@@ -26,7 +26,6 @@ import java.util.regex.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
-import org.restlet.data.Status;
 import org.openbel.rest.Path;
 
 @Path("/api/v1/completion/namespace-keyword/{keyword}")
@@ -62,7 +61,6 @@ public class NamespaceKeywordCompletion extends ServerResource {
             ret.addValue(rslt);
         }
         ret.addLink("self", ALT_URL + keyword);
-        setStatus(Status.SUCCESS_ACCEPTED);
         return ret.json();
     }
 

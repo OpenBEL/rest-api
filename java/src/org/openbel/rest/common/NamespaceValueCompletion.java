@@ -27,7 +27,6 @@ import java.util.regex.*;
 import org.restlet.resource.Get;
 import org.restlet.resource.ServerResource;
 import org.restlet.representation.Representation;
-import org.restlet.data.Status;
 import org.openbel.rest.Path;
 import org.bson.types.ObjectId;
 
@@ -63,13 +62,14 @@ public class NamespaceValueCompletion extends ServerResource {
         try {
             value = decode(value, "UTF-8");
         } catch (Exception e) {}
+        Response ret = new Response();
+        ret.addLink("self", ALT_URL + keyword + "/" + value);
 
         String query = format(FIND_ONE, keyword);
         @SuppressWarnings("unchecked")
         Map<?, ?> ns = $namespaces.findOne(query).as(Map.class);
         if (ns == null) {
-            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-            return null;
+            return ret.json();
         }
 
         String input = format("^%s", escapeRE(value));
@@ -103,12 +103,9 @@ public class NamespaceValueCompletion extends ServerResource {
         }
 
         if (rslts.size() == 0) {
-            setStatus(Status.CLIENT_ERROR_NOT_FOUND);
-            return null;
+            return ret.json();
         }
 
-        Response ret = new Response();
-        ret.addLink("self", ALT_URL + keyword + "/" + value);
         for (NSValueCompletion nvc : rslts) ret.addValue(nvc);
         if (rslts.size() == 1) return ret.json();
 
@@ -116,7 +113,6 @@ public class NamespaceValueCompletion extends ServerResource {
             ret.addLink("result", ALT_URL + keyword + "/" + nvc.value);
         }
         ret.addLink("self", ALT_URL + keyword + "/" + value);
-        setStatus(Status.SUCCESS_ACCEPTED);
         return ret.json();
     }
 
@@ -124,12 +120,10 @@ public class NamespaceValueCompletion extends ServerResource {
         List<NSValueCompletion> values;
         {
             addDocumentation("namespace-completion");
+            values = new ArrayList<>();
+            put("values", values);
         }
         void addValue(NSValueCompletion nvc) {
-            if (values == null) {
-                values = new ArrayList<>();
-                put("values", values);
-            }
             values.add(nvc);
         }
     }
