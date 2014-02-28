@@ -108,4 +108,30 @@ public class Translation extends ServerResource {
         return txt;
     }
 
+    public static void main(String... args) {
+        String txt = args[0];
+        String result = "";
+        for (int i = 0; i < REGEXES.length; i++) {
+            Pattern p = Pattern.compile(REGEXES[i][0]);
+            String repl = REGEXES[i][1];
+            Matcher m = p.matcher(txt);
+            if (m.find()) {
+                txt = m.replaceFirst(repl);
+            }
+            txt = txt.trim();
+            // Keep going until each iteration
+            if ((i + 1) == REGEXES.length) {
+                if (!result.equals(txt)) i = 0;
+                result = txt;
+                continue;
+            }
+        }
+        char[] carr = txt.toCharArray();
+        if (carr.length > 0) {
+            carr[0] = toUpperCase(carr[0]);
+            System.out.println(carr);
+        }
+        System.out.println(result);
+    }
+
 }
